@@ -16,7 +16,6 @@ from flask import Flask
 from flask import Response
 from flask import request
 
-from jass_player_service.request_parser import PlayCardParser
 from jass_players.random_player import RandomPlayer
 from jass_players.stdin_player import StdinPlayer
 
