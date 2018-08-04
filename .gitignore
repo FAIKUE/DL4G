@@ -3,3 +3,6 @@
 .AppleDouble
 .LSOverride
 .idea
+
+# Python specific stuff
+*.pyc
