@@ -44,10 +44,10 @@ trump_strings_short = [
 
 # German strings for trumps
 trump_strings_german_long = [
-    'Schellen - D', 'Rosen - H', 'Schilten - S', 'Eichel - C', 'Obe-Abe - O', 'Une-Ufe - U'
+    'D: Schellen', 'H: Rosen', 'S: Schilten', 'C: Eichel', 'O: Obe-Abe', 'U: Une-Ufe'
 ]
 
-trump_string_push_german = 'Schieben - P'
+trump_string_push_german = 'P: Schieben'
 
 trump_ints = [
     DIAMONDS, HEARTS, SPADES, CLUBS, OBE_ABE, UNE_UFE

@@ -3,7 +3,7 @@
 # Created by Ruedi Arnold on 18.01.2018
 #
 """
-Code for the validation of requests to a jass_base jass_player_service.
+Code for the validation of requests to a jass_player_service.
 """
 
 import json
