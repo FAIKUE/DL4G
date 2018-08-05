@@ -21,7 +21,7 @@ class Round:
     and filled.
 
     The member variables can be set directly or using methods. The methods will ensure the internal
-    consistency of the variables, the method assert_invariants get be used during development to verify the
+    consistency of the variables, the method assert_invariants can be used during development to verify the
     consistency for the cases when the member variables are set directly.
     """
 
@@ -71,7 +71,7 @@ class Round:
         self.trick_winner = np.full(shape=9, fill_value=-1, dtype=np.int32)
 
         # the points made in the tricks
-        self.trick_points = np.zeros(shape=0, dtype=np.int32)
+        self.trick_points = np.zeros(shape=9, dtype=np.int32)
 
         # the first player of the trick (derived)
         self.trick_first_player = np.full(shape=9, fill_value=-1, dtype=np.int32)
@@ -125,10 +125,12 @@ class Round:
                 self.player = partner_player[self.player]
             else:
                 self.trump = action
+                self.declared_trump = self.player
                 # next action is to play card, but this is done by the current player
                 self.trick_first_player[0] = self.player
         else:
             self.trump = action
+            self.declared_trump = self.player
             # next action is to play card, but the partner has to play
             self.player = next_player[self.dealer]
             self.trick_first_player[0] = self.player
@@ -154,6 +156,7 @@ class Round:
 
         # place in trick
         self.current_trick[self.cards_in_trick] = card
+        self.nr_played_cards += 1
 
         if self.cards_in_trick < 3:
             # trick is not yet finished
@@ -251,25 +254,29 @@ class Round:
         # adjust actual winner by first player
         return (first_player - winner) % 4
 
-    def _end_trick(self):
+    def _end_trick(self) -> None:
+        """
+        End the current trick and update all the necessary fields.
+        """
         # update information about the current trick
         points = self.calc_points(self.current_trick, self.trump, self.nr_played_cards == 36)
         self.trick_points[self.nr_tricks] = points
-        winner = self.calc_winner(self.current_trick, self.trick_first_player[self.current_trick], self.trump)
-        self.trick_winner = winner
+        winner = self.calc_winner(self.current_trick, self.trick_first_player[self.nr_tricks], self.trump)
+        self.trick_winner[self.nr_tricks] = winner
 
         if winner == NORTH or winner == SOUTH:
             self.points_team_0 += points
         else:
             self.points_team_1 += points
         self.nr_tricks += 1
+        self.cards_in_trick = 0
 
         if self.nr_tricks < 9:
             # not end of round
             # next player is the winner of the trick
             self.trick_first_player[self.nr_tricks] = winner
             self.player = winner
-            self.current_trick = self.tricks[self.nr_tricks,:]
+            self.current_trick = self.tricks[self.nr_tricks, :]
         else:
             # end of round
             self.player = None
@@ -288,7 +295,7 @@ class Round:
         # trick winners
         if self.nr_tricks > 0:
             assert self.trick_first_player[0] == next_player[self.dealer]
-        for i in range(self.nr_tricks-1):
+        for i in range(1, self.nr_tricks):
             assert self.trick_winner[i-1] == self.trick_first_player[i]
 
         # cards played
