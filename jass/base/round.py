@@ -81,7 +81,7 @@ class Round:
         # the number of completed tricks
         self.nr_tricks = 0
         # the number of card in the current trick
-        self.cards_in_trick = 0
+        self.nr_cards_in_trick = 0
         # the total number of played cards
         self.nr_played_cards = 0
 
@@ -155,12 +155,12 @@ class Round:
         self.hands[self.player, card] = 0
 
         # place in trick
-        self.current_trick[self.cards_in_trick] = card
+        self.current_trick[self.nr_cards_in_trick] = card
         self.nr_played_cards += 1
 
-        if self.cards_in_trick < 3:
+        if self.nr_cards_in_trick < 3:
             # trick is not yet finished
-            self.cards_in_trick += 1
+            self.nr_cards_in_trick += 1
             self.player = next_player[self.player]
         else:
             # finish current trick
@@ -201,7 +201,7 @@ class Round:
             # lowest card of first color wins
             winner = 0
             lowest_card = trick[0]
-            for i in range(1,4):
+            for i in range(1, 4):
                 # (lower card values have a higher card index)
                 if color_of_card[trick[i]] == color_of_first_card and trick[i] > lowest_card:
                     lowest_card = trick[i]
@@ -269,7 +269,7 @@ class Round:
         else:
             self.points_team_1 += points
         self.nr_tricks += 1
-        self.cards_in_trick = 0
+        self.nr_cards_in_trick = 0
 
         if self.nr_tricks < 9:
             # not end of round
@@ -299,4 +299,15 @@ class Round:
             assert self.trick_winner[i-1] == self.trick_first_player[i]
 
         # cards played
-        assert self.nr_played_cards == 4*self.nr_tricks + self.cards_in_trick
+        assert self.nr_played_cards == 4*self.nr_tricks + self.nr_cards_in_trick
+
+        # number of points
+        points_team_0 = 0
+        points_team_1 = 0
+        for trick in range(self.nr_tricks):
+            if self.trick_winner[trick] == 0 or self.trick_winner[trick] == 2:
+                points_team_0 += self.trick_points[trick]
+            else:
+                points_team_1 += self.trick_points[trick]
+        assert points_team_0 == self.points_team_0
+        assert points_team_1 == self.points_team_1

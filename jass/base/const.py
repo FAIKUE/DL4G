@@ -19,24 +19,39 @@ import numpy as np
 #
 
 # Players (players are numbered clockwise), playing is done counterclockwise
-NORTH = 0
-EAST  = 1
-SOUTH = 2
-WEST  = 3
-MAX_PLAYER = 3
+NORTH: int = 0
+EAST: int = 1
+SOUTH: int = 2
+WEST: int = 3
+MAX_PLAYER: int = 3
 
 player_strings = ['North', 'East', 'South', 'West']
 
-# Colors for trumps etc
-DIAMONDS    = D = 0                    # Ecken / Schellen
-HEARTS      = H = 1                    # Herz / Rosen
-SPADES      = S = 2                    # Schaufeln / Schilten
-CLUBS       = C = 3                    # Kreuz / Eichel
-OBE_ABE     = O = 4
-UNE_UFE     = U = 5
-MAX_TRUMP   = 5                        # maximal value of a trump action (for loops)
+# Colors for trump, there is a long and a short constant for each
+DIAMONDS: int = 0  # Ecken / Schellen
+D: int = DIAMONDS
+
+HEARTS: int = 1  # Herz / Rosen
+H: int = HEARTS
+
+SPADES: int = 2  # Schaufeln / Schilten
+S: int = 2
+
+CLUBS: int = 3  # Kreuz / Eichel
+C: int = CLUBS
+
+OBE_ABE: int = 4
+O: int = OBE_ABE
+
+UNE_UFE: int = 5
+U: int = UNE_UFE
+
+MAX_TRUMP: int = 5  # maximal value of a trump action (for loops)
+
 # additional action available at trump selection phase
-PUSH        = P = 6                    # Schieben
+PUSH: int = 6  # Schieben
+P: int = PUSH
+
 
 # Strings for trumps
 trump_strings_short = [
@@ -143,6 +158,7 @@ card_strings = np.array([
 ], np.str)
 
 # dictionary to get the ids from the strings:
+# noinspection PyPep8
 card_ids = {
     'DA' : DA ,
     'DK' : DK ,
@@ -185,6 +201,7 @@ card_ids = {
 # 2D array of scoring values for the cards in a trick, each row is the scoring for the cards for the trump indicated
 # by the row
 #
+# noinspection PyPep8
 card_values = np.array(
     [
        # DA DK DQ DJ D10 D9 D8 D7 D6 HA HK HQ HJ H10 H9 H8 H7 H6 DA DK DQ DJ D10 D9 D8 D7 D6 CA CK CQ CJ C10 C9 C8 C7  C6
