@@ -285,12 +285,14 @@ class Round:
         """
         Validates the internal consistency and throws an assertion exception if an error is detected.
         """
-        # trump declaration
+        # trump declaration should be present
         if self.forehand is not None:
             if self.forehand:
                 assert self.declared_trump == next_player[self.dealer]
             else:
                 assert self.declared_trump == partner_player[next_player[self.dealer]]
+            assert self.trump is not None
+            assert self.dealer is not None
 
         # trick winners
         if self.nr_tricks > 0:

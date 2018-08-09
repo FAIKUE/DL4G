@@ -49,7 +49,7 @@ U: int = UNE_UFE
 MAX_TRUMP: int = 5  # maximal value of a trump action (for loops)
 
 # additional action available at trump selection phase
-PUSH: int = 6  # Schieben
+PUSH: int = 10  # Schieben
 P: int = PUSH
 
 

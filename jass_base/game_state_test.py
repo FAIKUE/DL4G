@@ -270,7 +270,7 @@ class GameStateTestCase(unittest.TestCase):
                        '"player":[{"hand":[]},{"hand":[]},' \
                        '{"hand":["S8","S9","SK","CA","C10","H9"]},{"hand":[]}],' \
                        '"jassTyp":"SCHIEBER_2500"}'
-        # we use the parser, as it already can read incomplete rounds, while the read_round expects a full round
+        # we use the io, as it already can read incomplete rounds, while the read_round expects a full round
         play_card_parser = PlayCardParser(round_string)
         self.assertTrue(play_card_parser.is_valid_request())
         rnd = play_card_parser.get_parsed_round()
