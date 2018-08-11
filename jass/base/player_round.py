@@ -174,7 +174,7 @@ class PlayerRound:
         player_rnd.nr_tricks, player_rnd.nr_cards_in_trick = divmod(cards_played, 4)
 
         # copy the trick first player, this is also available after making trump, when no trick has been played yet
-        player_rnd.trick_first_player[0:player_rnd.nr_tricks + 1] = rnd.trick_winner[0:player_rnd.nr_tricks + 1]
+        player_rnd.trick_first_player[0:player_rnd.nr_tricks + 1] = rnd.trick_first_player[0:player_rnd.nr_tricks + 1]
 
         if cards_played > 0:
             # copy all the tricks
@@ -189,6 +189,18 @@ class PlayerRound:
 
         # incomplete
         return player_rnd
+
+    @staticmethod
+    def all_from_complete_round(rnd: Round) -> List['PlayerRound']:
+        """
+        Get all 36 player rounds from a complete round
+        Args:
+            rnd: The Round from which to create the PlayerRound.
+
+        Returns:
+            the list of player_rounds for cards 0..35
+        """
+        return [PlayerRound.from_complete_round(rnd, i) for i in range(0, 36)]
 
     def assert_invariants(self) -> None:
         """
