@@ -1,14 +1,13 @@
 import random
 
 from jass.base.player_round import PlayerRound
-from jass.base.game_const import *
+from jass.base.const import *
 from jass_base.rule import Rule
-from jass_players.player import Player
+from jass.player.player import Player
 
 
 class RandomPlayer(Player):
-    """RandomPlayer chooses a random trump and plays a valid, but randomly chosen card."""
-
+    """RandomPlayer chooses a random valid trump and plays a valid, but randomly chosen card."""
 
     def select_trump(self, rnd: PlayerRound) -> int:
         possible_trump = trump_ints.copy()
@@ -16,10 +15,8 @@ class RandomPlayer(Player):
             possible_trump.append(PUSH)
         return random.choice(possible_trump)
 
-
-    def play_card(self, rnd: Round) -> str:
-        cards = rnd.current_trick.cards
-        valid_cards = Rule.get_valid_cards(rnd.current_hand, cards, len(cards), rnd.trump)  # 1-hot encoded
+    def play_card(self, rnd: PlayerRound) -> str:
+        trick_cards = convert_one_hot_encoded_cards_to_int_encoded_list(rnd.get_current_trick())
+        valid_cards = Rule.get_valid_cards(rnd.hand, trick_cards, len(trick_cards), rnd.trump)  # 1-hot encoded
         valid_cards_str_list = convert_one_hot_encoded_cards_to_str_encoded_list(valid_cards)
         return random.choice(valid_cards_str_list)
-

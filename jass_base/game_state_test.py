@@ -5,7 +5,7 @@ from data.log.log_parser import read_round
 
 from jass_base.game_const import *
 from jass_base.game_state import GameState
-from jass_player_service.request_parser import PlayCardParser
+from jass.player_service.request_parser import PlayCardParser
 
 
 class GameStateTestCase(unittest.TestCase):

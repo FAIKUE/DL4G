@@ -1,9 +1,8 @@
-from jass.base.player_round import Round
+from jass.base.player_round import PlayerRound
 
 
 class Player:
     """ Player is the abstract base class for all Jass player implementations. """
-
 
     def select_trump(self, rnd: PlayerRound) -> int:
         """
@@ -16,7 +15,6 @@ class Player:
             selected trump, encoded as defined in jass_base.game_const.trump_ints or jass_base.game_const.PUSH
         """
         raise Exception("not implemented")
-
 
     def play_card(self, rnd: PlayerRound) -> str:
         """

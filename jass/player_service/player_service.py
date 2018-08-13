@@ -17,10 +17,10 @@ from flask import Flask
 from flask import Response
 from flask import request
 
-from jass_player_service.request_parser import PlayCardParser, SelectTrumpParser
-from jass_players.player import Player
-from jass_players.random_player import RandomPlayer
-from jass_players.stdin_player import StdinPlayer
+from jass.player_service.request_parser import PlayCardParser, SelectTrumpParser
+from jass.player.player import Player
+from jass.player.random_player import RandomPlayer
+from jass.player.stdin_player import StdinPlayer
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -45,13 +45,13 @@ SELECT_TRUMP_PATH_PREFIX = '/select_trump'
 PLAY_CARD_PATH_PREFIX = '/play_card'
 
 
-_jass_player_dict = {} # Containing K-V-pairs of player_name and Player instances.
+_jass_player_dict = {}  # Containing K-V-pairs of player_name and Player instances.
 
 
 @app.route(JASS_PATH_PREFIX + '<string:player_name>' + PLAY_CARD_PATH_PREFIX, methods=['POST'])
 def play_card(player_name: str) -> Response:
     """
-    takes a play_card request, validates its data and returns the card to play.
+    Takes a play_card request, validates its data and returns the card to play.
     Args:
         player_name: the name of the desired player
     Returns:
@@ -71,7 +71,7 @@ def play_card(player_name: str) -> Response:
 @app.route(JASS_PATH_PREFIX + '<string:player_name>' + SELECT_TRUMP_PATH_PREFIX, methods=['POST'])
 def select_trump(player_name: str) -> Response:
     """
-    takes a select_trump request, validates its data and returns the card to play.
+    Takes a select_trump request, validates its data and returns the card to play.
     Args:
         player_name: the name of the desired player
     Returns:
@@ -91,16 +91,26 @@ def select_trump(player_name: str) -> Response:
 
 @app.route(JASS_PATH_PREFIX + '<string:player_name>', methods=['GET'])
 def smoke_test(player_name: str) -> Response:
+    """
+    Provides basic information about this players.
+    Args:
+        player_name:  the player name as provided in the request path.
+
+    Returns:
+        basic smoke test information.
+    """
     msg = " *** Jass Player Service - SMOKE TEST ***"
     if player_name in _jass_player_dict.keys():
-        return (msg + " got a player '%s' here :-) *** " % player_name +
-                   " use POST requests on subpaths '/select_trump' and 'play_card'. ***")
+        return _create_ok_response(msg + " got a player '%s' here :-) *** " % player_name +
+                                         " use POST requests on subpaths '%s'" % SELECT_TRUMP_PATH_PREFIX +
+                                         " and '%s'. ***" % PLAY_CARD_PATH_PREFIX)
     else:
-        return msg + " got NO player '%s' here :-(" % player_name
+        return _create_ok_response(msg + " got NO player '%s' here :-(" % player_name)
+
 
 def _create_ok_json_response(json_str) -> Response:
     """
-    creates a http ok response with the given json data as content.
+    Creates a http ok response with the given json data as content.
     Args:
         json_str: the json string to be used as response content.
 
@@ -108,7 +118,6 @@ def _create_ok_json_response(json_str) -> Response:
         the http ok response with the given json data
 
     """
-    # ToDo: check if headers, mime type and so on are set as desired
     response = Response(response=json_str, status=HTTPStatus.OK, mimetype="application/json")
     response.headers["Content-Type"] = "application/json; charset=utf-8"
     return response
@@ -116,7 +125,7 @@ def _create_ok_json_response(json_str) -> Response:
 
 def _create_bad_request_response(bad_request: request) -> Response:
     """
-    creates a bad request http response with the requests data content
+    Creates a bad request http response with the requests data content
     Args:
         bad_request: the bad request
 
@@ -130,10 +139,29 @@ def _create_bad_request_response(bad_request: request) -> Response:
     return response
 
 
-def _check_and_setup_players():
+def _create_ok_response(txt) -> Response:
+    """
+    Creates a http ok response with the given text data as content.
+    Args:
+        txt: the text to be used as response content.
+
+    Returns:
+        the http ok response with the given text data
+
+    """
+    response = Response(response=txt, status=HTTPStatus.OK, mimetype="text/plain")
+    response.headers["Content-Type"] = "text/plain; charset=utf-8"
+    return response
+
+
+def _process_and_print_players():
+    """
+    Checks all players registered in _jass_players, sets up _jass_player_dict and prints
+    the registered players.
+    """
     for player in _jass_players:
         if isinstance(player, Player):
-            _jass_player_dict[_convert_camel_to_snake(player.__class__.__name__)] = player
+            _jass_player_dict[convert_camel_to_snake(player.__class__.__name__)] = player
         else:
             raise Exception('\'%s\' is not an instance of class Player.' % player)
     if len(_jass_players) != len(_jass_player_dict):
@@ -153,13 +181,21 @@ def _get_player_for_name(name: str) -> Player:
 
 
 # Inspried by https://stackoverflow.com/questions/1175208/elegant-python-function-to-convert-camelcase-to-snake-case
-def _convert_camel_to_snake(tha_string: str) -> str:
-    s1 = re.sub("(.)([A-Z][a-z]+)", r'\1_\2', tha_string)
+def convert_camel_to_snake(camel_case: str) -> str:
+    """
+    Converts a snake_case string to a CamelCase string.
+    Args:
+        camel_case: the string in CamelCase format.
+    Returns:
+        the same string in snake_case format.
+
+    """
+    s1 = re.sub("(.)([A-Z][a-z]+)", r'\1_\2', camel_case)
     return re.sub("([a-z0-9])([A-Z])", r'\1_\2', s1).lower()
 
 
 def main():
-    _check_and_setup_players()
+    _process_and_print_players()
     app.run(host=_ip_address, port=_port)
 
 

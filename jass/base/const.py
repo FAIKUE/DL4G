@@ -55,7 +55,19 @@ P: int = PUSH
 
 # Strings for trumps
 trump_strings_short = [
-    'D', 'H', 'S', 'C', 'O', 'U', 'P'
+    'D', 'H', 'S', 'C', 'O', 'U', '', '', '', '', 'P'
+]
+
+# German strings for trumps
+trump_strings_german_long = [
+    'D: Schellen', 'H: Rosen', 'S: Schilten', 'C: Eichel', 'O: Obe-Abe', 'U: Une-Ufe'
+]
+
+# German string for 'Schieben'
+trump_string_push_german = 'P: Schieben'
+
+trump_ints = [
+    DIAMONDS, HEARTS, SPADES, CLUBS, OBE_ABE, UNE_UFE
 ]
 
 # Card distributions (sets) like hands, cards played etc. will be modelled using arrays, corresponding to a 1-hot

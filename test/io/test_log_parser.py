@@ -1,6 +1,7 @@
 import unittest
 import logging
 from jass.io.log_parser import LogParser
+from jass.base.player_round import PlayerRound
 
 
 class LogParserTestCase(unittest.TestCase):
@@ -21,6 +22,11 @@ class LogParserTestCase(unittest.TestCase):
             self.assertEqual(36, rnd.nr_played_cards)
             self.assertEqual(9, rnd.nr_tricks)
             self.assertEqual(sum_of_all_cards, rnd.tricks.sum(axis=None))
+
+            # test player_rounds on the same data
+            player_rnds = PlayerRound.all_from_complete_round(rnd)
+            for player_rnd in player_rnds:
+                player_rnd.assert_invariants()
 
 
 

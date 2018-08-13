@@ -5,7 +5,7 @@
 
 import unittest
 
-from jass_player_service.request_parser import SelectTrumpParser, PlayCardParser
+from jass.player_service.request_parser import SelectTrumpParser, PlayCardParser
 
 
 class RequestValidatorTest(unittest.TestCase):
