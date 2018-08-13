@@ -3,7 +3,7 @@
 # Created by Ruedi Arnold on 18.01.2018
 #
 """
-Code for the validation of requests to a jass_player_service.
+Code for the validation and parsing of requests to a Jass player service.
 """
 
 import json
@@ -37,7 +37,7 @@ class BasicRequestParser:
         """
         Returns the parsed round object. Attention: call only if is_valid_request() returns True.
         Returns:
-            the parsed round object
+            the round object created by this parser.
         """
         return self._rnd
 
@@ -51,6 +51,10 @@ class BasicRequestParser:
         return self._error_msg
 
     def _parse_request(self):
+        """
+        Abstract method to parse the request set in the init method.
+        If is_valid_request returns true, the parsed data can be accessed by calling get_parsed_round().
+        """
         raise NotImplementedError('BasicRequestParser._parse_request')
 
     def _validate_request_data(self) -> bool:

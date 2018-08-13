@@ -12,7 +12,7 @@ class Player:
             rnd: current round
 
         Returns:
-            selected trump, encoded as defined in jass_base.game_const.trump_ints or jass_base.game_const.PUSH
+            selected trump, int encoded as defined in jass.base.const.trump_ints or jass.base..const.PUSH
         """
         raise Exception("not implemented")
 
@@ -24,6 +24,6 @@ class Player:
             rnd: current round
 
         Returns:
-            card to play, encoded as defined in jass_base.game_const.card_strings
+            card to play, str encoded as defined in jass.base.const.card_strings
         """
         raise Exception("not implemented")

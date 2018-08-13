@@ -4,8 +4,8 @@
 #
 
 """
-Code for the Jass player web interface, i.e. the "web part" of receiving requests and accordingly replying to them.
-Receives requests like the select_trump and play_card and delegates them to a one of the registered Jass player.
+Code for the Jass player web interface, i.e. the "web part" receiving requests and serving them accordingly.
+This file handles requests like select_trump and play_card and delegates them to a one of the registered Jass players.
 """
 
 import configparser
