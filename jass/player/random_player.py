@@ -2,8 +2,9 @@ import random
 
 from jass.base.player_round import PlayerRound
 from jass.base.const import *
-from jass_base.rule import Rule
 from jass.player.player import Player
+# TODO: move Rule to new jass.base package.
+from jass_base.rule import Rule
 
 
 class RandomPlayer(Player):
