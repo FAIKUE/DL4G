@@ -1,7 +1,7 @@
 import random
 
-from jass_base.game import Round
-from jass_base.game_const import *
+from jass.base.player_round import PlayerRound
+from jass.base.game_const import *
 from jass_base.rule import Rule
 from jass_players.player import Player
 
@@ -10,7 +10,7 @@ class RandomPlayer(Player):
     """RandomPlayer chooses a random trump and plays a valid, but randomly chosen card."""
 
 
-    def select_trump(self, rnd: Round) -> int:
+    def select_trump(self, rnd: PlayerRound) -> int:
         possible_trump = trump_ints.copy()
         if rnd.forehand:
             possible_trump.append(PUSH)

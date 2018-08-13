@@ -33,7 +33,7 @@ class RequestValidatorTest(unittest.TestCase):
                          1, 0, 0, 1, 0, 0, 0, 1, 0,  # H
                          0, 0, 0, 1, 0, 1, 0, 0, 0,  # S
                          0, 0, 0, 1, 0, 0, 1, 1, 1]  # C
-        self.assertEqual(expected_hand, rnd.current_hand.tolist())
+        self.assertEqual(expected_hand, rnd.hand.tolist())
 
     def test_parse_select_trump_request_missing_element(self):
         # element "dealer" is missing (i.e. misspelled)
@@ -62,7 +62,7 @@ class RequestValidatorTest(unittest.TestCase):
         play_card_parser = PlayCardParser(request_data)
         self.assertTrue(play_card_parser.is_valid_request())
         rnd = play_card_parser.get_parsed_round()
-        self.assertEqual(3, len(rnd.tricks))
+        self.assertEqual(3, rnd.nr_tricks)
         self.assertEqual(3, rnd.dealer)
         self.assertEqual(4, rnd.trump)
         self.assertFalse(rnd.forehand)
@@ -70,7 +70,7 @@ class RequestValidatorTest(unittest.TestCase):
                          0, 0, 0, 0, 0, 1, 0, 0, 0,  # H
                          0, 1, 0, 0, 0, 1, 1, 0, 0,  # S
                          1, 0, 0, 0, 1, 0, 0, 0, 0]  # C
-        self.assertEqual(expected_hand, rnd.current_hand.tolist())
+        self.assertEqual(expected_hand, rnd.hand.tolist())
 
     def test_parse_play_card_request_valid_first_trick(self):
         request_data = '{"trump":0,"dealer":3,"tss":0,"tricks":[' \
@@ -84,13 +84,14 @@ class RequestValidatorTest(unittest.TestCase):
         self.assertEqual(3, rnd.dealer)
         self.assertEqual(0, rnd.trump)
         self.assertTrue(rnd.forehand)
-        self.assertEqual(0, len(rnd.tricks))
+        self.assertEqual(0, rnd.nr_tricks)
         expected_hand = [0, 0, 0, 0, 0, 0, 1, 0, 1,  # D
                          0, 0, 0, 1, 0, 0, 0, 0, 0,  # H
                          0, 0, 0, 0, 0, 0, 1, 1, 1,  # S
                          0, 0, 0, 0, 0, 0, 1, 1, 1]  # C
-        self.assertEqual(expected_hand, rnd.current_hand.tolist())
-        self.assertEqual([3, 7, 4], rnd.current_trick.cards)
+        self.assertEqual(expected_hand, rnd.hand.tolist())
+        current_trick = rnd.get_current_trick().tolist()
+        self.assertEqual([3, 7, 4, -1], current_trick)
 
     def test_parse_play_card_request_valid_last_trick(self):
         request_data = '{"trump":2,"dealer":2,"tss":1,"tricks":[' \
@@ -110,13 +111,14 @@ class RequestValidatorTest(unittest.TestCase):
         self.assertEqual(2, rnd.dealer)
         self.assertEqual(2, rnd.trump)
         self.assertFalse(rnd.forehand)
-        self.assertEqual(8, len(rnd.tricks))
+        self.assertEqual(8, rnd.nr_tricks)
         expected_hand = [0, 1, 0, 0, 0, 0, 0, 0, 0,  # D
                          0, 0, 0, 0, 0, 0, 0, 0, 0,  # H
                          0, 0, 0, 0, 0, 0, 0, 0, 0,  # S
                          0, 0, 0, 0, 0, 0, 0, 0, 0]  # C
-        self.assertEqual(expected_hand, rnd.current_hand.tolist())
-        self.assertEqual([18, 5, 14], rnd.current_trick.cards)
+        self.assertEqual(expected_hand, rnd.hand.tolist())
+        current_trick = rnd.get_current_trick().tolist()
+        self.assertEqual([18, 5, 14, -1], current_trick)
 
 
 if __name__ == '__main__':

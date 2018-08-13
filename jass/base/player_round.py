@@ -2,6 +2,9 @@
 #
 # Created by Thomas Koller on 04.08.18
 #
+
+import numpy as np
+
 from jass.base.const import *
 from jass.base.round import Round
 
@@ -69,11 +72,11 @@ class PlayerRound:
         # the first player of the trick (derived)
         self.trick_first_player = np.full(shape=9, fill_value=-1, dtype=np.int32)
 
-        # the current trick is a view onto self.trick
-        self.current_trick = self.tricks[0, :]
-
         # the number of completed tricks
         self.nr_tricks = 0
+
+        # the current trick is a view onto self.trick
+        self.current_trick = self.tricks[0, :]
 
         # the number of cards in the current trick
         self.nr_cards_in_trick = 0
@@ -134,6 +137,9 @@ class PlayerRound:
         self.nr_played_cards = rnd.nr_played_cards
         self.points_team_0  = rnd.points_team_0
         self.points_team_1 = rnd.points_team_1
+
+    def get_current_trick(self) -> np.ndarray:
+        return self.tricks[self.nr_tricks, :]
 
     def _calculate_points_from_tricks(self) -> None:
         """

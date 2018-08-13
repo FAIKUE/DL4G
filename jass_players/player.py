@@ -1,11 +1,11 @@
-from jass_base.game import Round
+from jass.base.player_round import Round
 
 
 class Player:
     """ Player is the abstract base class for all Jass player implementations. """
 
 
-    def select_trump(self, rnd: Round) -> int:
+    def select_trump(self, rnd: PlayerRound) -> int:
         """
         Player chooses a trump based on the given round information.
 
@@ -18,7 +18,7 @@ class Player:
         raise Exception("not implemented")
 
 
-    def play_card(self, rnd: Round) -> str:
+    def play_card(self, rnd: PlayerRound) -> str:
         """
         Player returns a card to play based on the given round information.
 
