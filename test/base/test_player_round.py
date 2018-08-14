@@ -60,6 +60,7 @@ class PlayerRoundTestCase(unittest.TestCase):
 
         for i in range(36):
             player_rnd = PlayerRound.from_complete_round(rnd, i)
+            player_rnd.assert_invariants()
             self.assertEqual(i, player_rnd.nr_played_cards)
             self.assertEqual(rnd.dealer, player_rnd.dealer)
             self.assertEqual(rnd.declared_trump, player_rnd.declared_trump)

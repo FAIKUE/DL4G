@@ -12,11 +12,24 @@ from jass.base.round import Round
 class PlayerRound:
     """
     Class for one round of jass from the players point of view. It contains all the information about the round
-    that the player can observe at a specific time in the round. Similar to the class Round, PlayerRound captures
+    that the player can observe at a specific time in the round. This information is
+        - the dealer
+        - the player that declared trump,
+        - the trump chosen
+        - trump was declared forehand (derived information)
+        - the tricks that have been played so far
+        - the winner and the first player (derived) of each trick
+        - the number of points that have been made by the current jass_players team in this round
+        - the number of points that have been made by the opponent team in this round
+        - the number of cards played in the current trick
+        - the cards played in the current trick
+        - the current player
+
+    Similar to the class Round, PlayerRound captures
     the information at different stages of the game, like:
-    - Player can choose to select a trump or push the right to make trump to his partner
-    - Player needs to select trump after his partner pushed
-    - Player needs to play a card.
+        - Player can choose to select a trump or push the right to make trump to his partner
+        - Player needs to select trump after his partner pushed
+        - Player needs to play a card.
     """
 
     def __init__(self,
@@ -176,7 +189,8 @@ class PlayerRound:
                                  forehand=rnd.forehand)
 
         player_rnd.nr_played_cards = cards_played
-        # calculate the number of tricks we need and how many cards are left
+
+        # calculate the number of tricks played and how many cards in the current trick
         player_rnd.nr_tricks, player_rnd.nr_cards_in_trick = divmod(cards_played, 4)
 
         # copy the trick first player, this is also available after making trump, when no trick has been played yet
@@ -193,7 +207,19 @@ class PlayerRound:
 
             player_rnd._calculate_points_from_tricks()
 
-        # incomplete
+            # determine player
+            player_rnd.player = (player_rnd.trick_first_player[player_rnd.nr_tricks]-player_rnd.nr_cards_in_trick) % 4
+        else:
+            # no cards played yet
+            player_rnd.player = next_player[player_rnd.dealer]
+
+        # determine hand still held by the player, which are the cards that the player will play in the next
+        # tricks of the full rnd, that are not played yet
+        for i in range(player_rnd.nr_tricks, 9):
+            # determine which card was played in this trick by the player
+            index = (rnd.trick_first_player[i] - player_rnd.player) % 4
+            card_played = rnd.tricks[i, index]
+            player_rnd.hand[card_played] = 1
         return player_rnd
 
     @staticmethod
@@ -218,6 +244,7 @@ class PlayerRound:
                 assert self.declared_trump == next_player[self.dealer]
             else:
                 assert self.declared_trump == partner_player[next_player[self.dealer]]
+            assert self.player is not None
 
         # trick winners
         if self.nr_tricks > 0:
@@ -227,4 +254,7 @@ class PlayerRound:
 
         # cards played
         assert self.nr_played_cards == 4 * self.nr_tricks + self.nr_cards_in_trick
+
+        # cards in hand
+        assert self.hand.sum() == 9-self.nr_tricks
 
