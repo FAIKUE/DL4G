@@ -126,7 +126,6 @@ class Arena:
         """
         self._rnd = Round(dealer)
 
-
     def deal_cards(self):
         """
         Deal cards at the beginning of a round. Default is to deal the cards randomly using the method in
