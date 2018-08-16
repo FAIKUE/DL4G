@@ -1,6 +1,6 @@
 import unittest
 
-from jass_base.trump_stat import *
+from jass.stat.trump_stat import *
 
 
 class TrumpStatTestCase(unittest.TestCase):
