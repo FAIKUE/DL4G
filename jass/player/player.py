@@ -16,7 +16,7 @@ class Player:
         """
         raise Exception("not implemented")
 
-    def play_card(self, rnd: PlayerRound) -> str:
+    def play_card(self, rnd: PlayerRound) -> int:
         """
         Player returns a card to play based on the given round information.
 
