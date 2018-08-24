@@ -2,7 +2,7 @@ from jass.base.const import *
 from jass.player.player import Player
 from jass.base.player_round import PlayerRound
 # TODO: move Rule to new jass.base package.
-from jass_base.rule import Rule
+from jass.base.rule import Rule
 
 
 class StdinPlayer(Player):

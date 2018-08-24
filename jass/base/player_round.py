@@ -70,7 +70,7 @@ class PlayerRound:
         #
 
         # the current hands of the player
-        self.hand = np.zeros(shape=36, dtype=np.int32)
+        self.hand = np.zeros(shape=36, dtype=np.int)
 
         # the tricks played so far, with the cards of the tricks int encoded in the order they are played
         # a value of -1 indicates that the card has not been played yet
@@ -99,6 +99,67 @@ class PlayerRound:
 
         self.points_team_0 = 0          # points made by the team of players 0 and 2
         self.points_team_1 = 0          # points made by the team of players 1 and 3
+
+    def __repr__(self):
+        """
+        Build representation string of the object. This will also be used by str.
+        Returns:
+            String representation of the object
+        """
+        return str(self.__dict__)
+
+    def __eq__(self, other: 'PlayerRound'):
+        """
+        Compare two instances. Useful for tests when the representations are encoded and decoded. The objects are
+        considered equal if they have the same properties. As the properties are numpy arrays, we can not compare
+        dict directly.
+        Args:
+            other: the other object to compare to.
+
+        Returns:
+            True if the objects are the same.
+        """
+        return self.dealer == other.dealer and \
+               self.player == other.player and \
+               self.trump == other.trump and \
+               self.forehand == other.forehand and \
+               self.declared_trump == other.declared_trump and \
+               (self.hand == other.hand).all() and \
+               (self.tricks == other.tricks).all() and \
+               (self.trick_first_player == other.trick_first_player).all() and \
+               (self.trick_winner == other.trick_winner).all() and \
+               (self.trick_points == other.trick_points).all() and \
+               self.nr_tricks == other.nr_tricks and \
+               (self.current_trick == other.current_trick).all() and \
+               self.nr_cards_in_trick == other.nr_cards_in_trick and \
+               self.nr_played_cards == other.nr_played_cards and \
+               self.points_team_0 == other.points_team_0 and \
+               self.points_team_1 == other.points_team_1
+
+
+
+    # additional derived properties
+    @property
+    def points_team_own(self) -> int:
+        """
+        Points made by the players team
+        Returns: the current points made by the current players team
+        """
+        if self.player == 0 or self.player == 2:
+            return self.points_team_0
+        else:
+            return self.points_team_1
+
+    @property
+    def points_team_opponent(self) -> int:
+        """
+        Points made by the opponent players team
+        Returns: the current points made by the current players opponent team
+        """
+        if self.player == 0 or self.player == 2:
+            return self.points_team_1
+        else:
+            return self.points_team_0
 
     def set_from_round(self, rnd: Round):
         """

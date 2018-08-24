@@ -12,7 +12,7 @@ class Player:
             rnd: current round
 
         Returns:
-            selected trump, int encoded as defined in jass.base.const.trump_ints or jass.base..const.PUSH
+            selected trump, int encoded as defined in jass.base.const.trump_ints or jass.base.const.PUSH
         """
         raise Exception("not implemented")
 
