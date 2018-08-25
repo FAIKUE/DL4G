@@ -15,10 +15,9 @@ import socket
 
 from http import HTTPStatus
 
-from flask import Flask
-from flask import Response
-from flask import request
+from flask import Flask, Response, request, jsonify
 
+from jass.base.const import card_strings
 from jass.player_service.request_parser import PlayCardParser, SelectTrumpParser
 from jass.player.player import Player
 from jass.player.random_player import RandomPlayer
@@ -64,8 +63,9 @@ def play_card(player_name: str) -> Response:
     if play_card_parser.is_valid_request():
         player = _get_player_for_name(player_name)
         card = player.play_card(play_card_parser.get_parsed_round())
-        response_ok = '{"card":"' + str(card) + '"}'
-        return _create_ok_json_response(response_ok)
+        # card is returned as string
+        data = dict(card=card_strings[card])
+        return _create_ok_json_response(data)
     else:
         logging.warning(play_card_parser.get_error_message())
         return _create_bad_request_response(request)
@@ -85,8 +85,8 @@ def select_trump(player_name: str) -> Response:
     if select_trump_parser.is_valid_request():
         player = _get_player_for_name(player_name)
         trump = player.select_trump(select_trump_parser.get_parsed_round())
-        response_ok = '{"trump": ' + str(trump) + '}'
-        return _create_ok_json_response(response_ok)
+        data = dict(trump=trump)
+        return _create_ok_json_response(data)
     else:
         logging.warning(select_trump_parser.get_error_message())
         return _create_bad_request_response(request)
@@ -111,19 +111,19 @@ def smoke_test(player_name: str) -> Response:
         return _create_ok_response(msg + " got NO player '%s' here :-(" % player_name)
 
 
-def _create_ok_json_response(json_str) -> Response:
+def _create_ok_json_response(data: dict) -> Response:
     """
     Creates a http ok response with the given json data as content.
     Args:
-        json_str: the json string to be used as response content.
+        data: data payload as dict
 
     Returns:
         the http ok response with the given json data
 
     """
-    response = Response(response=json_str, status=HTTPStatus.OK, mimetype="application/json")
-    response.headers["Content-Type"] = "application/json; charset=utf-8"
-    return response
+    #response = Response(response=json_str, status=HTTPStatus.OK, mimetype="application/json")
+    #response.headers["Content-Type"] = "application/json; charset=utf-8"
+    return jsonify(data), HTTPStatus.OK
 
 
 def _create_bad_request_response(bad_request: request) -> Response:
@@ -198,13 +198,13 @@ def convert_camel_to_snake(camel_case: str) -> str:
 
 
 def main():
+    logging.basicConfig(level=logging.DEBUG)
     _process_and_print_players()
     # Code from https://stackoverflow.com/a/1267524
     print((([ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if not ip.startswith("127.")] or [
         [(s.connect(("8.8.8.8", 53)), s.getsockname()[0], s.close()) for s in
          [socket.socket(socket.AF_INET, socket.SOCK_DGRAM)]][0][1]]) + ["no IP found"])[0])
-
-    app.run(host=_ip_address, port=_port)
+    app.run(host=_ip_address, port=_port, debug=True)
 
 
 if __name__ == '__main__':
