@@ -11,6 +11,8 @@ This file handles requests like select_trump and play_card and delegates them to
 import configparser
 import logging
 import re
+import socket
+
 from http import HTTPStatus
 
 from flask import Flask
@@ -37,7 +39,8 @@ _jass_players = [RandomPlayer(), StdinPlayer()]
 
 app = Flask(__name__)
 
-_ip_address = '127.0.0.1'
+_ip_address = '10.147.97.96'
+# _ip_address = '127.0.0.1'
 _port = 8888
 
 JASS_PATH_PREFIX = '/jass-service/players/'
@@ -61,7 +64,7 @@ def play_card(player_name: str) -> Response:
     if play_card_parser.is_valid_request():
         player = _get_player_for_name(player_name)
         card = player.play_card(play_card_parser.get_parsed_round())
-        response_ok = '{"card":"' + card + '"}'
+        response_ok = '{"card":"' + str(card) + '"}'
         return _create_ok_json_response(response_ok)
     else:
         logging.warning(play_card_parser.get_error_message())
@@ -196,6 +199,11 @@ def convert_camel_to_snake(camel_case: str) -> str:
 
 def main():
     _process_and_print_players()
+    # Code from https://stackoverflow.com/a/1267524
+    print((([ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if not ip.startswith("127.")] or [
+        [(s.connect(("8.8.8.8", 53)), s.getsockname()[0], s.close()) for s in
+         [socket.socket(socket.AF_INET, socket.SOCK_DGRAM)]][0][1]]) + ["no IP found"])[0])
+
     app.run(host=_ip_address, port=_port)
 
 
