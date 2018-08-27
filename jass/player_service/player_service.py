@@ -11,8 +11,6 @@ This file handles requests like select_trump and play_card and delegates them to
 import configparser
 import logging
 import re
-import socket
-
 from http import HTTPStatus
 
 from flask import Flask, Response, request, jsonify
@@ -38,8 +36,7 @@ _jass_players = [RandomPlayer(), StdinPlayer()]
 
 app = Flask(__name__)
 
-_ip_address = '10.147.97.96'
-# _ip_address = '127.0.0.1'
+_ip_address = '127.0.0.1'
 _port = 8888
 
 JASS_PATH_PREFIX = '/jass-service/players/'
@@ -170,7 +167,7 @@ def _process_and_print_players():
     if len(_jass_players) != len(_jass_player_dict):
         raise Exception('Players must have distinct class names.')
     print(" ********************************************************")
-    print(" * Depolyed %d Jass Players, accessible at:' % len(_jass_player_dict)")
+    print(" * Depolyed %d Jass Players, accessible at:" % len(_jass_player_dict))
     for name in _jass_player_dict.keys():
         print(" * - " + _ip_address + ":" + str(_port) + JASS_PATH_PREFIX + name)
     print(' ********************************************************')
@@ -200,10 +197,6 @@ def convert_camel_to_snake(camel_case: str) -> str:
 def main():
     logging.basicConfig(level=logging.DEBUG)
     _process_and_print_players()
-    # Code from https://stackoverflow.com/a/1267524
-    print((([ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if not ip.startswith("127.")] or [
-        [(s.connect(("8.8.8.8", 53)), s.getsockname()[0], s.close()) for s in
-         [socket.socket(socket.AF_INET, socket.SOCK_DGRAM)]][0][1]]) + ["no IP found"])[0])
     app.run(host=_ip_address, port=_port, debug=True)
 
 
