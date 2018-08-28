@@ -3,6 +3,7 @@
 .AppleDouble
 .LSOverride
 .idea
+dist
 
 # Python specific stuff
 *.pyc
