@@ -78,6 +78,7 @@ class Round:
 
         # the current trick is a view onto self.trick
         self.current_trick = self.tricks[0, :]
+
         # the number of completed tricks
         self.nr_tricks = 0
         # the number of card in the current trick
@@ -87,6 +88,43 @@ class Round:
 
         self.points_team_0 = 0          # points made by the team of players 0 and 2
         self.points_team_1 = 0          # points made by the team of players 1 and 3
+
+    def __eq__(self, other: 'Round'):
+        """
+        Compare two instances. Useful for tests when the representations are encoded and decoded. The objects are
+        considered equal if they have the same properties. As the properties are numpy arrays, we can not compare
+        dict directly.
+        Args:
+            other: the other object to compare to.
+
+        Returns:
+            True if the objects are the same.
+        """
+        return self.dealer == other.dealer and \
+               self.player == other.player and \
+               self.trump == other.trump and \
+               self.forehand == other.forehand and \
+               self.declared_trump == other.declared_trump and \
+               (self.hands == other.hands).all() and \
+               (self.tricks == other.tricks).all() and \
+               (self.trick_first_player == other.trick_first_player).all() and \
+               (self.trick_winner == other.trick_winner).all() and \
+               (self.trick_points == other.trick_points).all() and \
+               self.nr_tricks == other.nr_tricks and \
+               (self.current_trick == other.current_trick).all() and \
+               self.nr_cards_in_trick == other.nr_cards_in_trick and \
+               self.nr_played_cards == other.nr_played_cards and \
+               self.points_team_0 == other.points_team_0 and \
+               self.points_team_1 == other.points_team_1
+
+    def __repr__(self) -> str:
+        """
+        Return a representation of the round.
+
+        Returns:
+            String describing the round
+        """
+        return str(self.__dict__)
 
     def deal_cards(self)->None:
         """

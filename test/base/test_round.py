@@ -196,6 +196,9 @@ class RoundTestCase(unittest.TestCase):
         self.assertEqual(0, rnd.trick_winner[rnd.nr_tricks-1])
         self.assertEqual(0, rnd.trick_first_player[rnd.nr_tricks-1])
 
+        # test equality operator
+        self.assertTrue(rnd == rnd)
+
     def test_deal(self):
         rnd = Round()
         rnd.deal_cards()

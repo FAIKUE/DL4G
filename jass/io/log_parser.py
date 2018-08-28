@@ -19,7 +19,7 @@ class LogParser:
     """
     Class to parse the log files.
     """
-    def __init__(self, filename: str) -> None:
+    def __init__(self, filename: str or None) -> None:
         """
         Initialise the parser with the given filename. The parsing is not done during initialisation, but
         only after parse_rounds is called.

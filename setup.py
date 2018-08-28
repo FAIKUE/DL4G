@@ -8,7 +8,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="jass",
+    name="jass-kit",
     version="0.9.0",
     author="ABIZ HSLU",
     author_email="thomas.koller@hslu.ch",
