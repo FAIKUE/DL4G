@@ -167,7 +167,7 @@ def _process_and_print_players():
     if len(_jass_players) != len(_jass_player_dict):
         raise Exception('Players must have distinct class names.')
     print(" ********************************************************")
-    print(" * Depolyed %d Jass Players, accessible at:' % len(_jass_player_dict)")
+    print(" * Depolyed %d Jass Players, accessible at:" % len(_jass_player_dict))
     for name in _jass_player_dict.keys():
         print(" * - " + _ip_address + ":" + str(_port) + JASS_PATH_PREFIX + name)
     print(' ********************************************************')

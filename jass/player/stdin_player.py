@@ -1,7 +1,6 @@
 from jass.base.const import *
 from jass.player.player import Player
 from jass.base.player_round import PlayerRound
-# TODO: move Rule to new jass.base package.
 from jass.base.rule import Rule
 
 
@@ -21,7 +20,7 @@ class StdinPlayer(Player):
                 continue
             return trump_strings_short.index(trump_char)
 
-    def play_card(self, rnd: PlayerRound) -> str:
+    def play_card(self, rnd: PlayerRound) -> int:
         trick_cards = convert_one_hot_encoded_cards_to_int_encoded_list(rnd.get_current_trick())
         print("Your hand: %s" % convert_one_hot_encoded_cards_to_str_encoded_list(rnd.hand))
         trump_and_trick = "Trump: '%s'" % trump_strings_german_long[rnd.trump]
@@ -38,6 +37,6 @@ class StdinPlayer(Player):
                 continue
             card = card_ids[card_str]
             if valid_cards[card] != 0:
-                return card_str
+                return card
             else:
                 print("'%s' is not a valid card to play." % card_str)
