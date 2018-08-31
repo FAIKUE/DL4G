@@ -99,7 +99,7 @@ class Rule:
                                 lowest_trump_played = current_trick[2]
 
                 #
-                # nobody played a trump, so we do not need to consider any restrictions on playing trump ourself
+                # nobody played a trump, so we do not need to consider any restrictions on playing trump ourselves
                 #
                 if not trump_played:
                     if have_color_played:

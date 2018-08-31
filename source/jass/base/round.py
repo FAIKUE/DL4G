@@ -100,6 +100,7 @@ class Round:
         Returns:
             True if the objects are the same.
         """
+        # noinspection PyPep8
         return self.dealer == other.dealer and \
                self.player == other.player and \
                self.trump == other.trump and \

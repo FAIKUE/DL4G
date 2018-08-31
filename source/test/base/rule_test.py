@@ -1,5 +1,4 @@
 import unittest
-import numpy as np
 from jass.base.const import *
 from jass.base.rule import Rule
 
@@ -77,7 +76,6 @@ class RuleTestCase(unittest.TestCase):
         # do not have the color, so any card is fine
         valid = Rule.get_valid_cards(self.hand, [DA, DK, D10], 3, H)
         self.assertTrue(np.all(self.hand == valid))
-
 
     def test_other_color_trump_played_H(self):
         self.hand[[SA, SK, HJ, H8, H6, C7, C6]] = 1

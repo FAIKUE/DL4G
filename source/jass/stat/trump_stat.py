@@ -6,8 +6,8 @@
 Calculate statistics of trumps in games
 """
 
-from jass_base.game import *
-from jass_base.game_const import *
+from jass.base.round import Round
+from jass.base.const import *
 
 
 class TrumpStat:
@@ -38,14 +38,13 @@ class TrumpStat:
             r: the round
         """
         if r.forehand:
-            player_hand = r.played_cards[r.declared_trump, :]
-            self.add_hand(player_hand, r.trump, True)
+            self.add_hand(r.hands[r.declared_trump, :], r.trump, True)
         else:
             # add forehand action
-            player_hand = r.played_cards[partner_player[r.declared_trump], :]
+            player_hand = r.hands[partner_player[r.declared_trump], :]
             self.add_hand(player_hand, PUSH, True)
             # add rearhand action
-            player_hand = r.played_cards[r.declared_trump, :]
+            player_hand = r.hands[r.declared_trump, :]
             self.add_hand(player_hand, r.trump, False)
 
     def add_hand(self, hand, trump, forehand):
@@ -54,6 +53,7 @@ class TrumpStat:
         Args:
             hand: hand of the player
             trump: declared trump action
+            forehand:
         """
         self.counter_total += 1
         if self._match_positive(hand, trump):
@@ -127,7 +127,6 @@ class AllStat:
 
     def get_statistics(self):
         result = {}
-
 
         for s in self.stat:
             percentage_forehand = s.counter_pos_forehand / (s.counter_pos_forehand + s.counter_neg_forehand)

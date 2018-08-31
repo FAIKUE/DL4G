@@ -42,7 +42,7 @@ class RoundTestCase(unittest.TestCase):
         self.assertEqual(45, points)
 
     def test_calc_winner(self):
-        first_player=EAST
+        first_player = EAST
         #                 E   N   W   S
         trick = np.array([SA, SK, HQ, C7])
         self.assertEqual(Round.calc_winner(trick, first_player, DIAMONDS), EAST)
@@ -62,34 +62,34 @@ class RoundTestCase(unittest.TestCase):
 
         #                E   N    W   S
         trick = np.array([SA, D6, D7, SJ])
-        self.assertEqual(Round.calc_winner(trick, first_player,HEARTS), EAST)
+        self.assertEqual(Round.calc_winner(trick, first_player, HEARTS), EAST)
 
         #                 E   N    W   S
         trick = np.array([SA, D6, D7, SJ])
-        self.assertEqual(Round.calc_winner(trick, first_player,DIAMONDS), WEST)
+        self.assertEqual(Round.calc_winner(trick, first_player, DIAMONDS), WEST)
 
         #                 E   N    W   S
         trick = np.array([SA, D6, D7, SJ])
-        self.assertEqual(Round.calc_winner(trick, first_player,SPADES), SOUTH)
+        self.assertEqual(Round.calc_winner(trick, first_player, SPADES), SOUTH)
 
         #                E   N    W   S
         trick = np.array([SA, D6, D7, S9])
-        self.assertEqual(Round.calc_winner(trick, first_player,SPADES), SOUTH)
+        self.assertEqual(Round.calc_winner(trick, first_player, SPADES), SOUTH)
 
         #                E   N    W   S
         trick = np.array([D7, SA, D6, S9])
-        self.assertEqual(Round.calc_winner(trick, first_player,UNE_UFE), WEST)
+        self.assertEqual(Round.calc_winner(trick, first_player, UNE_UFE), WEST)
 
         #                E   N    W   S
         trick = np.array([SA, D6, D7, S9])
-        self.assertEqual(Round.calc_winner(trick, first_player,UNE_UFE), SOUTH)
+        self.assertEqual(Round.calc_winner(trick, first_player, UNE_UFE), SOUTH)
 
         #                E   N    W   S
         trick = np.array([SA, D6, D7, S9])
-        self.assertEqual(Round.calc_winner(trick, first_player,OBE_ABE), EAST)
+        self.assertEqual(Round.calc_winner(trick, first_player, OBE_ABE), EAST)
 
-    #def test_calc_winner_profiling(self):
-        # for profiling: calll methods 1000 times
+    # def test_calc_winner_profiling(self):
+        # for profiling: call methods 1000 times
     #    for i in range(10000):
     #        self.test_calc_winner()
 
@@ -216,6 +216,7 @@ class RoundTestCase(unittest.TestCase):
         self.assertTrue(np.all(cards == np.ones(36, dtype=np.int32)))
 
         rnd.assert_invariants()
+
 
 if __name__ == '__main__':
     unittest.main()

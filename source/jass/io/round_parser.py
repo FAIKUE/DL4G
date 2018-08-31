@@ -60,6 +60,6 @@ class RoundParser:
         rnd.nr_played_cards = 36
 
         # current trick should be the trick at the end of the game
-        rnd.current_trick = rnd.tricks[8,:]
+        rnd.current_trick = rnd.tricks[8, :]
 
         return rnd

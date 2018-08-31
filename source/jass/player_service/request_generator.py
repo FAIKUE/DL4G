@@ -6,9 +6,8 @@
 Generate json document for Jass player service
 """
 import json
-import numpy as np
 from jass.base.player_round import PlayerRound
-from jass.base.const import *
+from jass.base.const import convert_int_encoded_cards_to_str_encoded, convert_one_hot_encoded_cards_to_str_encoded_list
 
 
 class PlayerRoundRequestGenerator:
@@ -43,7 +42,7 @@ class PlayerRoundRequestGenerator:
         # full tricks
         for i in range(player_rnd.nr_tricks):
             # cards of tricks
-            cards_int = player_rnd.tricks[i,:].tolist()
+            cards_int = player_rnd.tricks[i, :].tolist()
             cards = convert_int_encoded_cards_to_str_encoded(cards_int)
             trick = dict(
                 cards=cards,

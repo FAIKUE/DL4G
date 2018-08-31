@@ -19,5 +19,6 @@ class ArenaNrRoundsTestCase(unittest.TestCase):
         print(arena.nr_wins_team_1)
         print(arena.delta_points)
 
+
 if __name__ == '__main__':
     unittest.main()

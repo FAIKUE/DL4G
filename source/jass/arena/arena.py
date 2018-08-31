@@ -30,17 +30,17 @@ class Arena:
         self._nr_games_to_play = 0
 
         # the players
-        self._players: List[Player] = [None, None, None, None]
+        self._players = [None, None, None, None]        # type: List[Player]
 
         # the current round that is being played
-        self._rnd: Round = None
+        self._rnd = None                                # type: Round
 
         # Statistics about the games played
-        self._nr_wins_team_0: int = 0
-        self._nr_wins_team_1: int = 0
-        self._nr_draws: int = 0
-        self._nr_games_played: int = 0
-        self._delta_points: int = 0
+        self._nr_wins_team_0 = 0                        # type: int
+        self._nr_wins_team_1 = 0                        # type: int
+        self._nr_draws = 0                              # type: int
+        self._nr_games_played = 0                       # type: int
+        self._delta_points = 0                          # type: int
 
     @property
     def nr_games_to_play(self):

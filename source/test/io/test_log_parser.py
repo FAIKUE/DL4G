@@ -47,6 +47,5 @@ class LogParserTestCase(unittest.TestCase):
                 self.assertEqual(1, card_valid)
 
 
-
 if __name__ == '__main__':
     unittest.main()

@@ -118,8 +118,8 @@ def _create_ok_json_response(data: dict) -> Response:
         the http ok response with the given json data
 
     """
-    #response = Response(response=json_str, status=HTTPStatus.OK, mimetype="application/json")
-    #response.headers["Content-Type"] = "application/json; charset=utf-8"
+    # response = Response(response=json_str, status=HTTPStatus.OK, mimetype="application/json")
+    # response.headers["Content-Type"] = "application/json; charset=utf-8"
     return jsonify(data), HTTPStatus.OK
 
 
@@ -167,7 +167,7 @@ def _process_and_print_players():
     if len(_jass_players) != len(_jass_player_dict):
         raise Exception('Players must have distinct class names.')
     print(" ********************************************************")
-    print(" * Depolyed %d Jass Players, accessible at:" % len(_jass_player_dict))
+    print(" * Deployed %d Jass Players, accessible at:" % len(_jass_player_dict))
     for name in _jass_player_dict.keys():
         print(" * - " + _ip_address + ":" + str(_port) + JASS_PATH_PREFIX + name)
     print(' ********************************************************')
@@ -180,7 +180,7 @@ def _get_player_for_name(name: str) -> Player:
         raise Exception("Got no player with name \'%s\'." % name)
 
 
-# Inspried by https://stackoverflow.com/questions/1175208/elegant-python-function-to-convert-camelcase-to-snake-case
+# Inspired by https://stackoverflow.com/questions/1175208/elegant-python-function-to-convert-camelcase-to-snake-case
 def convert_camel_to_snake(camel_case: str) -> str:
     """
     Converts a snake_case string to a CamelCase string.

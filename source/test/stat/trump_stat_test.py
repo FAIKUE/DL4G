@@ -111,7 +111,6 @@ class TrumpStatTestCase(unittest.TestCase):
         self.assertEqual(0, stat_true.counter_pos_rearhand)
         self.assertEqual(0, stat_true.counter_neg_rearhand)
 
-
     def test_trump3(self):
         r = Round()
         r.trump = 0
@@ -217,6 +216,7 @@ class TrumpStatTestCase(unittest.TestCase):
         self.assertEqual(1, stat_true.counter_neg_forehand)
         self.assertEqual(0, stat_true.counter_pos_rearhand)
         self.assertEqual(0, stat_true.counter_neg_rearhand)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -5,6 +5,8 @@
 
 from jass.base.game import Game
 from jass.io.round_generator import RoundGenerator
+
+
 class GameGenerator:
     """
     Class for generation of the dict/json representation of a game (Game)
