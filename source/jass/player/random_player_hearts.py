@@ -16,7 +16,7 @@ class RandomPlayerHearts(Player):
         return None
 
     def play_card(self, player_rnd: PlayerRound) -> int:
-        valid_cards = self._rule.get_valid_cards_from_player_round(player_rnd)
+        valid_cards = player_rnd.get_valid_cards()
         card = np.random.choice(np.flatnonzero(valid_cards))
         self._logger.debug('Played card: {}'.format(card_strings[card]))
         return card

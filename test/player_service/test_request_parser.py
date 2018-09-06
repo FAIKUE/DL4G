@@ -90,7 +90,7 @@ class RequestValidatorTest(unittest.TestCase):
                          0, 0, 0, 0, 0, 0, 1, 1, 1,  # S
                          0, 0, 0, 0, 0, 0, 1, 1, 1]  # C
         self.assertEqual(expected_hand, rnd.hand.tolist())
-        current_trick = rnd.get_current_trick().tolist()
+        current_trick = rnd.current_trick.tolist()
         self.assertEqual([3, 7, 4, -1], current_trick)
 
     def test_parse_play_card_request_valid_last_trick(self):
@@ -117,7 +117,7 @@ class RequestValidatorTest(unittest.TestCase):
                          0, 0, 0, 0, 0, 0, 0, 0, 0,  # S
                          0, 0, 0, 0, 0, 0, 0, 0, 0]  # C
         self.assertEqual(expected_hand, rnd.hand.tolist())
-        current_trick = rnd.get_current_trick().tolist()
+        current_trick = rnd.current_trick.tolist()
         self.assertEqual([18, 5, 14, -1], current_trick)
 
 

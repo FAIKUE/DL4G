@@ -34,9 +34,7 @@ class TestCheatingPlayer(PlayerCheating):
 
         assert rnd.hand.sum() == cards_for_player[rnd.player]
 
-        # we should put that in to the rnd, class, but lets test first
-        rule = RuleHearts()
-        valid_cards = rule.get_valid_cards_from_player_round(rnd)
+        valid_cards = rnd.get_valid_cards()
         card = np.random.choice(np.flatnonzero(valid_cards))
         return card
 

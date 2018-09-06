@@ -22,7 +22,9 @@ class PlayerRoundCheating(PlayerRound):
                  player=None,
                  trump=None,
                  forehand=None,
-                 declared_trump=None) -> None:
+                 declared_trump=None,
+                 jass_type=None,
+                 rule=None) -> None:
         """
         Initialize the class. If dealer is supplied the player and dealer will be set accordingly and only the
         cards will have to be initialized separately to put the object in a consistent initial configuration.
@@ -31,7 +33,8 @@ class PlayerRoundCheating(PlayerRound):
             dealer: the dealer or None if it should remain uninitialized
         """
         super(PlayerRoundCheating, self).__init__(dealer=dealer, player=player,
-                                                  trump=trump, forehand=forehand, declared_trump=declared_trump)
+                                                  trump=trump, forehand=forehand, declared_trump=declared_trump,
+                                                  jass_type=jass_type, rule=rule)
         # the current hands of all the player
         self.hands = np.zeros(shape=[4, 36], dtype=np.int)
 

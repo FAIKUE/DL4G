@@ -71,7 +71,7 @@ class PlayerRoundRequestGenerator:
         data['player'] = player
 
         # we
-        data['jassTyp'] = "SCHIEBER_1000"
+        data['jassTyp'] = player_rnd.jass_type
 
         return data
 
