@@ -13,6 +13,7 @@ import logging
 from typing import Optional
 from jass.base.const import *
 from jass.base.round import Round
+from jass.base.round_factory import get_round
 
 
 class LogParser:
@@ -72,7 +73,7 @@ class LogParser:
             self._logger.warning('Warning: no trump found in entry: {}'.format(round_dict))
             return None
 
-        rnd = Round(round_dict['dealer'])
+        rnd = get_round(round_dict['jassTyp'], round_dict['dealer'])
         rnd.trump = round_dict['trump']
 
         if 'tss' in round_dict and round_dict['tss'] == 1:

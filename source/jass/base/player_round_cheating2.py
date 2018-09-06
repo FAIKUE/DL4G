@@ -1,6 +1,6 @@
 # HSLU
 #
-# Created by Thomas Koller on 04.08.18
+# Created by Thomas Koller on 05.09.2018
 #
 
 from typing import List
@@ -10,9 +10,12 @@ from jass.base.const import next_player, partner_player
 from jass.base.round import Round
 
 
-class PlayerRound:
+class PlayerRoundCheating:
     """
-    Class for one round of jass from the players point of view. It contains all the information about the round
+    Class for one round of jass from the players point of view, but containing the information of the hands of all
+    players.
+
+    It contains all the information about the round
     that the player can observe at a specific time in the round. This information is
         - the dealer
         - the player that declared trump,
@@ -25,7 +28,7 @@ class PlayerRound:
         - the number of cards played in the current trick
         - the cards played in the current trick
         - the current player
-        - the hand of the current player
+        - the hands of all players
 
     Similar to the class Round, PlayerRound captures
     the information at different stages of the game, like:
@@ -72,7 +75,7 @@ class PlayerRound:
         #
 
         # the current hands of the player
-        self.hand = np.zeros(shape=36, dtype=np.int)
+        self.hands = np.zeros(shape=[4, 36], dtype=np.int)
 
         # the tricks played so far, with the cards of the tricks int encoded in the order they are played
         # a value of -1 indicates that the card has not been played yet
@@ -110,7 +113,7 @@ class PlayerRound:
         """
         return str(self.__dict__)
 
-    def __eq__(self, other: 'PlayerRound'):
+    def __eq__(self, other: 'PlayerRoundCheating'):
         """
         Compare two instances. Useful for tests when the representations are encoded and decoded. The objects are
         considered equal if they have the same properties. As the properties are numpy arrays, we can not compare
@@ -127,7 +130,7 @@ class PlayerRound:
                self.trump == other.trump and \
                self.forehand == other.forehand and \
                self.declared_trump == other.declared_trump and \
-               (self.hand == other.hand).all() and \
+               (self.hands == other.hands).all() and \
                (self.tricks == other.tricks).all() and \
                (self.trick_first_player == other.trick_first_player).all() and \
                (self.trick_winner == other.trick_winner).all() and \
@@ -173,7 +176,7 @@ class PlayerRound:
         self.trump = rnd.trump
         self.forehand = rnd.forehand
         self.declared_trump = rnd.declared_trump
-        self.hand[:] = rnd.hands[self.player, :]
+        self.hands[:, :] = rnd.hands[:, :]
         self.tricks[:, :] = rnd.tricks[:, :]
         self.trick_winner = rnd.trick_winner
         self.trick_points = rnd.trick_points
@@ -199,7 +202,7 @@ class PlayerRound:
         self.trump = rnd.trump
         self.forehand = rnd.forehand
         self.declared_trump = rnd.declared_trump
-        self.hand = rnd.hands[self.player, :]
+        self.hands = rnd.hands
         self.tricks = rnd.tricks
         self.trick_winner = rnd.trick_winner
         self.trick_points = rnd.trick_points
@@ -227,7 +230,7 @@ class PlayerRound:
                 self.points_team_1 += self.trick_points[trick]
 
     @staticmethod
-    def from_complete_round(rnd: Round, cards_played: int) -> 'PlayerRound':
+    def from_complete_round(rnd: Round, cards_played: int) -> 'PlayerRoundCheating':
         """
         Create a PlayerRound object from a complete Round object for a specific card.
 
@@ -243,10 +246,10 @@ class PlayerRound:
             a PlayerRound object for the state when the cards have been played.
 
         """
-        player_rnd = PlayerRound(dealer=rnd.dealer,
-                                 trump=rnd.trump,
-                                 declared_trump=rnd.declared_trump,
-                                 forehand=rnd.forehand)
+        player_rnd = PlayerRoundCheating(dealer=rnd.dealer,
+                                         trump=rnd.trump,
+                                         declared_trump=rnd.declared_trump,
+                                         forehand=rnd.forehand)
 
         player_rnd.nr_played_cards = cards_played
 
@@ -275,15 +278,28 @@ class PlayerRound:
 
         # determine hand still held by the player, which are the cards that the player will play in the next
         # tricks of the full rnd, that are not played yet
-        for i in range(player_rnd.nr_tricks, 9):
-            # determine which card was played in this trick by the player
-            index = (rnd.trick_first_player[i] - player_rnd.player) % 4
-            card_played = rnd.tricks[i, index]
-            player_rnd.hand[card_played] = 1
+
+        # add cards for completed tricks
+        nr_tricks_played = player_rnd.nr_tricks
+        if player_rnd.nr_cards_in_trick != 0:
+            # there is a non complete trick, treat it specially by adding the cards not yet played in the current trick
+            player = rnd.trick_first_player[player_rnd.nr_tricks]
+            for card_nr in range(player_rnd.nr_cards_in_trick, 4):
+                card_played = rnd.tricks[player_rnd.nr_tricks, card_nr]
+                player_rnd.hands[player, card_played] = 1
+                player = next_player[player]
+            # exclude this trick from the full tricks
+            nr_tricks_played += 1
+        for rnd_nr in range(nr_tricks_played, 9):
+            player = rnd.trick_first_player[rnd_nr]
+            for card_nr in range(4):
+                card_played = rnd.tricks[rnd_nr, card_nr]
+                player_rnd.hands[player, card_played] = 1
+                player = next_player[player]
         return player_rnd
 
     @staticmethod
-    def all_from_complete_round(rnd: Round) -> List['PlayerRound']:
+    def all_from_complete_round(rnd: Round) -> List['PlayerRoundCheating']:
         """
         Get all 36 player rounds from a complete round
         Args:
@@ -292,10 +308,10 @@ class PlayerRound:
         Returns:
             the list of player_rounds for cards 0..35
         """
-        return [PlayerRound.from_complete_round(rnd, i) for i in range(0, 36)]
+        return [PlayerRoundCheating.from_complete_round(rnd, i) for i in range(0, 36)]
 
     @staticmethod
-    def trump_from_complete_round(rnd: Round, forehand: bool) -> 'PlayerRound' or None:
+    def trump_from_complete_round(rnd: Round, forehand: bool) -> 'PlayerRoundCheating' or None:
         """
         Create a player round from a complete round for the state of trump selection.
         Args:
@@ -310,7 +326,7 @@ class PlayerRound:
         if not forehand and rnd.forehand:
             return None
 
-        player_rnd = PlayerRound(dealer=rnd.dealer)
+        player_rnd = PlayerRoundCheating(dealer=rnd.dealer)
 
         if forehand:
             player_rnd.player = next_player[player_rnd.dealer]
@@ -319,13 +335,15 @@ class PlayerRound:
             player_rnd.player = partner_player[next_player[player_rnd.dealer]]
             player_rnd.forehand = False
 
-        # determine hand still held by the player, which are the cards that the player will play in the next
-        # tricks of the full rnd, that are not played yet
-        for i in range(player_rnd.nr_tricks, 9):
-            # determine which card was played in this trick by the player
-            index = (rnd.trick_first_player[i] - player_rnd.player) % 4
-            card_played = rnd.tricks[i, index]
-            player_rnd.hand[card_played] = 1
+        # determine hand held by the players at the beginning of the game, this are the hands of all cards played
+        for rnd_nr in range(9):
+            player = rnd.trick_first_player[rnd_nr]
+            for card_nr in range(4):
+                card_played = rnd.tricks[rnd_nr, card_nr]
+                player_rnd.hands[player, card_played] = 1
+                player = next_player[player]
+
+        # copy hand of the player, so
         return player_rnd
 
     def assert_invariants(self) -> None:
@@ -350,5 +368,5 @@ class PlayerRound:
         assert self.nr_played_cards == 4 * self.nr_tricks + self.nr_cards_in_trick
 
         # cards in hand
-        assert self.hand.sum() == 9-self.nr_tricks
+        assert self.hands.sum() == 36 - self.nr_played_cards
 

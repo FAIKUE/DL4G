@@ -2,7 +2,6 @@ import unittest
 import logging
 from jass.io.log_parser import LogParser
 from jass.base.player_round import PlayerRound
-from jass.base.rule import Rule
 
 
 class LogParserTestCase(unittest.TestCase):
@@ -42,7 +41,7 @@ class LogParserTestCase(unittest.TestCase):
             for i, player_rnd in enumerate(player_rnds):
                 nr_trick, move_in_trick = divmod(i, 4)
                 card_played = rnd.tricks[nr_trick, move_in_trick]
-                valid_cards = Rule.get_valid_cards_from_player_round(player_rnd)
+                valid_cards = rnd.rule.get_valid_cards_from_player_round(player_rnd)
                 card_valid = valid_cards[card_played]
                 self.assertEqual(1, card_valid)
 

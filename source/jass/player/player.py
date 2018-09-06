@@ -4,7 +4,7 @@ from jass.base.player_round import PlayerRound
 class Player:
     """ Player is the abstract base class for all Jass player implementations. """
 
-    def select_trump(self, rnd: PlayerRound) -> int:
+    def select_trump(self, rnd: PlayerRound) -> int or None:
         """
         Player chooses a trump based on the given round information.
 
@@ -12,9 +12,9 @@ class Player:
             rnd: current round
 
         Returns:
-            selected trump, int encoded as defined in jass.base.const.trump_ints or jass.base.const.PUSH
+            selected trump, int encoded as defined in jass.base.const or jass.base.const.PUSH
         """
-        raise Exception("not implemented")
+        raise NotImplementedError()
 
     def play_card(self, rnd: PlayerRound) -> int:
         """
@@ -24,6 +24,6 @@ class Player:
             rnd: current round
 
         Returns:
-            card to play, str encoded as defined in jass.base.const.card_strings
+            card to play, int encoded as defined in jass.base.const
         """
-        raise Exception("not implemented")
+        raise NotImplementedError()

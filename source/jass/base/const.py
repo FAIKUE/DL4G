@@ -67,6 +67,11 @@ trump_ints = [
     DIAMONDS, HEARTS, SPADES, CLUBS, OBE_ABE, UNE_UFE
 ]
 
+# Jass variants
+JASS_SCHIEBER_1000 = 'SCHIEBER_1000'
+JASS_SCHIEBER_2500 = 'SCHIEBER_2500'
+JASS_HEARTS = 'HEARTS'
+
 # Card distributions (sets) like hands, cards played etc. will be modelled using arrays, corresponding to a 1-hot
 # encoding. Also, this format will be used for neuronal networks. The following constants of all cards define the
 # index of the cards in the array

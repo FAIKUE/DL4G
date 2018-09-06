@@ -1,11 +1,16 @@
-from jass.base.const import *
-from jass.player.player import Player
+from jass.base.const import trump_strings_german_long, trump_string_push_german, trump_strings_short, \
+    card_strings, card_ids, \
+    convert_one_hot_encoded_cards_to_str_encoded_list, convert_one_hot_encoded_cards_to_int_encoded_list, \
+    convert_int_encoded_cards_to_str_encoded
 from jass.base.player_round import PlayerRound
-from jass.base.rule import Rule
+from jass.base.rule_schieber import RuleSchieber
+from jass.player.player import Player
 
 
-class StdinPlayer(Player):
+class StdinPlayerSchieber(Player):
     """StdinPlayer selects trump and plays the card which is entered by the user via stdin."""
+    def __init__(self):
+        self._rule = RuleSchieber()
 
     def select_trump(self, rnd: PlayerRound) -> int:
         possible_trumps = trump_strings_german_long.copy()
@@ -29,7 +34,7 @@ class StdinPlayer(Player):
                               ", current trick: %s" % convert_int_encoded_cards_to_str_encoded(trick_cards)
         print(trump_and_trick)
 
-        valid_cards = Rule.get_valid_cards(rnd.hand, trick_cards, len(trick_cards), rnd.trump)  # 1-hot encoded
+        valid_cards = self._rule.get_valid_cards(rnd.hand, trick_cards, len(trick_cards), rnd.trump)  # 1-hot encoded
         while True:
             card_str = input("> Enter card to play [string] : ").upper()
             if card_str not in card_strings:

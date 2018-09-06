@@ -9,25 +9,34 @@ might be carried out differently.
 """
 from jass.base.const import *
 from jass.base.round import Round
+from jass.base.round_factory import get_round
 from jass.base.player_round import PlayerRound
 from jass.player.player import Player
+from jass.arena.trump_selection_strategy import TrumpStrategy
+from jass.arena.play_game_strategy import PlayGameStrategy
 
 
 class Arena:
     """
-    Abstract base class for arenas. An arena plays a number of games between two pairs of players. The number of
+    Class for arenas. An arena plays a number of games between two pairs of players. The number of
     games to be played can be specified. What consists of one game depends on the specific arena. The arena keeps
     statistics of the games won by each side and also of the point difference when winning.
 
     A game consists of at least one round of playing 36 cards.
 
-    The class uses the template method patters, the minimal method that must be overridden is play_game, that
-    plays some rounds, determines the winner and updates the statistics.
+    The class uses the strategy and template methods patterns. Most common behaviour can be modified by using the
+    appropriate strategy, but there is currently no strategy to change how cards are dealt.
 
-    Optionally the methods declare_trump and deal_cards can be overridden for special behaviour.
     """
-    def __init__(self):
+    def __init__(self, jass_type: str, trump_strategy: TrumpStrategy, play_game_strategy: PlayGameStrategy):
         self._nr_games_to_play = 0
+
+        # the jass type, used to get the correct round
+        self._jass_type = jass_type
+
+        # the strategies
+        self._trump_strategy = trump_strategy
+        self._play_game_strategy = play_game_strategy
 
         # the players
         self._players = [None, None, None, None]        # type: List[Player]
@@ -83,7 +92,15 @@ class Arena:
     def west(self, player: Player):
         self._players[WEST] = player
 
-    # properties for the results (no setters as the values are set by the class or subclass)
+    @property
+    def players(self):
+        return self._players
+
+    @property
+    def current_rnd(self):
+        return self._rnd
+
+    # properties for the results (no setters as the values are set by the strategies using the add_win_team_x methods)
     @property
     def nr_games_played(self):
         return self._nr_games_played
@@ -118,13 +135,40 @@ class Arena:
         self._players[SOUTH] = south
         self._players[WEST] = west
 
+    def add_win_team_0(self, points) -> None:
+        """
+        Add a win for team 0/2
+        Args:
+            points: number of points with which the team won
+        """
+        self._nr_wins_team_0 += 1
+        self._delta_points += points
+        self._nr_games_played += 1
+
+    def add_win_team_1(self, points) -> None:
+        """
+        Add a win for team 1/3
+        Args:
+            points: number of points with which the team won
+        """
+        self._nr_wins_team_1 += 1
+        self._delta_points += points
+        self._nr_games_played += 1
+
+    def add_draw(self) -> None:
+        """
+        Add a draw.
+        """
+        self._nr_draws += 1
+        self._nr_games_played += 1
+
     def _init_round(self, dealer: int) -> None:
         """
-        Initialize a new round.
+        Initialize a new round. Should be overridden by the derived class to create the appropriate Round object
         Args:
             dealer: the dealer of the round
         """
-        self._rnd = Round(dealer)
+        self._rnd = get_round(jass_type=self._jass_type, dealer=dealer)
 
     def deal_cards(self):
         """
@@ -133,37 +177,13 @@ class Arena:
         """
         self._rnd.deal_cards()
 
-    def _determine_trump_from_players(self) -> None:
-        """
-        Determine trump through the players. The round must have been dealt, and the dealer assigned.
-        """
-        player_rnd = PlayerRound()
-        player_rnd.set_from_round(self._rnd)
-
-        # ask first player
-        trump_action = self._players[player_rnd.player].select_trump(player_rnd)
-        self._rnd.action_trump(trump_action)
-
-        if trump_action == PUSH:
-            # ask second player
-            player_rnd.set_from_round(self._rnd)
-            trump_action = self._players[player_rnd.player].select_trump(player_rnd)
-            self._rnd.action_trump(trump_action)
-
-    def determine_trump(self) -> None:
-        """
-        Determine the trump. The default is to determine the trump from the players, but the method can be
-        overridden in a derived class for a different behaviour
-        """
-        self._determine_trump_from_players()
-
     def play_round(self, dealer: int) -> None:
         """
         Play a complete round (36 cards). The results remain in self._rnd
         """
         self._init_round(dealer)
         self.deal_cards()
-        self.determine_trump()
+        self._trump_strategy.determine_trump(rnd=self._rnd, arena=self)
 
         player_rnd = PlayerRound()
         for cards in range(36):
@@ -171,12 +191,11 @@ class Arena:
             card_action = self._players[player_rnd.player].play_card(player_rnd)
             self._rnd.action_play_card(card_action)
 
-    def play_game(self) -> None:
+    def play_game(self):
         """
-        Play a game and determine the winners and points. Must be overridden in derived class
-
+        Play one game.
         """
-        pass
+        self._play_game_strategy.play_game(arena=self)
 
     def play_all_games(self):
         """

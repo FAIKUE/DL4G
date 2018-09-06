@@ -3,13 +3,13 @@ import json
 
 from jass.base.const import *
 from jass.base.round_schieber import RoundSchieber
-from jass.base.player_round import PlayerRound
+from jass.base.player_round_cheating import PlayerRoundCheating
 from jass.io.log_parser import LogParser
 
 
-class PlayerRoundTestCase(unittest.TestCase):
+class PlayerRoundCheatingTestCase(unittest.TestCase):
     def test_init(self):
-        _ = PlayerRound()
+        _ = PlayerRoundCheating()
 
     def test_from_round(self):
         # create a full round
@@ -63,7 +63,7 @@ class PlayerRoundTestCase(unittest.TestCase):
         rnd.action_play_card(D8)
 
         for i in range(36):
-            player_rnd = PlayerRound.from_complete_round(rnd, i)
+            player_rnd = PlayerRoundCheating.from_complete_round(rnd, i)
             player_rnd.assert_invariants()
             self.assertEqual(i, player_rnd.nr_played_cards)
 
@@ -75,14 +75,14 @@ class PlayerRoundTestCase(unittest.TestCase):
             self.assertEqual(nr_tricks, player_rnd.nr_tricks)
             self.assertEqual(nr_cards_in_trick, player_rnd.nr_cards_in_trick)
 
-        player_rnd = PlayerRound.trump_from_complete_round(rnd, forehand=True)
+        player_rnd = PlayerRoundCheating.trump_from_complete_round(rnd, forehand=True)
         self.assertEqual(rnd.dealer, player_rnd.dealer)
         self.assertIsNone(player_rnd.trump)
         self.assertIsNone(player_rnd.forehand)
         self.assertEqual(player_rnd.player, next_player[WEST])
         player_rnd.assert_invariants()
 
-        player_rnd = PlayerRound.trump_from_complete_round(rnd, forehand=False)
+        player_rnd = PlayerRoundCheating.trump_from_complete_round(rnd, forehand=False)
         self.assertEqual(rnd.dealer, player_rnd.dealer)
         self.assertIsNone(player_rnd.trump)
         self.assertFalse(player_rnd.forehand)
@@ -105,7 +105,7 @@ class PlayerRoundTestCase(unittest.TestCase):
         round_dict = json.loads(round_string)
         parser = LogParser(None)
         rnd = parser.read_round(round_dict)
-        player_rnds = PlayerRound.all_from_complete_round(rnd)
+        player_rnds = PlayerRoundCheating.all_from_complete_round(rnd)
         self.assertEqual(36, len(player_rnds))
 
         # check properties for all moves
@@ -114,21 +114,26 @@ class PlayerRoundTestCase(unittest.TestCase):
             self.assertEqual(3, player_rnd.dealer)
             self.assertEqual(0, player_rnd.declared_trump)
             self.assertEqual(False, player_rnd.forehand)
+            player_rnd.assert_invariants()
 
         # first trick
         player_rnd = player_rnds[0]
         self.assertEqual(2, player_rnd.player)
-        self.assertEqual(9, np.sum(player_rnd.hand))
+        self.assertEqual(36, np.sum(player_rnd.hands))
+        self.assertEqual(9, np.sum(player_rnd.hands[0, :]))
+        self.assertEqual(9, np.sum(player_rnd.hands[1, :]))
+        self.assertEqual(9, np.sum(player_rnd.hands[2, :]))
+        self.assertEqual(9, np.sum(player_rnd.hands[3, :]))
         self.assertEqual(0, player_rnd.nr_played_cards)
         self.assertEqual(0, player_rnd.nr_tricks)
         self.assertEqual(0, player_rnd.nr_cards_in_trick)
-        self.assertTrue(np.all(player_rnd.hand == get_cards_encoded([C7, SA, SQ, HJ, C9, DJ, CQ, DK, C8])))
+        self.assertTrue(np.all(player_rnd.hands[player_rnd.player, :] == get_cards_encoded([C7, SA, SQ, HJ, C9, DJ, CQ, DK, C8])))
         self.assertEqual(0, player_rnd.points_team_0)
         self.assertEqual(0, player_rnd.points_team_1)
 
         player_rnd = player_rnds[1]
         self.assertEqual(1, player_rnd.player)
-        self.assertEqual(9, np.sum(player_rnd.hand))
+        self.assertEqual(35, np.sum(player_rnd.hands))
         self.assertEqual(1, player_rnd.nr_played_cards)
         self.assertEqual(0, player_rnd.nr_tricks)
         self.assertEqual(1, player_rnd.nr_cards_in_trick)
@@ -138,7 +143,7 @@ class PlayerRoundTestCase(unittest.TestCase):
 
         player_rnd = player_rnds[2]
         self.assertEqual(0, player_rnd.player, 0)
-        self.assertEqual(9, np.sum(player_rnd.hand), 9)
+        self.assertEqual(34, np.sum(player_rnd.hands))
         self.assertEqual(2, player_rnd.nr_played_cards)
         self.assertEqual(0, player_rnd.nr_tricks)
         self.assertEqual(2, player_rnd.nr_cards_in_trick)
@@ -149,7 +154,7 @@ class PlayerRoundTestCase(unittest.TestCase):
 
         player_rnd = player_rnds[3]
         self.assertEqual(3, player_rnd.player)
-        self.assertEqual(9, np.sum(player_rnd.hand))
+        self.assertEqual(33, np.sum(player_rnd.hands))
         self.assertEqual(3, player_rnd.nr_played_cards)
         self.assertEqual(0, player_rnd.nr_tricks)
         self.assertEqual(3, player_rnd.nr_cards_in_trick)
@@ -163,7 +168,7 @@ class PlayerRoundTestCase(unittest.TestCase):
         # second trick
         player_rnd = player_rnds[4]
         self.assertEqual(0, player_rnd.player)
-        self.assertEqual(8, np.sum(player_rnd.hand))
+        self.assertEqual(32, np.sum(player_rnd.hands))
         self.assertEqual(4, player_rnd.nr_played_cards)
         self.assertEqual(1, player_rnd.nr_tricks)
         self.assertEqual(0, player_rnd.nr_cards_in_trick)
@@ -176,7 +181,7 @@ class PlayerRoundTestCase(unittest.TestCase):
 
         player_rnd = player_rnds[5]
         self.assertEqual(3, player_rnd.player)
-        self.assertEqual(8, np.sum(player_rnd.hand))
+        self.assertEqual(31, np.sum(player_rnd.hands))
         self.assertEqual(5, player_rnd.nr_played_cards)
         self.assertEqual(1, player_rnd.nr_tricks, 1)
         self.assertEqual(1, player_rnd.nr_cards_in_trick)
@@ -186,7 +191,7 @@ class PlayerRoundTestCase(unittest.TestCase):
 
         player_rnd = player_rnds[6]
         self.assertEqual(2, player_rnd.player, 2)
-        self.assertEqual(8, np.sum(player_rnd.hand), 8)
+        self.assertEqual(30, np.sum(player_rnd.hands))
         self.assertEqual(6, player_rnd.nr_played_cards)
         self.assertEqual(1, player_rnd.nr_tricks, 1)
         self.assertEqual(2, player_rnd.nr_cards_in_trick)
@@ -197,7 +202,7 @@ class PlayerRoundTestCase(unittest.TestCase):
 
         player_rnd = player_rnds[7]
         self.assertEqual(1, player_rnd.player, 1)
-        self.assertEqual(8, np.sum(player_rnd.hand), 8)
+        self.assertEqual(29, np.sum(player_rnd.hands))
         self.assertEqual(7, player_rnd.nr_played_cards)
         self.assertEqual(1, player_rnd.nr_tricks)
         self.assertEqual(3, player_rnd.nr_cards_in_trick)
@@ -210,7 +215,7 @@ class PlayerRoundTestCase(unittest.TestCase):
         # third trick
         player_rnd = player_rnds[8]
         self.assertEqual(0, player_rnd.player)
-        self.assertEqual(7, np.sum(player_rnd.hand))
+        self.assertEqual(28, np.sum(player_rnd.hands))
         self.assertEqual(8, player_rnd.nr_played_cards)
         self.assertEqual(2, player_rnd.nr_tricks)
         self.assertEqual(0, player_rnd.nr_cards_in_trick)
@@ -227,7 +232,7 @@ class PlayerRoundTestCase(unittest.TestCase):
 
         player_rnd = player_rnds[9]
         self.assertEqual(3, player_rnd.player)
-        self.assertEqual(7, np.sum(player_rnd.hand))
+        self.assertEqual(27, np.sum(player_rnd.hands))
         self.assertEqual(9, player_rnd.nr_played_cards)
         self.assertEqual(2, player_rnd.nr_tricks)
         self.assertEqual(1, player_rnd.nr_cards_in_trick)
@@ -237,7 +242,7 @@ class PlayerRoundTestCase(unittest.TestCase):
 
         player_rnd = player_rnds[10]
         self.assertEqual(2, player_rnd.player)
-        self.assertEqual(7, np.sum(player_rnd.hand))
+        self.assertEqual(26, np.sum(player_rnd.hands))
         self.assertEqual(10, player_rnd.nr_played_cards)
         self.assertEqual(2, player_rnd.nr_tricks)
         self.assertEqual(2, player_rnd.nr_cards_in_trick)
@@ -248,7 +253,7 @@ class PlayerRoundTestCase(unittest.TestCase):
 
         player_rnd = player_rnds[11]
         self.assertEqual(1, player_rnd.player)
-        self.assertEqual(7, np.sum(player_rnd.hand))
+        self.assertEqual(25, np.sum(player_rnd.hands))
         self.assertEqual(11, player_rnd.nr_played_cards)
         self.assertEqual(2, player_rnd.nr_tricks)
         self.assertEqual(3, player_rnd.nr_cards_in_trick)

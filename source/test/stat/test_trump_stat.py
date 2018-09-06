@@ -6,25 +6,22 @@ from jass.stat.trump_stat import *
 class TrumpStatTestCase(unittest.TestCase):
 
     def test_trump5(self):
-        r = Round()
-        r.trump = 0
-        r.forehand = True
-        r.declared_trump = 0
-        hands = np.zeros([4, 36], np.int32)
+        trump = 0
+        forehand = True
+        hands = np.zeros([36], np.int32)
 
         # fill played_cards for player 0
 
         # five trumps
-        hands[0, DA] = 1
-        hands[0, DK] = 1
-        hands[0, DJ] = 1
-        hands[0, D9] = 1
-        hands[0, D8] = 1
-        hands[0, CA] = 1
-        hands[0, H6] = 1
-        hands[0, H10] = 1
-        hands[0, SQ] = 1
-        r.played_cards = hands
+        hands[DA] = 1
+        hands[DK] = 1
+        hands[DJ] = 1
+        hands[D9] = 1
+        hands[D8] = 1
+        hands[CA] = 1
+        hands[H6] = 1
+        hands[H10] = 1
+        hands[SQ] = 1
 
         all_stat = AllStat()
 
@@ -38,7 +35,7 @@ class TrumpStatTestCase(unittest.TestCase):
         all_stat.add_statistic(stat_false_2)
         all_stat.add_statistic(stat_false_3)
 
-        all_stat.add_round(r)
+        all_stat.add_hand(hands, trump, forehand)
 
         self.assertEqual(1, stat_true.counter_pos_forehand)
         self.assertEqual(0, stat_true.counter_neg_forehand)
@@ -51,33 +48,30 @@ class TrumpStatTestCase(unittest.TestCase):
             self.assertEqual(0, stat.counter_pos_rearhand)
             self.assertEqual(0, stat.counter_neg_rearhand)
 
-        r.trump = 1
-        all_stat.add_round(r)
+        trump = 1
+        all_stat.add_hand(hands, trump, forehand)
         self.assertEqual(1, stat_true.counter_pos_forehand)
         self.assertEqual(1, stat_true.counter_neg_forehand)
         self.assertEqual(0, stat_true.counter_pos_rearhand)
         self.assertEqual(0, stat_true.counter_neg_rearhand)
 
     def test_trump4(self):
-        r = Round()
-        r.trump = 0
-        r.forehand = True
-        r.declared_trump = 0
-        hands = np.zeros([4, 36], np.int32)
+        trump = 0
+        forehand = True
+        hands = np.zeros([36], np.int32)
 
         # fill played_cards for player 0
 
         # four trumps
-        hands[0, DA] = 1
-        hands[0, DK] = 1
-        hands[0, DJ] = 1
-        hands[0, D9] = 1
-        hands[0, H8] = 1
-        hands[0, CA] = 1
-        hands[0, H6] = 1
-        hands[0, H10] = 1
-        hands[0, SQ] = 1
-        r.played_cards = hands
+        hands[DA] = 1
+        hands[DK] = 1
+        hands[DJ] = 1
+        hands[D9] = 1
+        hands[H8] = 1
+        hands[CA] = 1
+        hands[H6] = 1
+        hands[H10] = 1
+        hands[SQ] = 1
 
         all_stat = AllStat()
 
@@ -91,7 +85,7 @@ class TrumpStatTestCase(unittest.TestCase):
         all_stat.add_statistic(stat_false_2)
         all_stat.add_statistic(stat_false_3)
 
-        all_stat.add_round(r)
+        all_stat.add_hand(hands, trump, forehand)
 
         self.assertEqual(1, stat_true.counter_pos_forehand)
         self.assertEqual(0, stat_true.counter_neg_forehand)
@@ -104,33 +98,30 @@ class TrumpStatTestCase(unittest.TestCase):
             self.assertEqual(0, stat.counter_pos_rearhand)
             self.assertEqual(0, stat.counter_neg_rearhand)
 
-        r.trump = 1
-        all_stat.add_round(r)
+        trump = 1
+        all_stat.add_hand(hands, trump, forehand)
         self.assertEqual(1, stat_true.counter_pos_forehand)
         self.assertEqual(1, stat_true.counter_neg_forehand)
         self.assertEqual(0, stat_true.counter_pos_rearhand)
         self.assertEqual(0, stat_true.counter_neg_rearhand)
 
     def test_trump3(self):
-        r = Round()
-        r.trump = 0
-        r.forehand = True
-        r.declared_trump = 0
-        hands = np.zeros([4, 36], np.int32)
+        trump = 0
+        forehand = True
+        hands = np.zeros([36], np.int32)
 
         # fill played_cards for player 0
 
         # three trumps
-        hands[0, DA] = 1
-        hands[0, HK] = 1
-        hands[0, DJ] = 1
-        hands[0, D9] = 1
-        hands[0, H8] = 1
-        hands[0, CA] = 1
-        hands[0, H6] = 1
-        hands[0, H10] = 1
-        hands[0, SQ] = 1
-        r.played_cards = hands
+        hands[DA] = 1
+        hands[HK] = 1
+        hands[DJ] = 1
+        hands[D9] = 1
+        hands[H8] = 1
+        hands[CA] = 1
+        hands[H6] = 1
+        hands[H10] = 1
+        hands[SQ] = 1
 
         all_stat = AllStat()
 
@@ -144,7 +135,7 @@ class TrumpStatTestCase(unittest.TestCase):
         all_stat.add_statistic(stat_false_2)
         all_stat.add_statistic(stat_false_3)
 
-        all_stat.add_round(r)
+        all_stat.add_hand(hands, trump, forehand)
 
         self.assertEqual(1, stat_true.counter_pos_forehand)
         self.assertEqual(0, stat_true.counter_neg_forehand)
@@ -157,33 +148,30 @@ class TrumpStatTestCase(unittest.TestCase):
             self.assertEqual(0, stat.counter_pos_rearhand)
             self.assertEqual(0, stat.counter_neg_rearhand)
 
-        r.trump = 1
-        all_stat.add_round(r)
+        trump = 1
+        all_stat.add_hand(hands, trump, forehand)
         self.assertEqual(1, stat_true.counter_pos_forehand)
         self.assertEqual(1, stat_true.counter_neg_forehand)
         self.assertEqual(0, stat_true.counter_pos_rearhand)
         self.assertEqual(0, stat_true.counter_neg_rearhand)
 
     def test_trump_4aces(self):
-        r = Round()
-        r.trump = OBE_ABE
-        r.forehand = True
-        r.declared_trump = 0
-        hands = np.zeros([4, 36], np.int32)
+        trump = OBE_ABE
+        forehand = True
+        hands = np.zeros([36], np.int32)
 
         # fill played_cards for player 0
 
         # 4 aces
-        hands[0, DA] = 1
-        hands[0, HA] = 1
-        hands[0, DJ] = 1
-        hands[0, D8] = 1
-        hands[0, H8] = 1
-        hands[0, CA] = 1
-        hands[0, H6] = 1
-        hands[0, H10] = 1
-        hands[0, SA] = 1
-        r.played_cards = hands
+        hands[DA] = 1
+        hands[HA] = 1
+        hands[DJ] = 1
+        hands[D8] = 1
+        hands[H8] = 1
+        hands[CA] = 1
+        hands[H6] = 1
+        hands[H10] = 1
+        hands[SA] = 1
 
         all_stat = AllStat()
 
@@ -197,7 +185,7 @@ class TrumpStatTestCase(unittest.TestCase):
         all_stat.add_statistic(stat_false_2)
         all_stat.add_statistic(stat_false_3)
 
-        all_stat.add_round(r)
+        all_stat.add_hand(hands, trump, forehand)
 
         self.assertEqual(1, stat_true.counter_pos_forehand)
         self.assertEqual(0, stat_true.counter_neg_forehand)
@@ -210,8 +198,8 @@ class TrumpStatTestCase(unittest.TestCase):
             self.assertEqual(0, stat.counter_pos_rearhand)
             self.assertEqual(0, stat.counter_neg_rearhand)
 
-        r.trump = 1
-        all_stat.add_round(r)
+        trump = 1
+        all_stat.add_hand(hands, trump, forehand)
         self.assertEqual(1, stat_true.counter_pos_forehand)
         self.assertEqual(1, stat_true.counter_neg_forehand)
         self.assertEqual(0, stat_true.counter_pos_rearhand)

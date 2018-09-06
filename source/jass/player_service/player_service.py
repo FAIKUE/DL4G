@@ -18,8 +18,8 @@ from flask import Flask, Response, request, jsonify
 from jass.base.const import card_strings
 from jass.player_service.request_parser import PlayCardParser, SelectTrumpParser
 from jass.player.player import Player
-from jass.player.random_player import RandomPlayer
-from jass.player.stdin_player import StdinPlayer
+from jass.player.random_player_schieber import RandomPlayerSchieber
+from jass.player.stdin_player_schieber import StdinPlayerSchieber
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -31,7 +31,7 @@ config.read('config.ini')
 #                                              #
 ################################################
 
-_jass_players = [RandomPlayer(), StdinPlayer()]
+_jass_players = [RandomPlayerSchieber(), StdinPlayerSchieber()]
 
 
 app = Flask(__name__)
@@ -102,7 +102,7 @@ def smoke_test(player_name: str) -> Response:
     msg = " *** Jass Player Service - SMOKE TEST ***"
     if player_name in _jass_player_dict.keys():
         return _create_ok_response(msg + " got a player '%s' here :-) *** " % player_name +
-                                         " use POST requests on subpaths '%s'" % SELECT_TRUMP_PATH_PREFIX +
+                                         " use POST requests on sub paths '%s'" % SELECT_TRUMP_PATH_PREFIX +
                                          " and '%s'. ***" % PLAY_CARD_PATH_PREFIX)
     else:
         return _create_ok_response(msg + " got NO player '%s' here :-(" % player_name)

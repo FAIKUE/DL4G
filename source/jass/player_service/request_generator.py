@@ -17,7 +17,7 @@ class PlayerRoundRequestGenerator:
     @staticmethod
     def generate_dict(player_rnd: PlayerRound) -> dict:
         """
-        Generate dict for the player round that corresponds to the json sp[ecification of the interface
+        Generate dict for the player round that corresponds to the json specification of the interface
         Args:
             player_rnd: the player round to convert
 

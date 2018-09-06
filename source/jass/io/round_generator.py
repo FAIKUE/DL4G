@@ -59,5 +59,5 @@ class RoundGenerator:
         # it correspondingly in the parser
         # (it is not clear from the documentation if 'player' is mandatory)
 
-        # also the Jass type is not really defined on the level of the round, so we leave it
+        data['jass_typ'] = rnd.jass_type
         return data

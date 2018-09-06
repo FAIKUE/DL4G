@@ -1,13 +1,18 @@
 import unittest
-from jass.arena.arena_random_trump import ArenaRandomTrump
-from jass.player.random_player import RandomPlayer
+from jass.base.const import JASS_SCHIEBER_1000
+from jass.arena.arena import Arena
+from jass.arena.trump_selection_random_strategy import TrumpRandomStrategy
+from jass.arena.play_game_nr_rounds_strategy import PlayNrRoundsStrategy
+from jass.player.random_player_schieber import RandomPlayerSchieber
 
 
 class ArenaRandomTrumpTestCase(unittest.TestCase):
 
     def test_arena(self):
-        arena = ArenaRandomTrump()
-        player = RandomPlayer()
+        arena = Arena(jass_type=JASS_SCHIEBER_1000,
+                      trump_strategy=TrumpRandomStrategy(),
+                      play_game_strategy=PlayNrRoundsStrategy(10))
+        player = RandomPlayerSchieber()
 
         arena.set_players(player, player, player, player)
         arena.nr_games_to_play = 2

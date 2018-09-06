@@ -5,6 +5,7 @@
 
 from jass.base.const import *
 from jass.base.round import Round
+from jass.base.round_factory import get_round
 
 
 class RoundParser:
@@ -23,8 +24,7 @@ class RoundParser:
         """
         # check a mandatory field to see if it seems a valid entry
 
-        rnd = Round()
-        rnd.dealer = data['dealer']
+        rnd = get_round(data['jass_typ'], data['dealer'])
         rnd.trump = data['trump']
 
         if 'tss' in data and data['tss'] == 1:
@@ -58,6 +58,9 @@ class RoundParser:
         # complete entry
         rnd.nr_tricks = 9
         rnd.nr_played_cards = 36
+
+        # end of game, no player
+        rnd.player = None
 
         # current trick should be the trick at the end of the game
         rnd.current_trick = rnd.tricks[8, :]
