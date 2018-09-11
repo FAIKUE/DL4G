@@ -15,11 +15,11 @@ class Game:
     """
 
     def __init__(self):
-        self._players: [str] = ['', '', '', '']
-        self._rounds: [Round] = []
-        self._points_team0 = 0
-        self._points_team1 = 0
-        self._winner = -1
+        self._players = ['', '', '', '']                # type: [str]
+        self._rounds = []                               # type: [Round]
+        self._points_team0 = 0                          # type: int
+        self._points_team1 = 0                          # type: int
+        self._winner = -1                               # type: int
 
         # time is not set by default, as the game can also be created by reading from db
         self._time_started = None

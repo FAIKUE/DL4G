@@ -6,8 +6,9 @@
 Calculate statistics of trumps in games
 """
 
-from jass_base.game import *
-from jass_base.game_const import *
+from jass.base.round_schieber import RoundSchieber
+from jass.base.player_round import PlayerRound
+from jass.base.const import *
 
 
 class TrumpStat:
@@ -30,7 +31,7 @@ class TrumpStat:
         self.counter_total = 0
         self.counter_total_match = 0
 
-    def add_round(self, r: Round):
+    def add_round(self, r: RoundSchieber):
         """
         Add a round and calculate the statistics of it. If the trump declaration was passed from forehand to
         backhand, the statistics is updated for both hands
@@ -38,15 +39,15 @@ class TrumpStat:
             r: the round
         """
         if r.forehand:
-            player_hand = r.played_cards[r.declared_trump, :]
-            self.add_hand(player_hand, r.trump, True)
+            player_rnd = PlayerRound.trump_from_complete_round(r, True)
+            self.add_hand(player_rnd.hand, r.trump, True)
         else:
             # add forehand action
-            player_hand = r.played_cards[partner_player[r.declared_trump], :]
-            self.add_hand(player_hand, PUSH, True)
+            player_rnd = PlayerRound.trump_from_complete_round(r, True)
+            self.add_hand(player_rnd.hand, PUSH, True)
             # add rearhand action
-            player_hand = r.played_cards[r.declared_trump, :]
-            self.add_hand(player_hand, r.trump, False)
+            player_rnd = PlayerRound.trump_from_complete_round(r, False)
+            self.add_hand(player_rnd.hand, r.trump, False)
 
     def add_hand(self, hand, trump, forehand):
         """
@@ -54,6 +55,7 @@ class TrumpStat:
         Args:
             hand: hand of the player
             trump: declared trump action
+            forehand:
         """
         self.counter_total += 1
         if self._match_positive(hand, trump):
@@ -117,7 +119,7 @@ class AllStat:
     def add_statistic(self, statistic: TrumpStat):
         self.stat.append(statistic)
 
-    def add_round(self, r: Round):
+    def add_round(self, r: RoundSchieber):
         for s in self.stat:
             s.add_round(r)
 
@@ -127,7 +129,6 @@ class AllStat:
 
     def get_statistics(self):
         result = {}
-
 
         for s in self.stat:
             percentage_forehand = s.counter_pos_forehand / (s.counter_pos_forehand + s.counter_neg_forehand)

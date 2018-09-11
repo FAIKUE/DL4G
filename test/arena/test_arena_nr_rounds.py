@@ -1,13 +1,18 @@
 import unittest
-from jass.arena.arena_nr_rounds import ArenaNrRounds
-from jass.player.random_player import RandomPlayer
+from jass.base.const import JASS_SCHIEBER_1000
+from jass.arena.arena import Arena
+from jass.arena.trump_selection_players_strategy import TrumpPlayerStrategy
+from jass.arena.play_game_nr_rounds_strategy import PlayNrRoundsStrategy
+from jass.player.random_player_schieber import RandomPlayerSchieber
 
 
 class ArenaNrRoundsTestCase(unittest.TestCase):
 
     def test_arena(self):
-        arena = ArenaNrRounds()
-        player = RandomPlayer()
+        arena = Arena(jass_type=JASS_SCHIEBER_1000,
+                      trump_strategy=TrumpPlayerStrategy(),
+                      play_game_strategy=PlayNrRoundsStrategy(4))
+        player = RandomPlayerSchieber()
 
         arena.set_players(player, player, player, player)
         arena.nr_games_to_play = 2
@@ -18,6 +23,7 @@ class ArenaNrRoundsTestCase(unittest.TestCase):
         print(arena.nr_wins_team_0)
         print(arena.nr_wins_team_1)
         print(arena.delta_points)
+
 
 if __name__ == '__main__':
     unittest.main()

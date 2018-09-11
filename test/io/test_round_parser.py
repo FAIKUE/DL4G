@@ -1,7 +1,7 @@
 import unittest
 
 from jass.base.const import *
-from jass.base.round import Round
+from jass.base.round_schieber import RoundSchieber
 from jass.io.round_generator import RoundGenerator
 from jass.io.round_parser import RoundParser
 
@@ -9,7 +9,7 @@ from jass.io.round_parser import RoundParser
 class RoundParserCase(unittest.TestCase):
     def test_generator_and_parser(self):
         # Generate a round manually by 'playing' a game
-        rnd = Round(dealer=WEST)
+        rnd = RoundSchieber(dealer=WEST)
         rnd.action_trump(PUSH)
         rnd.action_trump(U)
         rnd.action_play_card(C7)
@@ -53,6 +53,7 @@ class RoundParserCase(unittest.TestCase):
 
         rnd_data = RoundGenerator.generate_dict(rnd)
         rnd_from_data = RoundParser.parse_round(rnd_data)
+        rnd_from_data.assert_invariants()
 
         # reconstructed round should be the same
         self.assertTrue(rnd == rnd_from_data)

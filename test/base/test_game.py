@@ -2,10 +2,7 @@ import unittest
 import json
 import datetime
 
-from jass.base.const import *
-from jass.base.round import Round
 from jass.base.game import Game
-from jass.base.player_round import PlayerRound
 from jass.io.log_parser import LogParser
 from jass.io.game_generator import GameGenerator
 from jass.io.game_parser import GameParser
@@ -75,6 +72,7 @@ class GameTestCase(unittest.TestCase):
         game_restored = GameParser.parse_game(data)
 
         self.assertTrue(game, game_restored)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -3,10 +3,12 @@
 # Created by Thomas Koller on 04.08.18
 #
 
+from typing import List
 import numpy as np
 
-from jass.base.const import *
+from jass.base.const import next_player, partner_player
 from jass.base.round import Round
+import jass.base.rule_factory
 
 
 class PlayerRound:
@@ -24,6 +26,7 @@ class PlayerRound:
         - the number of cards played in the current trick
         - the cards played in the current trick
         - the current player
+        - the hand of the current player
 
     Similar to the class Round, PlayerRound captures
     the information at different stages of the game, like:
@@ -37,7 +40,9 @@ class PlayerRound:
                  player=None,
                  trump=None,
                  forehand=None,
-                 declared_trump=None) -> None:
+                 declared_trump=None,
+                 jass_type=None,
+                 rule=None) -> None:
         """
         Initialize the class. If dealer is supplied the player and dealer will be set accordingly and only the
         cards will have to be initialized separately to put the object in a consistent initial configuration.
@@ -100,6 +105,15 @@ class PlayerRound:
         self.points_team_0 = 0          # points made by the team of players 0 and 2
         self.points_team_1 = 0          # points made by the team of players 1 and 3
 
+        # the jass_type (as used by the round_factory to create this type of round)
+        self.jass_type = jass_type
+
+        # create an appropriate object of type Rule that implements the rules for this round
+        self.rule = rule
+        if rule is None and jass_type is not None:
+            # create the rule object
+            self.rule = jass.base.rule_factory.get_rule(jass_type)
+
     def __repr__(self):
         """
         Build representation string of the object. This will also be used by str.
@@ -119,6 +133,7 @@ class PlayerRound:
         Returns:
             True if the objects are the same.
         """
+        # noinspection PyPep8
         return self.dealer == other.dealer and \
                self.player == other.player and \
                self.trump == other.trump and \
@@ -134,9 +149,8 @@ class PlayerRound:
                self.nr_cards_in_trick == other.nr_cards_in_trick and \
                self.nr_played_cards == other.nr_played_cards and \
                self.points_team_0 == other.points_team_0 and \
-               self.points_team_1 == other.points_team_1
-
-
+               self.points_team_1 == other.points_team_1 and \
+               self.jass_type == other.jass_type
 
     # additional derived properties
     @property
@@ -164,8 +178,6 @@ class PlayerRound:
     def set_from_round(self, rnd: Round):
         """
         Initialize PlayerRound from a full Round at the same card. The data in arrays is copied from the round.
-
-
         Args:
             rnd:
         """
@@ -185,6 +197,8 @@ class PlayerRound:
         self.nr_played_cards = rnd.nr_played_cards
         self.points_team_0  = rnd.points_team_0
         self.points_team_1 = rnd.points_team_1
+        self.jass_type = rnd.jass_type
+        self.rule = rnd.rule
 
     def set_from_round_shared(self, rnd: Round):
         """
@@ -211,9 +225,9 @@ class PlayerRound:
         self.nr_played_cards = rnd.nr_played_cards
         self.points_team_0  = rnd.points_team_0
         self.points_team_1 = rnd.points_team_1
+        self.jass_type = rnd.jass_type
+        self.rule = rnd.rule
 
-    def get_current_trick(self) -> np.ndarray:
-        return self.tricks[self.nr_tricks, :]
 
     def _calculate_points_from_tricks(self) -> None:
         """
@@ -226,6 +240,17 @@ class PlayerRound:
                 self.points_team_0 += self.trick_points[trick]
             else:
                 self.points_team_1 += self.trick_points[trick]
+
+    def get_valid_cards(self):
+        """
+        Get the valid cards for the player. Delegated to the rule
+        Returns:
+            the valid cards
+        """
+        return self.rule.get_valid_cards(self.hand,
+                                         self.current_trick,
+                                         self.nr_cards_in_trick,
+                                         self.trump)
 
     @staticmethod
     def from_complete_round(rnd: Round, cards_played: int) -> 'PlayerRound':
@@ -247,7 +272,9 @@ class PlayerRound:
         player_rnd = PlayerRound(dealer=rnd.dealer,
                                  trump=rnd.trump,
                                  declared_trump=rnd.declared_trump,
-                                 forehand=rnd.forehand)
+                                 forehand=rnd.forehand,
+                                 jass_type=rnd.jass_type,
+                                 rule=rnd.rule)
 
         player_rnd.nr_played_cards = cards_played
 
@@ -258,10 +285,19 @@ class PlayerRound:
         player_rnd.trick_first_player[0:player_rnd.nr_tricks + 1] = rnd.trick_first_player[0:player_rnd.nr_tricks + 1]
 
         if cards_played > 0:
-            # copy all the tricks
-            player_rnd.tricks[0:player_rnd.nr_tricks, :] = rnd.tricks[0:player_rnd.nr_tricks, :]
-            player_rnd.current_trick[0:player_rnd.nr_cards_in_trick] = \
-                rnd.tricks[player_rnd.nr_tricks, 0:player_rnd.nr_cards_in_trick]
+            if player_rnd.nr_cards_in_trick == 0:
+                # only full tricks
+                player_rnd.tricks[0:player_rnd.nr_tricks, :] = rnd.tricks[0:player_rnd.nr_tricks, :]
+
+            else:
+                # copy all the full tricks first
+                player_rnd.tricks[0:player_rnd.nr_tricks, :] = rnd.tricks[0:player_rnd.nr_tricks, :]
+
+                # copy the trick in progress
+                player_rnd.tricks[player_rnd.nr_tricks, 0:player_rnd.nr_cards_in_trick] = \
+                    rnd.tricks[player_rnd.nr_tricks, 0:player_rnd.nr_cards_in_trick]
+                # make sure the current trick points to that
+                player_rnd.current_trick = player_rnd.tricks[player_rnd.nr_tricks]
             # copy the results from the tricks
             player_rnd.trick_winner[0:player_rnd.nr_tricks] = rnd.trick_winner[0:player_rnd.nr_tricks]
             player_rnd.trick_points[0:player_rnd.nr_tricks] = rnd.trick_points[0:player_rnd.nr_tricks]
@@ -295,12 +331,46 @@ class PlayerRound:
         """
         return [PlayerRound.from_complete_round(rnd, i) for i in range(0, 36)]
 
+    @staticmethod
+    def trump_from_complete_round(rnd: Round, forehand: bool) -> 'PlayerRound' or None:
+        """
+        Create a player round from a complete round for the state of trump selection.
+        Args:
+            rnd: a complete round
+            forehand: true if the trump selection should be for the forehand player, false if it should be for the
+            rearhand player after push
+
+        Returns:
+            a PlayerRound for trump selection or None if trump selection was asked to be returned for rearhand, when
+            there was no rearhand trump selection in that round
+        """
+        if not forehand and rnd.forehand:
+            return None
+
+        player_rnd = PlayerRound(dealer=rnd.dealer, jass_type=rnd.jass_type, rule=rnd.rule)
+
+        if forehand:
+            player_rnd.player = next_player[player_rnd.dealer]
+            player_rnd.forehand = None
+        else:
+            player_rnd.player = partner_player[next_player[player_rnd.dealer]]
+            player_rnd.forehand = False
+
+        # determine hand still held by the player, which are the cards that the player will play in the next
+        # tricks of the full rnd, that are not played yet
+        for i in range(player_rnd.nr_tricks, 9):
+            # determine which card was played in this trick by the player
+            index = (rnd.trick_first_player[i] - player_rnd.player) % 4
+            card_played = rnd.tricks[i, index]
+            player_rnd.hand[card_played] = 1
+        return player_rnd
+
     def assert_invariants(self) -> None:
         """
         Validates the internal consistency and throws an assertion exception if an error is detected.
         """
         # trump declaration
-        if self.forehand is not None:
+        if self.trump is not None:
             if self.forehand:
                 assert self.declared_trump == next_player[self.dealer]
             else:

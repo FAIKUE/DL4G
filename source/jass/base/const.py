@@ -19,39 +19,36 @@ import numpy as np
 #
 
 # Players (players are numbered clockwise), playing is done counterclockwise
-NORTH: int = 0
-EAST: int = 1
-SOUTH: int = 2
-WEST: int = 3
-MAX_PLAYER: int = 3
+NORTH       = 0                         # type: int
+EAST        = 1                         # type: int
+SOUTH       = 2                         # type: int
+WEST        = 3                         # type: int
+MAX_PLAYER  = 3                         # type: int
 
 player_strings = ['North', 'East', 'South', 'West']
 
 # Colors for trump, there is a long and a short constant for each
-DIAMONDS: int = 0  # Ecken / Schellen
-D: int = DIAMONDS
+DIAMONDS    = 0                         # type: int  # Ecken / Schellen
+D           = DIAMONDS
+HEARTS      = 1                         # type: int  # Herz / Rosen
+H           = HEARTS
+SPADES      = 2                         # type: int  # Schaufeln / Schilten
+S           = SPADES
+CLUBS       = 3                         # type: int  # Kreuz / Eichel
+C           = CLUBS
+OBE_ABE     = 4                         # type: int
+O           = OBE_ABE
+UNE_UFE     = 5                         # type: int
+U           = UNE_UFE
+MAX_TRUMP   = 5                         # maximal value of a trump action (for loops)
 
-HEARTS: int = 1  # Herz / Rosen
-H: int = HEARTS
+# additional action available at trump selection phase, this is encoded as 10 in the Swisslos specification.
+PUSH        = 10                        # type: int # Schieben
+P           = PUSH
 
-SPADES: int = 2  # Schaufeln / Schilten
-S: int = 2
-
-CLUBS: int = 3  # Kreuz / Eichel
-C: int = CLUBS
-
-OBE_ABE: int = 4
-O: int = OBE_ABE
-
-UNE_UFE: int = 5
-U: int = UNE_UFE
-
-MAX_TRUMP: int = 5  # maximal value of a trump action (for loops)
-
-# additional action available at trump selection phase
-PUSH: int = 10  # Schieben
-P: int = PUSH
-
+# alternative value for push (used in some ml approaches to be able to 1-hot encode the trump/push action
+# (is translated to PUSH when the action is added to the round)
+PUSH_ALT    = 6                         # type: int
 
 # Strings for trumps
 trump_strings_short = [
@@ -69,6 +66,12 @@ trump_string_push_german = 'P: Schieben'
 trump_ints = [
     DIAMONDS, HEARTS, SPADES, CLUBS, OBE_ABE, UNE_UFE
 ]
+
+# Jass variants (jassTyp in request message)
+JASS_SCHIEBER_1000 = 'SCHIEBER_1000'
+JASS_SCHIEBER_2500 = 'SCHIEBER_2500'
+JASS_HEARTS = 'HEARTS'
+JASS_ALL = [JASS_SCHIEBER_1000, JASS_SCHIEBER_2500, JASS_HEARTS]
 
 # Card distributions (sets) like hands, cards played etc. will be modelled using arrays, corresponding to a 1-hot
 # encoding. Also, this format will be used for neuronal networks. The following constants of all cards define the
@@ -284,6 +287,15 @@ next_player = [3, 0, 1, 2]
 
 # partner player of player with given index
 partner_player = [2, 3, 0, 1]
+
+# true if same_player[i, j] are in the same team for players i, j
+same_team = np.array(
+    [
+        [True, False, True, False],
+        [False, True, False, True],
+        [True, False, True, False],
+        [False, True, False, True]
+    ], np.bool)
 
 
 def get_cards_encoded(cards: List[int]) -> np.ndarray:

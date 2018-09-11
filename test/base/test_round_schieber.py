@@ -1,21 +1,21 @@
 import unittest
 
 from jass.base.const import *
-from jass.base.round import Round
+from jass.base.round_schieber import RoundSchieber
 
 
 class RoundTestCase(unittest.TestCase):
 
     def test_round_empty(self):
-        rnd = Round()
+        rnd = RoundSchieber(dealer=NORTH)
         rnd.assert_invariants()
 
     def test_make_trump(self):
-        rnd = Round(dealer=NORTH)
+        rnd = RoundSchieber(dealer=NORTH)
         rnd.action_trump(DIAMONDS)
         rnd.assert_invariants()
 
-        rnd2 = Round(dealer=NORTH)
+        rnd2 = RoundSchieber(dealer=NORTH)
         rnd2.action_trump(PUSH)
         rnd.assert_invariants()
         rnd2.action_trump(DIAMONDS)
@@ -23,80 +23,99 @@ class RoundTestCase(unittest.TestCase):
         self.assertEqual(WEST, rnd2.player)
 
     def test_calc_points(self):
+        rnd = RoundSchieber(dealer=NORTH)
         trick = np.array([SA, SK, SQ, SJ])
-
-        points = Round.calc_points(trick, trump=D, is_last=False)
+        rnd.trump = DIAMONDS
+        points = rnd.rule.calc_points(trick, is_last=False, trump=DIAMONDS)
         self.assertEqual(20, points)
 
-        points = Round.calc_points(trick, trump=H, is_last=True)
+        rnd.trump = HEARTS
+        points = rnd.rule.calc_points(trick, is_last=True, trump=HEARTS)
         self.assertEqual(25, points)
 
-        points = Round.calc_points(trick, trump=S, is_last=False)
+        rnd.trump = SPADES
+        points = rnd.rule.calc_points(trick, is_last=False, trump=SPADES)
         self.assertEqual(38, points)
 
-        points = Round.calc_points(trick, trump=C, is_last=False)
+        rnd.trump = CLUBS
+        points = rnd.rule.calc_points(trick, is_last=False, trump=CLUBS)
         self.assertEqual(20, points)
 
         trick = np.array([SA, SJ, S6, S9])
-        points = Round.calc_points(trick, trump=S, is_last=False)
+        rnd.trump = SPADES
+        points = rnd.rule.calc_points(trick, is_last=False, trump=SPADES)
         self.assertEqual(45, points)
 
     def test_calc_winner(self):
-        first_player=EAST
+        rnd = RoundSchieber(dealer=NORTH)
+        first_player = EAST
         #                 E   N   W   S
         trick = np.array([SA, SK, HQ, C7])
-        self.assertEqual(Round.calc_winner(trick, first_player, DIAMONDS), EAST)
-        self.assertEqual(Round.calc_winner(trick, first_player, HEARTS), WEST)
-        self.assertEqual(Round.calc_winner(trick, first_player, SPADES), EAST)
-        self.assertEqual(Round.calc_winner(trick, first_player, CLUBS), SOUTH)
-        self.assertEqual(Round.calc_winner(trick, first_player, OBE_ABE), EAST)
-        self.assertEqual(Round.calc_winner(trick, first_player, UNE_UFE), NORTH)
+        rnd.trump = DIAMONDS
+        self.assertEqual(rnd.rule.calc_winner(trick, first_player, trump=DIAMONDS), EAST)
+        rnd.trump = HEARTS
+        self.assertEqual(rnd.rule.calc_winner(trick, first_player, trump=HEARTS), WEST)
+        rnd.trump = SPADES
+        self.assertEqual(rnd.rule.calc_winner(trick, first_player, trump=SPADES), EAST)
+        rnd.trump = CLUBS
+        self.assertEqual(rnd.rule.calc_winner(trick, first_player, trump=CLUBS), SOUTH)
+        rnd.trump = OBE_ABE
+        self.assertEqual(rnd.rule.calc_winner(trick, first_player, trump=OBE_ABE), EAST)
+        rnd.trump = UNE_UFE
+        self.assertEqual(rnd.rule.calc_winner(trick, first_player, trump=UNE_UFE), NORTH)
 
         #                 E   N    W   S
         trick = np.array([S9, S10, SQ, SK])
-        self.assertEqual(Round.calc_winner(trick, first_player, SPADES), EAST)
+        rnd.trump = SPADES
+        self.assertEqual(rnd.rule.calc_winner(trick, first_player, trump=SPADES), EAST)
 
         #                 E   N    W   S
         trick = np.array([S9, S10, SJ, SK])
-        self.assertEqual(Round.calc_winner(trick, first_player, SPADES), WEST)
+        rnd.trump = SPADES
+        self.assertEqual(rnd.rule.calc_winner(trick, first_player, trump=SPADES), WEST)
 
         #                E   N    W   S
         trick = np.array([SA, D6, D7, SJ])
-        self.assertEqual(Round.calc_winner(trick, first_player,HEARTS), EAST)
+        rnd.trump = HEARTS
+        self.assertEqual(rnd.rule.calc_winner(trick, first_player, trump=HEARTS), EAST)
 
         #                 E   N    W   S
         trick = np.array([SA, D6, D7, SJ])
-        self.assertEqual(Round.calc_winner(trick, first_player,DIAMONDS), WEST)
+        rnd.trump = DIAMONDS
+        self.assertEqual(rnd.rule.calc_winner(trick, first_player, trump=DIAMONDS), WEST)
 
         #                 E   N    W   S
         trick = np.array([SA, D6, D7, SJ])
-        self.assertEqual(Round.calc_winner(trick, first_player,SPADES), SOUTH)
+        rnd.trump = SPADES
+        self.assertEqual(rnd.rule.calc_winner(trick, first_player, trump=SPADES), SOUTH)
 
         #                E   N    W   S
         trick = np.array([SA, D6, D7, S9])
-        self.assertEqual(Round.calc_winner(trick, first_player,SPADES), SOUTH)
+        self.assertEqual(rnd.rule.calc_winner(trick, first_player, trump=SPADES), SOUTH)
 
         #                E   N    W   S
         trick = np.array([D7, SA, D6, S9])
-        self.assertEqual(Round.calc_winner(trick, first_player,UNE_UFE), WEST)
+        rnd.trump = UNE_UFE
+        self.assertEqual(rnd.rule.calc_winner(trick, first_player, trump=UNE_UFE), WEST)
 
         #                E   N    W   S
         trick = np.array([SA, D6, D7, S9])
-        self.assertEqual(Round.calc_winner(trick, first_player,UNE_UFE), SOUTH)
+        self.assertEqual(rnd.rule.calc_winner(trick, first_player, trump=UNE_UFE), SOUTH)
 
         #                E   N    W   S
         trick = np.array([SA, D6, D7, S9])
-        self.assertEqual(Round.calc_winner(trick, first_player,OBE_ABE), EAST)
+        rnd.trump = OBE_ABE
+        self.assertEqual(rnd.rule.calc_winner(trick, first_player, trump=OBE_ABE), EAST)
 
-    #def test_calc_winner_profiling(self):
-        # for profiling: calll methods 1000 times
+    # def test_calc_winner_profiling(self):
+        # for profiling: call methods 1000 times
     #    for i in range(10000):
     #        self.test_calc_winner()
 
     def test_complete_round(self):
         # replay round manually from a log file entry
         # {"trump":5,"dealer":3,"tss":1,"tricks":[{"cards":["C7","CK","C6","CJ"],"points":17,"win":0,"first":2},
-        rnd = Round(dealer=WEST)
+        rnd = RoundSchieber(dealer=WEST)
         rnd.action_trump(PUSH)
         rnd.action_trump(U)
 
@@ -200,7 +219,7 @@ class RoundTestCase(unittest.TestCase):
         self.assertTrue(rnd == rnd)
 
     def test_deal(self):
-        rnd = Round()
+        rnd = RoundSchieber()
         rnd.deal_cards()
         # check if all 36 cards have been dealt
         self.assertEqual(36, rnd.hands.sum())
@@ -216,6 +235,7 @@ class RoundTestCase(unittest.TestCase):
         self.assertTrue(np.all(cards == np.ones(36, dtype=np.int32)))
 
         rnd.assert_invariants()
+
 
 if __name__ == '__main__':
     unittest.main()

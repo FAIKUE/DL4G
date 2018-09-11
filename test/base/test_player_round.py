@@ -2,18 +2,18 @@ import unittest
 import json
 
 from jass.base.const import *
-from jass.base.round import Round
+from jass.base.round_schieber import RoundSchieber
 from jass.base.player_round import PlayerRound
 from jass.io.log_parser import LogParser
 
 
 class PlayerRoundTestCase(unittest.TestCase):
     def test_init(self):
-        player_rnd = PlayerRound()
+        _ = PlayerRound()
 
     def test_from_round(self):
         # create a full round
-        rnd = Round(dealer=WEST)
+        rnd = RoundSchieber(dealer=WEST)
         rnd.action_trump(PUSH)
         rnd.action_trump(U)
 
@@ -66,7 +66,7 @@ class PlayerRoundTestCase(unittest.TestCase):
             player_rnd = PlayerRound.from_complete_round(rnd, i)
             player_rnd.assert_invariants()
             self.assertEqual(i, player_rnd.nr_played_cards)
-            self.assertEqual(rnd.dealer, player_rnd.dealer)
+
             self.assertEqual(rnd.declared_trump, player_rnd.declared_trump)
             self.assertEqual(rnd.forehand, player_rnd.forehand)
             self.assertEqual(rnd.trump, player_rnd.trump)
@@ -74,6 +74,20 @@ class PlayerRoundTestCase(unittest.TestCase):
             nr_tricks, nr_cards_in_trick = divmod(i, 4)
             self.assertEqual(nr_tricks, player_rnd.nr_tricks)
             self.assertEqual(nr_cards_in_trick, player_rnd.nr_cards_in_trick)
+
+        player_rnd = PlayerRound.trump_from_complete_round(rnd, forehand=True)
+        self.assertEqual(rnd.dealer, player_rnd.dealer)
+        self.assertIsNone(player_rnd.trump)
+        self.assertIsNone(player_rnd.forehand)
+        self.assertEqual(player_rnd.player, next_player[WEST])
+        player_rnd.assert_invariants()
+
+        player_rnd = PlayerRound.trump_from_complete_round(rnd, forehand=False)
+        self.assertEqual(rnd.dealer, player_rnd.dealer)
+        self.assertIsNone(player_rnd.trump)
+        self.assertFalse(player_rnd.forehand)
+        self.assertEqual(player_rnd.player, partner_player[next_player[WEST]])
+        player_rnd.assert_invariants()
 
     def test_game_state_from_round(self):
         # take game string from a record

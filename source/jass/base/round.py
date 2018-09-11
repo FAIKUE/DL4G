@@ -23,6 +23,8 @@ class Round:
     The member variables can be set directly or using methods. The methods will ensure the internal
     consistency of the variables, the method assert_invariants can be used during development to verify the
     consistency for the cases when the member variables are set directly.
+
+    This is a base class that allows for implementations of different variants of the game.
     """
 
     def __init__(self, dealer=None) -> None:
@@ -42,11 +44,14 @@ class Round:
 
         # player of the next action, i.e. declaring trump or playing a card
         if self.dealer is not None:
-            # if the dealer is set, the first action is to declare trump
+            # if the dealer is set, the first action is usually carried out by the next player (subclasses can
+            # override this
             self.player = next_player[self.dealer]
         else:
             self.player = None
 
+        # (we keep the trump and forehand information in the base class, even as not all variations of the game will
+        # need it)
         # selected trump
         self.trump = None               # type: int
 
@@ -75,6 +80,9 @@ class Round:
 
         # the first player of the trick (derived)
         self.trick_first_player = np.full(shape=9, fill_value=-1, dtype=np.int32)
+        # if the dealer is defined, the first player of the first trick is usually the next player
+        if dealer is not None:
+            self.trick_first_player[0] = next_player[self.dealer]
 
         # the current trick is a view onto self.trick
         self.current_trick = self.tricks[0, :]
@@ -89,6 +97,13 @@ class Round:
         self.points_team_0 = 0          # points made by the team of players 0 and 2
         self.points_team_1 = 0          # points made by the team of players 1 and 3
 
+        # create an appropriate object of type Rule that implements the rules for this round
+        # must be set in the derived class
+        self.rule = None
+
+        # the jass_type (as used by the round_factory to create this type of round)
+        self.jass_type = None
+
     def __eq__(self, other: 'Round'):
         """
         Compare two instances. Useful for tests when the representations are encoded and decoded. The objects are
@@ -100,6 +115,7 @@ class Round:
         Returns:
             True if the objects are the same.
         """
+        # noinspection PyPep8
         return self.dealer == other.dealer and \
                self.player == other.player and \
                self.trump == other.trump and \
@@ -141,13 +157,7 @@ class Round:
 
     def action_trump(self, action: int)->None:
         """
-        Execute trump action on the current round.
-
-        Preconditions:
-            (action == PASS) => (self.forehand == None)
-            self.nr_played_cards == 0
-            (self.forehand == None) => self.player == next_player[player.dealer]
-            (self.forehand == False) => self.player == partner_player[next_player[player.dealer]
+        Execute trump action on the current round. Must be implemented in the subclass
 
         Postcondistions:
             see assert_invariants
@@ -155,23 +165,7 @@ class Round:
         Args:
             action: the action to perform, which is either a trump selection or a pass (if allowed)
         """
-        if self.forehand is None:
-            # this is the action done by the forehand player
-            if action == PUSH:
-                self.forehand = False
-                # next action is to select trump by the partner
-                self.player = partner_player[self.player]
-            else:
-                self.trump = action
-                self.declared_trump = self.player
-                # next action is to play card, but this is done by the current player
-                self.trick_first_player[0] = self.player
-        else:
-            self.trump = action
-            self.declared_trump = self.player
-            # next action is to play card, but the partner has to play
-            self.player = next_player[self.dealer]
-            self.trick_first_player[0] = self.player
+        raise NotImplementedError()
 
     def action_play_card(self, card: int)->None:
         """
@@ -179,9 +173,8 @@ class Round:
 
         Preconditions:
             self.nr_played_cards < 36
-            self.trump != None
-            self.forehand != None
             self.hands[self.player,card] == 1
+            (trump selection done according to rules of the jass variation)
 
         Postconditions:
             see assert_invariants
@@ -204,102 +197,14 @@ class Round:
             # finish current trick
             self._end_trick()
 
-    @staticmethod
-    def calc_points(trick: np.ndarray, trump: int, is_last: bool) -> int:
-        """
-        Calculate the points from the cards in the trick according to the given trump
-
-        Args:
-            trick: the trick
-            trump: the trump color
-            is_last: true if this is the last trick
-        """
-        return int(np.sum(card_values[trump, trick])) + (5 if is_last else 0)
-
-    @staticmethod
-    def calc_winner(trick: np.ndarray, first_player: int, trump: int) -> int:
-        """
-        Calculate the winner of a completed trick.
-
-        Second implementation in an attempt to be more efficient, while the implementation is somewhat longer
-        and more complicated it is about 3 times faster than the previous method.
-
-        Precondition:
-            0 <= trick[i] <= 35, for i = 0..3
-        Args:
-            trick: the completed trick
-            first_player: the first player of the trick
-            trump: the trump color
-
-        Returns:
-            the player who won this trick
-        """
-        color_of_first_card = color_of_card[trick[0]]
-        if trump == UNE_UFE:
-            # lowest card of first color wins
-            winner = 0
-            lowest_card = trick[0]
-            for i in range(1, 4):
-                # (lower card values have a higher card index)
-                if color_of_card[trick[i]] == color_of_first_card and trick[i] > lowest_card:
-                    lowest_card = trick[i]
-                    winner = i
-        elif trump == OBE_ABE:
-            # highest card of first color wins
-            winner = 0
-            highest_card = trick[0]
-            for i in range(1, 4):
-                if color_of_card[trick[i]] == color_of_first_card and trick[i] < highest_card:
-                    highest_card = trick[i]
-                    winner = i
-        elif color_of_first_card == trump:
-            # trump mode and first card is trump: highest trump wins
-            winner = 0
-            highest_card = trick[0]
-            for i in range(1, 4):
-                # lower_trump[i,j] checks if j is a lower trump than i
-                if color_of_card[trick[i]] == trump and lower_trump[trick[i], highest_card]:
-                    highest_card = trick[i]
-                    winner = i
-        else:
-            # trump mode, but different color played on first move, so we have to check for higher cards until
-            # a trump is played, and then for the highest trump
-            winner = 0
-            highest_card = trick[0]
-            trump_played = False
-            trump_card = None
-            for i in range(1, 4):
-                if color_of_card[trick[i]] == trump:
-                    if trump_played:
-                        # second trump, check if it is higher
-                        if lower_trump[trick[i], trump_card]:
-                            winner = i
-                            trump_card = trick[i]
-                    else:
-                        # first trump played
-                        trump_played = True
-                        trump_card = trick[i]
-                        winner = i
-                elif trump_played:
-                    # color played is not trump, but trump has been played, so ignore this card
-                    pass
-                elif color_of_card[trick[i]] == color_of_first_card:
-                    # trump has not been played and this is the same color as the first card played
-                    # so check if it is higher
-                    if trick[i] < highest_card:
-                        highest_card = trick[i]
-                        winner = i
-        # adjust actual winner by first player
-        return (first_player - winner) % 4
-
     def _end_trick(self) -> None:
         """
         End the current trick and update all the necessary fields.
         """
         # update information about the current trick
-        points = self.calc_points(self.current_trick, self.trump, self.nr_played_cards == 36)
+        points = self.rule.calc_points(self.current_trick, self.nr_played_cards == 36, self.trump)
         self.trick_points[self.nr_tricks] = points
-        winner = self.calc_winner(self.current_trick, self.trick_first_player[self.nr_tricks], self.trump)
+        winner = self.rule.calc_winner(self.current_trick, self.trick_first_player[self.nr_tricks], self.trump)
         self.trick_winner[self.nr_tricks] = winner
 
         if winner == NORTH or winner == SOUTH:
@@ -323,31 +228,4 @@ class Round:
         """
         Validates the internal consistency and throws an assertion exception if an error is detected.
         """
-        # trump declaration should be present
-        if self.forehand is not None:
-            if self.forehand:
-                assert self.declared_trump == next_player[self.dealer]
-            else:
-                assert self.declared_trump == partner_player[next_player[self.dealer]]
-            assert self.trump is not None
-            assert self.dealer is not None
-
-        # trick winners
-        if self.nr_tricks > 0:
-            assert self.trick_first_player[0] == next_player[self.dealer]
-        for i in range(1, self.nr_tricks):
-            assert self.trick_winner[i-1] == self.trick_first_player[i]
-
-        # cards played
-        assert self.nr_played_cards == 4*self.nr_tricks + self.nr_cards_in_trick
-
-        # number of points
-        points_team_0 = 0
-        points_team_1 = 0
-        for trick in range(self.nr_tricks):
-            if self.trick_winner[trick] == 0 or self.trick_winner[trick] == 2:
-                points_team_0 += self.trick_points[trick]
-            else:
-                points_team_1 += self.trick_points[trick]
-        assert points_team_0 == self.points_team_0
-        assert points_team_1 == self.points_team_1
+        raise NotImplementedError()

@@ -11,6 +11,7 @@ import logging
 
 from jass.base.player_round import PlayerRound
 from jass.base.const import *
+from jass.base.round_factory import get_round
 
 ERROR_MSG_PREFIX = 'Request Parse Error: '
 VALID_JASS_TYPES = ['SCHIEBER_1000', 'SCHIEBER_2500']
@@ -106,8 +107,7 @@ class PlayerRoundParser(BasicRequestParser):
             self._logger.error(self._error_msg)
             return
 
-        player_round = PlayerRound()
-        player_round.dealer = self._request_dict['dealer']
+        player_round = PlayerRound(dealer=self._request_dict['dealer'], jass_type=jass_typ)
         # trump might be None if case of trump request
         if 'trump' in self._request_dict:
             player_round.trump = self._request_dict['trump']
@@ -133,13 +133,14 @@ class PlayerRoundParser(BasicRequestParser):
                     player_round.points_team_0 += player_round.trick_points[i]
                 else:
                     player_round.points_team_1 += player_round.trick_points[i]
-            else:
+            elif len(cards) > 0:
                 # incomplete trick
-                # player_round.trick_points[i] = trick_dict['points']
                 player_round.nr_cards_in_trick = len(cards)
-
+                # first copy the data to the trick array
                 for j in range(len(cards)):
-                    player_round.current_trick[j] = card_ids[cards[j]]
+                    player_round.tricks[player_round.nr_tricks, j] = card_ids[cards[j]]
+                # then make sure the current trick points to the correct position...
+                player_round.current_trick = player_round.tricks[player_round.nr_tricks]
 
         found_current_hand = False
         for i, player_data in enumerate(self._request_dict['player']):
