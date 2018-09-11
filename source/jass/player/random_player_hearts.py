@@ -10,7 +10,6 @@ class RandomPlayerHearts(Player):
 
     def __init__(self):
         self._logger = logging.getLogger(__name__)
-        self._rule = RuleHearts()
 
     def select_trump(self, rnd: PlayerRound) -> int or None:
         return None
