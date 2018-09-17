@@ -155,6 +155,14 @@ class Round:
         self.hands[2, cards[18:27]] = 1
         self.hands[3, cards[27:39]] = 1
 
+    def set_hands(self, hands: np.array) -> None :
+        """
+        Set the hands (instead of dealing the cards). The used array is copied
+        Args:
+            hands: The hands
+        """
+        self.hands[:, :] = hands[:, :]
+
     def action_trump(self, action: int)->None:
         """
         Execute trump action on the current round. Must be implemented in the subclass
@@ -196,6 +204,19 @@ class Round:
         else:
             # finish current trick
             self._end_trick()
+
+    def get_valid_cards(self):
+        """
+        Get the valid cards for the current player.
+
+        Returns:
+
+        """
+        if self.nr_played_cards == 36:
+            return None
+        else:
+            return self.rule.get_valid_cards(self.hands[self.player, :], self.current_trick,
+                                             self.nr_cards_in_trick, self.trump)
 
     def _end_trick(self) -> None:
         """

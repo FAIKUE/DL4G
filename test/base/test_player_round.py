@@ -12,8 +12,14 @@ class PlayerRoundTestCase(unittest.TestCase):
         _ = PlayerRound()
 
     def test_from_round(self):
-        # create a full round
         rnd = RoundSchieber(dealer=WEST)
+        hands = np.array([
+            get_cards_encoded([C6, S7, S9, HQ, DA, CA, S8, D6, S10]),  # N
+            get_cards_encoded([CK, C10, D10, H6, H7, H9, HK, DQ, D8]),  # E
+            get_cards_encoded([C7, SA, SQ, HJ, C9, DJ, CQ, DK, C8]),  # S
+            get_cards_encoded([CJ, SJ, S6, H10, H8, HA, SK, D9, D7]),  # W
+        ], dtype=np.int32)
+        rnd.set_hands(hands)
         rnd.action_trump(PUSH)
         rnd.action_trump(U)
 
@@ -89,6 +95,137 @@ class PlayerRoundTestCase(unittest.TestCase):
         self.assertEqual(player_rnd.player, partner_player[next_player[WEST]])
         player_rnd.assert_invariants()
 
+    def test_from_partial_round(self):
+        # create  round
+        rnd = RoundSchieber(dealer=WEST)
+        hands = np.array([
+            get_cards_encoded([C6, S7, S9, HQ, DA, CA, S8, D6, S10]),  # N
+            get_cards_encoded([CK, C10, D10, H6, H7, H9, HK, DQ, D8]),  # E
+            get_cards_encoded([C7, SA, SQ, HJ, C9, DJ, CQ, DK, C8]),  # S
+            get_cards_encoded([CJ, SJ, S6, H10, H8, HA, SK, D9, D7]),  # W
+        ], dtype=np.int32)
+        rnd.set_hands(hands)
+        rnd.action_trump(PUSH)
+        rnd.action_trump(U)
+
+
+        # play 1 card
+        rnd.action_play_card(C7)        # S
+
+        self.assertEqual(EAST, rnd.player)
+        player_rnd = PlayerRound()
+        player_rnd.set_from_round(rnd)
+        player_rnd.assert_invariants()
+        self.assertEqual(EAST, player_rnd.player)
+        self.assertEqual(C7, player_rnd.current_trick[0])
+
+
+        rnd.action_play_card(CK)        # E
+        player_rnd = PlayerRound()
+        player_rnd.set_from_round(rnd)
+        player_rnd.assert_invariants()
+        rnd.action_play_card(C6)        # N
+        player_rnd = PlayerRound()
+        player_rnd.set_from_round(rnd)
+        player_rnd.assert_invariants()
+        rnd.action_play_card(CJ)        # W
+        player_rnd = PlayerRound()
+        player_rnd.set_from_round(rnd)
+        player_rnd.assert_invariants()
+        # full first trick
+
+        rnd.action_play_card(S7)
+        player_rnd = PlayerRound()
+        player_rnd.set_from_round(rnd)
+        player_rnd.assert_invariants()
+        rnd.action_play_card(SJ)
+        player_rnd = PlayerRound()
+        player_rnd.set_from_round(rnd)
+        player_rnd.assert_invariants()
+        rnd.action_play_card(SA)
+        player_rnd = PlayerRound()
+        player_rnd.set_from_round(rnd)
+        player_rnd.assert_invariants()
+        rnd.action_play_card(C10)
+        player_rnd = PlayerRound()
+        player_rnd.set_from_round(rnd)
+        player_rnd.assert_invariants()
+
+        rnd.action_play_card(S9)
+        player_rnd = PlayerRound()
+        player_rnd.set_from_round(rnd)
+        player_rnd.assert_invariants()
+        rnd.action_play_card(S6)
+        player_rnd = PlayerRound()
+        player_rnd.set_from_round(rnd)
+        player_rnd.assert_invariants()
+        rnd.action_play_card(SQ)
+        player_rnd = PlayerRound()
+        player_rnd.set_from_round(rnd)
+        player_rnd.assert_invariants()
+        rnd.action_play_card(D10)
+        player_rnd = PlayerRound()
+        player_rnd.set_from_round(rnd)
+        player_rnd.assert_invariants()
+
+        rnd.action_play_card(H10)
+        player_rnd = PlayerRound()
+        player_rnd.set_from_round(rnd)
+        player_rnd.assert_invariants()
+        rnd.action_play_card(HJ)
+        player_rnd = PlayerRound()
+        player_rnd.set_from_round(rnd)
+        player_rnd.assert_invariants()
+        rnd.action_play_card(H6)
+        player_rnd = PlayerRound()
+        player_rnd.set_from_round(rnd)
+        player_rnd.assert_invariants()
+        rnd.action_play_card(HQ)
+        player_rnd = PlayerRound()
+        player_rnd.set_from_round(rnd)
+        player_rnd.assert_invariants()
+
+        rnd.action_play_card(H7)
+        player_rnd = PlayerRound()
+        player_rnd.set_from_round(rnd)
+        player_rnd.assert_invariants()
+        rnd.action_play_card(DA)
+        player_rnd = PlayerRound()
+        player_rnd.set_from_round(rnd)
+        player_rnd.assert_invariants()
+        rnd.action_play_card(H8)
+        player_rnd = PlayerRound()
+        player_rnd.set_from_round(rnd)
+        player_rnd.assert_invariants()
+        rnd.action_play_card(C9)
+        player_rnd = PlayerRound()
+        player_rnd.set_from_round(rnd)
+        player_rnd.assert_invariants()
+
+        rnd.action_play_card(H9)
+        rnd.action_play_card(CA)
+        rnd.action_play_card(HA)
+        rnd.action_play_card(DJ)
+
+        rnd.action_play_card(HK)
+        rnd.action_play_card(S8)
+        rnd.action_play_card(SK)
+        rnd.action_play_card(CQ)
+
+        rnd.action_play_card(DQ)
+        rnd.action_play_card(D6)
+        rnd.action_play_card(D9)
+        rnd.action_play_card(DK)
+
+        rnd.action_play_card(S10)
+        rnd.action_play_card(D7)
+        rnd.action_play_card(C8)
+        rnd.action_play_card(D8)
+        player_rnd = PlayerRound()
+        player_rnd.set_from_round(rnd)
+        player_rnd.assert_invariants()
+
+
     def test_game_state_from_round(self):
         # take game string from a record
         round_string = '{"trump":5,"dealer":3,"tss":1,"tricks":[' \
@@ -110,6 +247,7 @@ class PlayerRoundTestCase(unittest.TestCase):
 
         # check properties for all moves
         for player_rnd in player_rnds:
+            player_rnd.assert_invariants()
             self.assertEqual(5, player_rnd.trump)
             self.assertEqual(3, player_rnd.dealer)
             self.assertEqual(0, player_rnd.declared_trump)
