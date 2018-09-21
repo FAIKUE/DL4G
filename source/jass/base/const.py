@@ -11,7 +11,7 @@ Constants, tables and small utility function for the jass game.
 # - integer arrays are of type np.int32
 
 
-from typing import List
+from typing import List, Iterable
 import numpy as np
 
 #
@@ -19,6 +19,7 @@ import numpy as np
 #
 
 # Players (players are numbered clockwise), playing is done counterclockwise
+# noinspection PyPep8
 NORTH       = 0                         # type: int
 EAST        = 1                         # type: int
 SOUTH       = 2                         # type: int
@@ -131,6 +132,11 @@ Nine_offset = 5
 Eight_offset = 6
 Seven_offset = 7
 Six_offset = 8
+
+# offsets to start of cards for this color
+color_offset = np.array([
+    0, 9, 18, 27
+], np.int)
 
 # array to generate string representations from the ids
 card_strings = np.array([
@@ -321,10 +327,7 @@ def convert_str_encoded_cards_to_int_encoded(cards: List[str]) -> List[int]:
     Returns:
         list of the cards, int encoded
     """
-    int_list = []
-    for card in cards:
-        int_list.append(card_ids[card])
-    return int_list
+    return [card_ids[card] for card in cards]
 
 
 def convert_int_encoded_cards_to_str_encoded(cards: List[int]) -> List[str]:
@@ -348,14 +351,10 @@ def convert_one_hot_encoded_cards_to_str_encoded_list(cards: np.ndarray) -> List
     Returns:
         list of the cards as str
     """
-    str_list = []
-    for i, card in enumerate(cards):
-        if card == 1:
-            str_list.append(card_strings[i])
-    return str_list
+    return [card_strings[i] for i in np.flatnonzero(cards)]
 
 
-def convert_one_hot_encoded_cards_to_int_encoded_list(cards: np.ndarray) -> List[int]:
+def convert_one_hot_encoded_cards_to_int_encoded_list(cards: np.ndarray) -> Iterable[int]:
     """
     Get the int encoded array of a one hot encoded array
     Args:
@@ -364,11 +363,7 @@ def convert_one_hot_encoded_cards_to_int_encoded_list(cards: np.ndarray) -> List
     Returns:
         list of the cards as int
     """
-    int_list = []
-    for i, card in enumerate(cards):
-        if card == 1:
-            int_list.append(i)
-    return int_list
+    return np.flatnonzero(cards).tolist()
 
 
 def count_colors(cards: np.ndarray) -> np.ndarray:

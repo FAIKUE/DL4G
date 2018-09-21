@@ -14,6 +14,34 @@ class JassConstTestCase(unittest.TestCase):
             # 9 cards per color
             self.assertEqual(9, color_masks[color, :].sum())
 
+    def test_conversions(self):
+        cards = get_cards_encoded([DA, C6])
+        self.assertEqual(36, cards.size)
+        self.assertEqual(2, cards.sum())
+        self.assertEqual(1, cards[DA])
+        self.assertEqual(1, cards[C6])
+
+        card_list = convert_str_encoded_cards_to_int_encoded(['DA', 'S8', 'H10', 'CQ'])
+        self.assertEqual(4, len(card_list))
+        self.assertEqual([DA, S8, H10, CQ], card_list)
+
+        card_list = convert_int_encoded_cards_to_str_encoded([DA, S8, H10, CQ])
+        self.assertEqual(4, len(card_list))
+        self.assertEqual(['DA', 'S8', 'H10', 'CQ'], card_list)
+
+        cards = np.zeros(36, dtype=np.int32)
+        cards[DA] = 1
+        cards[H10] = 1
+        card_list = convert_one_hot_encoded_cards_to_str_encoded_list(cards)
+        self.assertEqual(2, len(card_list))
+        self.assertEqual(['DA', 'H10'], card_list)
+
+        card_list = convert_one_hot_encoded_cards_to_int_encoded_list(cards)
+        self.assertEqual(2, len(card_list))
+        self.assertEqual([DA, H10], card_list)
+
+
+
     def test_same_player(self):
         self.assertTrue(same_team[0, 0])
         self.assertTrue(same_team[0, 2])
