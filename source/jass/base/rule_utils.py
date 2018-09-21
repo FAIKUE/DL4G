@@ -3,6 +3,10 @@
 # Created by Thomas Koller on 06.09.18
 #
 
+from jass.base.player_round import PlayerRound
+from jass.base.round import Round
+
+
 def get_valid_cards_from_player_round(self, player_rnd: PlayerRound):
     return self.get_valid_cards(player_rnd.hand,
                                 player_rnd.current_trick,
