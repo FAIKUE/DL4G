@@ -162,6 +162,16 @@ class Arena:
         self._nr_draws += 1
         self._nr_games_played += 1
 
+    def reset_stat(self) -> None:
+        """
+        Reset the statistics about played games.
+        """
+        self._nr_wins_team_0 = 0
+        self._nr_wins_team_1 = 0
+        self._nr_draws = 0
+        self._nr_games_played = 0
+        self._delta_points = 0
+
     def _init_round(self, dealer: int) -> None:
         """
         Initialize a new round. Should be overridden by the derived class to create the appropriate Round object
