@@ -19,8 +19,7 @@ class TrumpPlayerStrategy(TrumpStrategy):
             rnd: the round for which to determine trump.
             arena: the arena to which this strategy belongs, needed to access the players and possibly other data
         """
-        player_rnd = PlayerRound()
-        player_rnd.set_from_round(rnd)
+        player_rnd = arena.get_player_round()
 
         # ask first player
         trump_action = arena.players[player_rnd.player].select_trump(player_rnd)
