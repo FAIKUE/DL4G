@@ -19,17 +19,31 @@ class ArenaCheating(Arena):
                     south: PlayerCheating, west: PlayerCheating) -> None:
         super().set_players(north, east, south, west)
 
-    def play_round(self, dealer: int) -> None:
+    def get_player_round(self) -> PlayerRoundCheating:
         """
-        Play a complete round (36 cards). The results remains in self._rnd. Used PlayerRoundCheating
-        to give the player full information
-        """
-        self._init_round(dealer)
-        self.deal_cards()
-        self._trump_strategy.determine_trump(rnd=self._rnd, arena=self)
+        Creates and returns an appropriate player round object to use for the players that is created from the
+        current round. By default the object is a PlayerRound, but that can be overridden.
 
+        Returns:
+
+        """
         player_rnd = PlayerRoundCheating()
-        for cards in range(36):
-            player_rnd.set_from_round(self._rnd)
-            card_action = self._players[player_rnd.player].play_card(player_rnd)
-            self._rnd.action_play_card(card_action)
+        player_rnd.set_from_round(self.current_rnd)
+        return player_rnd
+
+    # no longer necessary as basic implementation handles the PlayerRoundCheating now...
+
+    # def play_round(self, dealer: int) -> None:
+    #     """
+    #     Play a complete round (36 cards). The results remains in self._rnd. Used PlayerRoundCheating
+    #     to give the player full information
+    #     """
+    #     self._init_round(dealer)
+    #     self.deal_cards()
+    #     self._trump_strategy.determine_trump(rnd=self._rnd, arena=self)
+    #
+    #     player_rnd = PlayerRoundCheating()
+    #     for cards in range(36):
+    #         player_rnd.set_from_round(self._rnd)
+    #         card_action = self._players[player_rnd.player].play_card(player_rnd)
+    #         self._rnd.action_play_card(card_action)

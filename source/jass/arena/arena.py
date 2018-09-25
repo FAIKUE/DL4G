@@ -121,6 +121,18 @@ class Arena:
     def delta_points(self):
         return self._delta_points
 
+    def get_player_round(self) -> PlayerRound:
+        """
+        Creates and returns an appropriate player round object to use for the players that is created from the
+        current round. By default the object is a PlayerRound, but that can be overridden.
+
+        Returns:
+
+        """
+        player_rnd = PlayerRound()
+        player_rnd.set_from_round(self.current_rnd)
+        return player_rnd
+
     def set_players(self, north: Player, east: Player, south: Player, west: Player) -> None:
         """
         Set the players.
@@ -195,7 +207,7 @@ class Arena:
         self.deal_cards()
         self._trump_strategy.determine_trump(rnd=self._rnd, arena=self)
 
-        player_rnd = PlayerRound()
+        player_rnd = self.get_player_round()
         for cards in range(36):
             player_rnd.set_from_round(self._rnd)
             card_action = self._players[player_rnd.player].play_card(player_rnd)
