@@ -10,7 +10,7 @@ Parse the log files containing the game play data
 
 import json
 import logging
-from typing import Optional
+from typing import Optional, List, Dict
 from jass.base.const import *
 from jass.base.round import Round
 from jass.base.round_factory import get_round
@@ -46,6 +46,7 @@ class LogParser:
                 index = line.find('{')
                 if index:
                     line_json = json.loads(line[index:])
+                    # read the players for those rounds
                     for r in line_json['rounds']:
                         if r is not None:
                             rnd_read = self.read_round(r)
@@ -58,6 +59,40 @@ class LogParser:
         self._logger.info('Read {} valid rounds from file'.format(nr_rounds))
         self._logger.info('Skipped {} rounds'.format(nr_skipped))
         return rnds
+
+    def parse_rounds_and_players(self) -> List[Dict]:
+        rnds = []
+        with open(self._filename, 'r') as file:
+            nr_lines = 0
+            nr_rounds = 0
+            nr_skipped = 0
+            # one line contains one log record (with multiple rounds)
+            for line in file:
+                nr_lines += 1
+                # start of line contains:
+                # 27.11.17 20:10:08,140 | INFO |  |  |  |  |
+                # so we read until the first {
+                index = line.find('{')
+                if index:
+                    line_json = json.loads(line[index:])
+                    # read the players for those rounds
+                    if 'players' in line_json:
+                        players = line_json['players']
+                    else:
+                        players = [0, 0, 0, 0]
+                    for r in line_json['rounds']:
+                        if r is not None:
+                            rnd_read = self.read_round(r)
+                            if rnd_read is not None:
+                                nr_rounds += 1
+                                rnds.append(dict(players=players, round=rnd_read))
+                            else:
+                                nr_skipped += 1
+
+        self._logger.info('Read {} valid rounds from file'.format(nr_rounds))
+        self._logger.info('Skipped {} rounds'.format(nr_skipped))
+        return rnds
+
 
     def read_round(self, round_dict: dict) -> Optional[Round]:
         """
