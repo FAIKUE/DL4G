@@ -218,6 +218,21 @@ class Round:
             return self.rule.get_valid_cards(self.hands[self.player, :], self.current_trick,
                                              self.nr_cards_in_trick, self.trump)
 
+    def get_card_played(self, move: int):
+        """
+        Get the card played in the indicated move.
+
+        Precondition:
+         0 <= move <= 35
+         self.nr_played_cards <= move
+        Args:
+            move: the card of the move to get.
+        Returns:
+            the card played in the move
+        """
+        nr_trick, move_in_trick = divmod(move, 4)
+        return self.tricks[nr_trick, move_in_trick]
+
     def _end_trick(self) -> None:
         """
         End the current trick and update all the necessary fields.
