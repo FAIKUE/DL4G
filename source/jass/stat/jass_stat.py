@@ -90,7 +90,7 @@ class AccuracyByMoveStat(PlayerStat):
 
     def get(self):
         return {
-            'count': self.count_by_move,
-            'raw': self.positives_by_move,
-            'accuracy': self.positives_by_move / self.count_by_move
+            'count': self.count_by_move.tolist(),
+            'raw': self.positives_by_move.tolist(),
+            'accuracy': (self.positives_by_move / self.count_by_move).tolist()
         }
