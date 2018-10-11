@@ -21,16 +21,16 @@ class BasicRequestParser:
     """
     Base class to parse and validate requests.
     """
-    def __init__(self, request_data):
-        self._request_data = request_data
-        self._request_dict = None
+    def __init__(self, request_dict):
+        #self._request_data = request_data
+        self._request_dict = request_dict
         self._valid_request = False
         self._rnd = None
         self._error_msg = 'No Error!'
         self._logger = logging.getLogger(__name__)
         # start the parsing (including validation)
-        if self._validate_request_data():
-            self._parse_request()
+        #if self._validate_request_data():
+        self._parse_request()
 
     def is_valid_request(self) -> bool:
         return self._valid_request

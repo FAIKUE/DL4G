@@ -8,6 +8,7 @@ Code for the Jass player web interface, i.e. the "web part" receiving requests a
 This file handles requests like select_trump and play_card and delegates them to a one of the registered Jass players.
 """
 
+import os
 import configparser
 import logging
 import re
@@ -36,8 +37,9 @@ _jass_players = [RandomPlayerSchieber(), StdinPlayerSchieber()]
 
 app = Flask(__name__)
 
-_ip_address = '127.0.0.1'
-_port = 8888
+#_ip_address = '127.0.0.1'
+_ip_address = '0.0.0.0'
+_port = 80
 
 JASS_PATH_PREFIX = '/jass-service/players/'
 SELECT_TRUMP_PATH_PREFIX = '/select_trump'
@@ -56,7 +58,9 @@ def play_card(player_name: str) -> Response:
     Returns:
         the http response to answer the given request
     """
-    play_card_parser = PlayCardParser(request.data)
+    request_dict = request.get_json()
+    #play_card_parser = PlayCardParser(request.data)
+    play_card_parser = PlayCardParser(request_dict)
     if play_card_parser.is_valid_request():
         player = _get_player_for_name(player_name)
         card = player.play_card(play_card_parser.get_parsed_round())
@@ -78,7 +82,9 @@ def select_trump(player_name: str) -> Response:
         the http response to answer the given request
 
     """
-    select_trump_parser = SelectTrumpParser(request.data)
+    request_dict = request.get_json()
+    # select_trump_parser = SelectTrumpParser(request.data)
+    select_trump_parser = SelectTrumpParser(request_dict)
     if select_trump_parser.is_valid_request():
         player = _get_player_for_name(player_name)
         trump = player.select_trump(select_trump_parser.get_parsed_round())
@@ -197,8 +203,10 @@ def convert_camel_to_snake(camel_case: str) -> str:
 def main():
     logging.basicConfig(level=logging.DEBUG)
     _process_and_print_players()
-    app.run(host=_ip_address, port=_port, debug=True)
+    # app.run(host=_ip_address, port=_port, debug=True)
+    app.run(host='0.0.0.0', port=_port, debug=True)
 
 
 if __name__ == '__main__':
     main()
+
