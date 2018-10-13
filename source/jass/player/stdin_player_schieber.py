@@ -26,7 +26,7 @@ class StdinPlayerSchieber(Player):
             return trump_strings_short.index(trump_char)
 
     def play_card(self, rnd: PlayerRound) -> int:
-        trick_cards = convert_one_hot_encoded_cards_to_int_encoded_list(rnd.get_current_trick())
+        trick_cards = convert_one_hot_encoded_cards_to_int_encoded_list(rnd.current_trick)
         print("Your hand: %s" % convert_one_hot_encoded_cards_to_str_encoded_list(rnd.hand))
         trump_and_trick = "Trump: '%s'" % trump_strings_german_long[rnd.trump]
         if len(trick_cards) > 0:

@@ -4,27 +4,29 @@
 #
 
 import unittest
+import json
 
-from jass.player_service.request_parser import SelectTrumpParser, PlayCardParser
+from jass.player_service.request_parser import PlayerRoundParser
 
 
 class RequestValidatorTest(unittest.TestCase):
 
     def test_parse_select_trump_request_no_data(self):
         request_data = None
-        result = SelectTrumpParser(request_data).is_valid_request()
+        result = PlayerRoundParser(request_data).is_valid_request()
         self.assertFalse(result)
 
     def test_parse_select_trump_request_no_json(self):
         request_data = 'i am not a json string'
-        result = SelectTrumpParser(request_data).is_valid_request()
+        result = PlayerRoundParser(request_data).is_valid_request()
         self.assertFalse(result)
 
     def test_parse_select_trump_request_ok(self):
         request_data = '{"dealer":0,"tss":1,"tricks":[],"player":[{"hand":[]},' \
                        '{"hand":[]},{"hand":[]},{"hand":["HJ","S9","SJ","C7","C8","HA",' \
                        '"C6","H7","CJ"]}],"jassTyp":"SCHIEBER_1000"}'
-        select_trump_parser = SelectTrumpParser(request_data)
+        request_dict = json.loads(request_data)
+        select_trump_parser = PlayerRoundParser(request_dict)
         self.assertTrue(select_trump_parser.is_valid_request())
         rnd = select_trump_parser.get_parsed_round()
         self.assertEqual(0, rnd.dealer)
@@ -40,14 +42,16 @@ class RequestValidatorTest(unittest.TestCase):
         request_data = '{"dealerXXX":0,"tss":1,"tricks":[],"player":[{"hand":[]},' \
                        '{"hand":[]},{"hand":[]},{"hand":["HJ","S9","SJ","C7","C8","HA",' \
                        '"C6","H7","CJ"]}],"jassTyp":"SCHIEBER_1000"}'
-        result = SelectTrumpParser(request_data).is_valid_request()
+        request_dict = json.loads(request_data)
+        result = PlayerRoundParser(request_dict).is_valid_request()
         self.assertFalse(result)
 
     def test_parse_select_trump_request_wrong_jassTyp(self):
         request_data = '{"dealer":0,"tss":1,"tricks":[],"player":[{"hand":[]},' \
                        '{"hand":[]},{"hand":[]},{"hand":["HJ","S9","SJ","C7","C8","HA",' \
                        '"C6","H7","CJ"]}],"jassTyp":"WHATEVER"}'
-        result = SelectTrumpParser(request_data).is_valid_request()
+        request_dict = json.loads(request_data)
+        result = PlayerRoundParser(request_dict).is_valid_request()
         self.assertFalse(result)
 
     def test_parse_play_card_request_valid_middle_of_game(self):
@@ -59,7 +63,8 @@ class RequestValidatorTest(unittest.TestCase):
                        '"player":[{"hand":[]},{"hand":[]},' \
                        '{"hand":["S8","S9","SK","CA","C10","H9"]},{"hand":[]}],' \
                        '"jassTyp":"SCHIEBER_2500"}'
-        play_card_parser = PlayCardParser(request_data)
+        request_dict = json.loads(request_data)
+        play_card_parser = PlayerRoundParser(request_dict)
         self.assertTrue(play_card_parser.is_valid_request())
         rnd = play_card_parser.get_parsed_round()
         self.assertEqual(3, rnd.nr_tricks)
@@ -78,7 +83,8 @@ class RequestValidatorTest(unittest.TestCase):
                        '"player":[{"hand":[]},{"hand":[]},{"hand":[]},' \
                        '{"hand":["S6","S7","S8","C6","C7","C8","D6","D8","HJ"]}],' \
                        '"jassTyp":"SCHIEBER_1000"}'
-        play_card_parser = PlayCardParser(request_data)
+        request_dict = json.loads(request_data)
+        play_card_parser = PlayerRoundParser(request_dict)
         self.assertTrue(play_card_parser.is_valid_request())
         rnd = play_card_parser.get_parsed_round()
         self.assertEqual(3, rnd.dealer)
@@ -105,7 +111,8 @@ class RequestValidatorTest(unittest.TestCase):
                        '{"cards":["H7","HQ","HK","D8"],"points":7,"win":1,"first":3},' \
                        '{"cards":["SA","D9","H9"],"points":20,"win":1,"first":1}],' \
                        '"player":[{"hand":[]},{"hand":[]},{"hand":[]},{"hand":["DK"]}],"jassTyp":"SCHIEBER_2500"}'
-        play_card_parser = PlayCardParser(request_data)
+        request_dict = json.loads(request_data)
+        play_card_parser = PlayerRoundParser(request_dict)
         self.assertTrue(play_card_parser.is_valid_request())
         rnd = play_card_parser.get_parsed_round()
         self.assertEqual(2, rnd.dealer)

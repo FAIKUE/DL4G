@@ -16,7 +16,10 @@ class Rule:
     This in an abstract base class that defines the interface.
     """
 
-    def get_valid_cards(self, hand: np.array, current_trick: np.ndarray or list, move_nr: int, trump: int or None) -> np.array:
+    def get_valid_cards(self, hand: np.array,
+                        current_trick: np.ndarray or list,
+                        move_nr: int,
+                        trump: int or None) -> np.array:
         """
         Get the valid cards that can be played by the current player.
 

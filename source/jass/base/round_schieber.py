@@ -2,7 +2,6 @@
 #
 # Created by Thomas Koller on 24.07.18
 #
-import numpy as np
 from jass.base.const import JASS_SCHIEBER_1000, next_player, partner_player, PUSH
 from jass.base.round import Round
 from jass.base.rule_schieber import RuleSchieber
@@ -96,7 +95,6 @@ class RoundSchieber(Round):
         nr_played_cards = played_cards.sum()
         nr_cards_in_hand = self.hands.flatten().sum()
         assert nr_played_cards + nr_cards_in_hand == 36
-
 
         # number of points
         points_team_0 = 0

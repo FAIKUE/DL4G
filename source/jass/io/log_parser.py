@@ -10,7 +10,7 @@ Parse the log files containing the game play data
 
 import json
 import logging
-from typing import Optional, List, Dict
+from typing import Optional, Dict
 from jass.base.const import *
 from jass.base.round import Round
 from jass.base.round_factory import get_round
@@ -92,7 +92,6 @@ class LogParser:
         self._logger.info('Read {} valid rounds from file'.format(nr_rounds))
         self._logger.info('Skipped {} rounds'.format(nr_skipped))
         return rnds
-
 
     def read_round(self, round_dict: dict) -> Optional[Round]:
         """

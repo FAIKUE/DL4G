@@ -17,7 +17,6 @@ class PlayerStat:
         self.description = 'Base Stat'
         pass
 
-
     def add_result_for_action(self, label: int, action: int, player_rnd: PlayerRound = None):
         """
         Add one result from label and the action.
@@ -29,7 +28,6 @@ class PlayerStat:
             the statistics (what move, what trump, etc.)
         """
         raise NotImplementedError
-
 
     def get(self) -> Dict:
         """
@@ -47,7 +45,6 @@ class PlayerStatCollection:
 
     def __init__(self):
         self.stat = []
-
 
     def add_statistic(self, statistic: PlayerStat):
         self.stat.append(statistic)

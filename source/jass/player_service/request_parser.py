@@ -6,12 +6,10 @@
 Code for the validation and parsing of requests to a Jass player service.
 """
 
-import json
 import logging
 
-from jass.base.player_round import PlayerRound
 from jass.base.const import *
-from jass.base.round_factory import get_round
+from jass.base.player_round import PlayerRound
 
 ERROR_MSG_PREFIX = 'Request Parse Error: '
 VALID_JASS_TYPES = ['SCHIEBER_1000', 'SCHIEBER_2500']
@@ -22,14 +20,12 @@ class BasicRequestParser:
     Base class to parse and validate requests.
     """
     def __init__(self, request_dict):
-        #self._request_data = request_data
         self._request_dict = request_dict
         self._valid_request = False
         self._rnd = None
         self._error_msg = 'No Error!'
         self._logger = logging.getLogger(__name__)
         # start the parsing (including validation)
-        #if self._validate_request_data():
         self._parse_request()
 
     def is_valid_request(self) -> bool:
@@ -60,18 +56,6 @@ class BasicRequestParser:
         raise NotImplementedError('BasicRequestParser._parse_request')
 
     def _validate_request_data(self) -> bool:
-        if not self._request_data:
-            self._error_msg = ERROR_MSG_PREFIX + 'got no request data'
-            self._logger.error(self._error_msg)
-            return False
-
-        try:
-            self._request_dict = json.loads(self._request_data)
-        except ValueError:
-            self._error_msg = ERROR_MSG_PREFIX + 'could not parse request data as json'
-            self._logger.error(self._error_msg)
-            return False
-
         if not self._request_dict:
             self._error_msg = ERROR_MSG_PREFIX + 'could not parse json data'
             self._logger.error(self._error_msg)
@@ -96,6 +80,8 @@ class PlayerRoundParser(BasicRequestParser):
     """
 
     def _parse_request(self):
+        if not self._request_dict:
+            return
         if not self._json_has_top_level_elements(self._request_dict,
                                                  ['dealer', 'player', 'jassTyp']):
             return
@@ -164,20 +150,3 @@ class PlayerRoundParser(BasicRequestParser):
         self._rnd = player_round
         self._valid_request = True
 
-
-class SelectTrumpParser(PlayerRoundParser):
-    """
-    Class to parse a select trump request. This includes validation of the request.
-    """
-
-    def __init__(self, request_data):
-        super(SelectTrumpParser, self).__init__(request_data)
-
-
-class PlayCardParser(PlayerRoundParser):
-    """
-    Class to parse a play request. This includes validation of the request.
-    """
-
-    def __init__(self, request_data):
-        super(PlayCardParser, self).__init__(request_data)

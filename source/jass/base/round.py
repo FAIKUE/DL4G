@@ -155,7 +155,7 @@ class Round:
         self.hands[2, cards[18:27]] = 1
         self.hands[3, cards[27:39]] = 1
 
-    def set_hands(self, hands: np.array) -> None :
+    def set_hands(self, hands: np.array) -> None:
         """
         Set the hands (instead of dealing the cards). The used array is copied
         Args:
