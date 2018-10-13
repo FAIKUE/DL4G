@@ -24,10 +24,10 @@ class GameParser:
         game = Game()
         game.set_players(data['north'], data['east'], data['south'], data['west'])
         game.winner = data['winner']
-        game._points_team0 = data['points_team0']
-        game._points_team1 = data['points_team1']
-        game.time_started = data['time_started']
-        game.time_finished = data['time_finished']
+        game._points_team0 = data['pointsTeam0']
+        game._points_team1 = data['pointsTeam1']
+        game.time_started = data['timeStarted']
+        game.time_finished = data['timeFinished']
 
         rounds = data['rounds']
         # use temporary list for rounds (as Game.add_round changes the points)

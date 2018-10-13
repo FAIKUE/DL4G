@@ -1,5 +1,5 @@
 import unittest
-
+import json
 from jass.base.player_round import PlayerRound
 from jass.io.log_parser import LogParser
 from jass.player_service.request_generator import PlayerRoundRequestGenerator
@@ -15,7 +15,9 @@ class PlayerRoundGeneratorTestCase(unittest.TestCase):
             player_rnds = PlayerRound.all_from_complete_round(rnd)
             for player_rnd in player_rnds:
                 json_data = PlayerRoundRequestGenerator.generate_json(player_rnd)
-                parser = PlayerRoundParser(json_data)
+                # in the service, we directly get the json dict
+                json_dict = json.loads(json_data)
+                parser = PlayerRoundParser(json_dict)
                 is_valid = parser.is_valid_request()
                 self.assertTrue(is_valid)
                 self.assertTrue(player_rnd == parser.get_parsed_round())

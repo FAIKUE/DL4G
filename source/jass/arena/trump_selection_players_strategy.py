@@ -4,7 +4,6 @@
 #
 
 from jass.base.const import PUSH
-from jass.base.player_round import PlayerRound
 from jass.arena.trump_selection_strategy import TrumpStrategy
 
 
