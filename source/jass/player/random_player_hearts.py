@@ -2,7 +2,6 @@ import logging
 from jass.base.player_round import PlayerRound
 from jass.base.const import *
 from jass.player.player import Player
-from jass.base.rule_hearts import RuleHearts
 
 
 class RandomPlayerHearts(Player):

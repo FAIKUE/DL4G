@@ -394,7 +394,6 @@ class PlayerRound:
         # cards played
         assert self.nr_played_cards == 4 * self.nr_tricks + self.nr_cards_in_trick
 
-
         # cards in hand
         assert self.hand.size == 36
         assert self.hand.sum() == 9-self.nr_tricks

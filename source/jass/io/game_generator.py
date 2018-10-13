@@ -29,10 +29,10 @@ class GameGenerator:
         data['south'] = game.south
         data['west'] = game.west
         data['winner'] = game.winner
-        data['points_team0'] = int(game.points_team0)
-        data['points_team1'] = int(game.points_team1)
-        data['time_started'] = game.time_started
-        data['time_finished'] = game.time_finished
+        data['pointsTeam0'] = int(game.points_team0)
+        data['pointsTeam1'] = int(game.points_team1)
+        data['timeStarted'] = game.time_started
+        data['timeFinished'] = game.time_finished
 
         rounds = []
         for i in range(game.nr_rounds):
