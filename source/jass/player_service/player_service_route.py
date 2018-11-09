@@ -41,13 +41,15 @@ def play_card(player_name: str):
     parser = PlayerRoundParser(request_dict)
     if parser.is_valid_request():
         player = current_app.get_player_for_name(player_name)
+        if player is None:
+            return jsonify(error='player not found'), HTTPStatus.BAD_REQUEST
         try:
             card = player.play_card(parser.get_parsed_round())
             # card is returned as string
             data = dict(card=card_strings[card])
             return jsonify(data), HTTPStatus.OK
         except Exception as e:
-            return jsonify(e), HTTPStatus.INTERNAL_SERVER_ERROR
+            return jsonify(error=str(e)), HTTPStatus.INTERNAL_SERVER_ERROR
     else:
         logging.warning(parser.get_error_message())
         return jsonify(parser.get_error_message()), HTTPStatus.BAD_REQUEST
