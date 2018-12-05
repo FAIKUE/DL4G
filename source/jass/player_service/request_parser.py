@@ -97,12 +97,16 @@ class PlayerRoundParser(BasicRequestParser):
         # trump might be None if case of trump request
         if 'trump' in self._request_dict:
             player_round.trump = self._request_dict['trump']
+        else:
+            player_round.trump = None
         if 'tss' in self._request_dict and self._request_dict['tss'] == 1:
             player_round.forehand = False
-            player_round.declared_trump = partner_player[next_player[player_round.dealer]]
+            if player_round.trump is not None:
+                # only mark declared player, when trump has already been declared
+                player_round.declared_trump = partner_player[next_player[player_round.dealer]]
         else:
             # forehand is true if trump has been declared
-            if 'trump' in self._request_dict:
+            if player_round.trump is not None:
                 player_round.forehand = True
                 player_round.declared_trump = next_player[player_round.dealer]
             else:
