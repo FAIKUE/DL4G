@@ -75,7 +75,7 @@ class PlayerRound:
         #
 
         # the current hands of the player
-        self.hand = np.zeros(shape=36, dtype=np.int)
+        self.hand = np.zeros(shape=36, dtype=np.int32)
 
         # the tricks played so far, with the cards of the tricks int encoded in the order they are played
         # a value of -1 indicates that the card has not been played yet
@@ -365,7 +365,7 @@ class PlayerRound:
 
         # determine hand still held by the player, which are the cards that the player will play in the next
         # tricks of the full rnd, that are not played yet
-        for i in range(player_rnd.nr_tricks, 9):
+        for i in range(0, 9):
             # determine which card was played in this trick by the player
             index = (rnd.trick_first_player[i] - player_rnd.player) % 4
             card_played = rnd.tricks[i, index]

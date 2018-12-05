@@ -136,7 +136,7 @@ Six_offset = 8
 # offsets to start of cards for this color
 color_offset = np.array([
     0, 9, 18, 27
-], np.int)
+], np.int32)
 
 # array to generate string representations from the ids
 card_strings = np.array([
