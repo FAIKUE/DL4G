@@ -36,7 +36,7 @@ class PlayerRoundCheating(PlayerRound):
                                                   trump=trump, forehand=forehand, declared_trump=declared_trump,
                                                   jass_type=jass_type, rule=rule)
         # the current hands of all the player
-        self.hands = np.zeros(shape=[4, 36], dtype=np.int)
+        self.hands = np.zeros(shape=[4, 36], dtype=np.int32)
 
     def __repr__(self):
         """

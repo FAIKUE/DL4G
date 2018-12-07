@@ -15,7 +15,7 @@ class RandomPlayerSchieber(Player):
 
     def select_trump(self, rnd: PlayerRound) -> int:
         possible_trump = trump_ints.copy()
-        if rnd.forehand:
+        if rnd.forehand is None:
             possible_trump.append(PUSH)
         return random.choice(possible_trump)
 

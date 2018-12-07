@@ -97,12 +97,20 @@ class PlayerRoundParser(BasicRequestParser):
         # trump might be None if case of trump request
         if 'trump' in self._request_dict:
             player_round.trump = self._request_dict['trump']
+        else:
+            player_round.trump = None
         if 'tss' in self._request_dict and self._request_dict['tss'] == 1:
             player_round.forehand = False
-            player_round.declared_trump = partner_player[next_player[player_round.dealer]]
+            if player_round.trump is not None:
+                # only mark declared player, when trump has already been declared
+                player_round.declared_trump = partner_player[next_player[player_round.dealer]]
         else:
-            player_round.forehand = True
-            player_round.declared_trump = next_player[player_round.dealer]
+            # forehand is true if trump has been declared
+            if player_round.trump is not None:
+                player_round.forehand = True
+                player_round.declared_trump = next_player[player_round.dealer]
+            else:
+                player_round.forehand = None
         for i, trick_dict in enumerate(self._request_dict['tricks']):
             player_round.trick_first_player[i] = trick_dict['first']
             cards = trick_dict['cards']
@@ -111,10 +119,24 @@ class PlayerRoundParser(BasicRequestParser):
             if len(cards) == 4:
                 # complete trick of 4 cards
                 player_round.nr_tricks += 1
-                player_round.trick_points[i] = trick_dict['points']
-                player_round.trick_winner[i] = trick_dict['win']
                 for j in range(len(cards)):
                     player_round.tricks[i, j] = card_ids[cards[j]]
+                if 'points' in trick_dict:
+                    player_round.trick_points[i] = trick_dict['points']
+                else:
+                    # calculate points
+                    points = player_round.rule.calc_points(player_round.tricks[i],
+                                                           player_round.nr_tricks == 9,
+                                                           player_round.trump)
+                    player_round.trick_points[i] = points
+                if 'win' in trick_dict:
+                    player_round.trick_winner[i] = trick_dict['win']
+                else:
+                    winner = player_round.rule.calc_winner(player_round.tricks[i],
+                                                           player_round.trick_first_player[i],
+                                                           player_round.trump)
+                    player_round.trick_winner[i] = winner
+
                 if player_round.trick_winner[i] == 0 or player_round.trick_winner[i] == 2:
                     player_round.points_team_0 += player_round.trick_points[i]
                 else:

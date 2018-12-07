@@ -7,6 +7,7 @@ Arena classes allow to players to compete against each other. The rules of the a
 play only a single round or to play a complete game to a specific number of points. Also the trump selection
 might be carried out differently.
 """
+import sys
 from jass.base.const import *
 from jass.base.round import Round
 from jass.base.round_factory import get_round
@@ -28,7 +29,9 @@ class Arena:
     appropriate strategy, but there is currently no strategy to change how cards are dealt.
 
     """
-    def __init__(self, jass_type: str, trump_strategy: TrumpStrategy, play_game_strategy: PlayGameStrategy):
+    def __init__(self, jass_type: str,
+                 trump_strategy: TrumpStrategy, play_game_strategy: PlayGameStrategy,
+                 print_every_x_games: int = 5):
         self._nr_games_to_play = 0
 
         # the jass type, used to get the correct round
@@ -50,6 +53,9 @@ class Arena:
         self._nr_draws = 0                              # type: int
         self._nr_games_played = 0                       # type: int
         self._delta_points = 0                          # type: int
+
+        # Print  progress
+        self._print_every_x_games = print_every_x_games
 
     @property
     def nr_games_to_play(self):
@@ -225,3 +231,12 @@ class Arena:
         """
         for game_id in range(self._nr_games_to_play):
             self.play_game()
+            if self.nr_games_played % self._print_every_x_games == 0:
+                points_to_write = int(self.nr_games_played / self._nr_games_to_play * 40)
+                spaces_to_write = 40 - points_to_write
+                sys.stdout.write("\r[{}{}] {:4}/{:4} games played".format('.' * points_to_write,
+                                                                          ' ' * spaces_to_write,
+                                                                          self.nr_games_played,
+                                                                          self._nr_games_to_play))
+        sys.stdout.write('\n')
+

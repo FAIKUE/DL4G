@@ -26,7 +26,14 @@ class StdinPlayerSchieber(Player):
             return trump_strings_short.index(trump_char)
 
     def play_card(self, rnd: PlayerRound) -> int:
-        trick_cards = convert_one_hot_encoded_cards_to_int_encoded_list(rnd.current_trick)
+        print('You are player {}'.format(rnd.player))
+        # print previous tricks
+
+        if rnd.nr_cards_in_trick == 0:
+            trick_cards = []
+        else:
+            trick_cards = convert_one_hot_encoded_cards_to_int_encoded_list(rnd.current_trick[0:rnd.nr_cards_in_trick-1])
+
         print("Your hand: %s" % convert_one_hot_encoded_cards_to_str_encoded_list(rnd.hand))
         trump_and_trick = "Trump: '%s'" % trump_strings_german_long[rnd.trump]
         if len(trick_cards) > 0:
@@ -35,6 +42,8 @@ class StdinPlayerSchieber(Player):
         print(trump_and_trick)
 
         valid_cards = self._rule.get_valid_cards(rnd.hand, trick_cards, len(trick_cards), rnd.trump)  # 1-hot encoded
+        print('Valid cards: {}'.format(convert_one_hot_encoded_cards_to_str_encoded_list(valid_cards)))
+
         while True:
             card_str = input("> Enter card to play [string] : ").upper()
             if card_str not in card_strings:
