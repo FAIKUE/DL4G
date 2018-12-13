@@ -11,11 +11,13 @@ class Game:
     A game consists of a number of (full) rounds that are played between 4 players.
 
     (Most of the logic and the available data is based on Rounds. The game is primarily used to store and load
-    games that are played on the server.
+    games that are played on the server. For that reason it is now extended to support the urls of the players
     """
 
     def __init__(self):
         self._players = ['', '', '', '']                # type: [str]
+        self._urls = ['', '', '', '']                   # type: [str]
+        self._player_ids = ['', '', '', '']             # type: [str]
         self._rounds = []                               # type: [Round]
         self._points_team0 = 0                          # type: int
         self._points_team1 = 0                          # type: int
@@ -104,6 +106,54 @@ class Game:
         self._players[WEST] = player
 
     @property
+    def north_url(self) -> str:
+        return self._urls[NORTH]
+
+    @north_url.setter
+    def north_url(self, url: str):
+        self._urls[NORTH] = url
+
+    @property
+    def east_url(self) -> str:
+        return self._urls[EAST]
+
+    @east_url.setter
+    def east_url(self, url: str):
+        self._urls[EAST] = url
+
+    @property
+    def south_url(self) -> str:
+        return self._urls[SOUTH]
+
+    @south_url.setter
+    def south_url(self, url: str):
+        self._urls[SOUTH] = url
+
+    @property
+    def west_url(self) -> str:
+        return self._urls[WEST]
+
+    @west_url.setter
+    def west_url(self, url: str):
+        self._urls[WEST] = url
+
+    @property
+    def north_id(self):
+        return self._player_ids[NORTH]
+
+    @property
+    def east_id(self):
+        return self._player_ids[EAST]
+
+    @property
+    def south_id(self):
+        return self._player_ids[SOUTH]
+
+    @property
+    def west_id(self):
+        return self._player_ids[WEST]
+
+    @property
     def winner(self) -> int:
         return self._winner
 
@@ -141,6 +191,34 @@ class Game:
         self._players[SOUTH] = south
         self._players[WEST] = west
 
+    def set_urls(self, north_url: str, east_url: str, south_url: str, west_url: str) -> None:
+        """
+        Set the players.
+        Args:
+           north_url: url of north player
+           east_url: url of east player
+           south_url: url of south player
+           west_url: url of west player
+        """
+        self._urls[NORTH] = north_url
+        self._urls[EAST] = east_url
+        self._urls[SOUTH] = south_url
+        self._urls[WEST] = west_url
+
+    def set_player_ids(self, north_id: str, east_id: str, south_id: str, west_id: str) -> None:
+        """
+        Set the players.
+        Args:
+           north_id: id of north player
+           east_id: id of east player
+           south_id: id of south player
+           west_id: id of west player
+        """
+        self._player_ids[NORTH] = north_id
+        self._player_ids[EAST] = east_id
+        self._player_ids[SOUTH] = south_id
+        self._player_ids[WEST] = west_id
+
     def add_round(self, rnd: Round) -> None:
         """
         Add a round to the game. The points are adjusted from the round.
@@ -151,5 +229,3 @@ class Game:
         self._rounds.append(rnd)
         self._points_team0 += rnd.points_team_0
         self._points_team1 += rnd.points_team_1
-
-

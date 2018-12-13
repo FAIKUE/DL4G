@@ -28,6 +28,14 @@ class GameGenerator:
         data['east'] = game.east
         data['south'] = game.south
         data['west'] = game.west
+        data['northUrl'] = game.north_url
+        data['eastUrl'] = game.east_url
+        data['southUrl'] = game.south_url
+        data['westUrl'] = game.west_url
+        data['northId'] = game.north_id
+        data['eastId'] = game.east_id
+        data['southId'] = game.south_id
+        data['westId'] = game.west_id
         data['winner'] = game.winner
         data['pointsTeam0'] = int(game.points_team0)
         data['pointsTeam1'] = int(game.points_team1)
