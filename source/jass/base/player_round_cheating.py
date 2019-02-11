@@ -117,7 +117,9 @@ class PlayerRoundCheating(PlayerRound):
         player_rnd = PlayerRoundCheating(dealer=rnd.dealer,
                                          trump=rnd.trump,
                                          declared_trump=rnd.declared_trump,
-                                         forehand=rnd.forehand)
+                                         forehand=rnd.forehand,
+                                         jass_type=rnd.jass_type,
+                                         rule=rnd.rule)
 
         player_rnd.nr_played_cards = cards_played
 
@@ -128,10 +130,19 @@ class PlayerRoundCheating(PlayerRound):
         player_rnd.trick_first_player[0:player_rnd.nr_tricks + 1] = rnd.trick_first_player[0:player_rnd.nr_tricks + 1]
 
         if cards_played > 0:
-            # copy all the tricks
-            player_rnd.tricks[0:player_rnd.nr_tricks, :] = rnd.tricks[0:player_rnd.nr_tricks, :]
-            player_rnd.current_trick[0:player_rnd.nr_cards_in_trick] = \
-                rnd.tricks[player_rnd.nr_tricks, 0:player_rnd.nr_cards_in_trick]
+            if player_rnd.nr_cards_in_trick == 0:
+                # only full tricks
+                player_rnd.tricks[0:player_rnd.nr_tricks, :] = rnd.tricks[0:player_rnd.nr_tricks, :]
+
+            else:
+                # copy all the full tricks first
+                player_rnd.tricks[0:player_rnd.nr_tricks, :] = rnd.tricks[0:player_rnd.nr_tricks, :]
+
+                # copy the trick in progress
+                player_rnd.tricks[player_rnd.nr_tricks, 0:player_rnd.nr_cards_in_trick] = \
+                    rnd.tricks[player_rnd.nr_tricks, 0:player_rnd.nr_cards_in_trick]
+                # make sure the current trick points to that
+                player_rnd.current_trick = player_rnd.tricks[player_rnd.nr_tricks]
             # copy the results from the tricks
             player_rnd.trick_winner[0:player_rnd.nr_tricks] = rnd.trick_winner[0:player_rnd.nr_tricks]
             player_rnd.trick_points[0:player_rnd.nr_tricks] = rnd.trick_points[0:player_rnd.nr_tricks]

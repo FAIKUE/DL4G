@@ -67,3 +67,4 @@ def get_round_from_player_round(player_rnd: PlayerRound, hands: np.ndarray):
     rnd.rule = player_rnd.rule
 
     return rnd
+

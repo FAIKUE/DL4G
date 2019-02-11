@@ -306,7 +306,8 @@ same_team = np.array(
 
 def get_cards_encoded(cards: List[int]) -> np.ndarray:
     """
-    Get the 1-hot encoded array of the cards in the list
+    Get the 1-hot encoded array of the cards in the list.
+
     Args:
         cards: the cards
 
