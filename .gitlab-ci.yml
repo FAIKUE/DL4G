@@ -36,7 +36,7 @@ Build:
 Publish to Nexus:
   stage: release
   only:
-    - master
+    - qa
   dependencies:
     - Build
   image: hub.edu.abiz.ch/sys/agents/docker:stable
