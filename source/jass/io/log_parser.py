@@ -44,7 +44,7 @@ class LogParser:
                 # 27.11.17 20:10:08,140 | INFO |  |  |  |  |
                 # so we read until the first {
                 index = line.find('{')
-                if index:
+                if index != -1:
                     line_json = json.loads(line[index:])
                     # read the players for those rounds
                     for r in line_json['rounds']:
@@ -73,7 +73,7 @@ class LogParser:
                 # 27.11.17 20:10:08,140 | INFO |  |  |  |  |
                 # so we read until the first {
                 index = line.find('{')
-                if index:
+                if index != -1:
                     line_json = json.loads(line[index:])
                     # read the players for those rounds
                     if 'players' in line_json:
@@ -141,5 +141,6 @@ class LogParser:
         # complete entry
         rnd.nr_tricks = 9
         rnd.nr_played_cards = 36
+        rnd.current_trick = None
 
         return rnd

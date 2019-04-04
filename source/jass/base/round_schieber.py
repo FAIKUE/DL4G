@@ -2,6 +2,7 @@
 #
 # Created by Thomas Koller on 24.07.18
 #
+import numpy as np
 from jass.base.const import JASS_SCHIEBER_1000, next_player, partner_player, PUSH
 from jass.base.round import Round
 from jass.base.rule_schieber import RuleSchieber
@@ -106,3 +107,12 @@ class RoundSchieber(Round):
                 points_team_1 += self.trick_points[trick]
         assert points_team_0 == self.points_team_0
         assert points_team_1 == self.points_team_1
+
+        # check current trick
+        # check current trick
+        if self.nr_played_cards == 36:
+            assert self.current_trick is None
+        else:
+            nr_cards_in_current_trick = np.count_nonzero(self.current_trick[:] > -1)
+            expected_cards_in_current_trick = (self.nr_played_cards % 4)
+            assert nr_cards_in_current_trick == expected_cards_in_current_trick

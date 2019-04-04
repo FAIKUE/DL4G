@@ -296,6 +296,12 @@ class PlayerRound:
                 # only full tricks
                 player_rnd.tricks[0:player_rnd.nr_tricks, :] = rnd.tricks[0:player_rnd.nr_tricks, :]
 
+                # current trick is empty (or none if last card)
+                if cards_played == 36:
+                    player_rnd.current_trick = None
+                else:
+                    # this is the next trick, after the full ones
+                    player_rnd.current_trick = player_rnd.tricks[player_rnd.nr_tricks]
             else:
                 # copy all the full tricks first
                 player_rnd.tricks[0:player_rnd.nr_tricks, :] = rnd.tricks[0:player_rnd.nr_tricks, :]
@@ -304,6 +310,7 @@ class PlayerRound:
                 player_rnd.tricks[player_rnd.nr_tricks, 0:player_rnd.nr_cards_in_trick] = \
                     rnd.tricks[player_rnd.nr_tricks, 0:player_rnd.nr_cards_in_trick]
                 # make sure the current trick points to that
+
                 player_rnd.current_trick = player_rnd.tricks[player_rnd.nr_tricks]
             # copy the results from the tricks
             player_rnd.trick_winner[0:player_rnd.nr_tricks] = rnd.trick_winner[0:player_rnd.nr_tricks]
@@ -397,4 +404,12 @@ class PlayerRound:
         # cards in hand
         assert self.hand.size == 36
         assert self.hand.sum() == 9-self.nr_tricks
+
+        # check current trick
+        if self.nr_played_cards == 36:
+            assert self.current_trick is None
+        else:
+            nr_cards_in_current_trick = np.count_nonzero(self.current_trick[:] > -1)
+            expected_cards_in_current_trick = (self.nr_played_cards % 4)
+            assert nr_cards_in_current_trick == expected_cards_in_current_trick
 

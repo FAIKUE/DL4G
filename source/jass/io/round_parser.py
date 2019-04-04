@@ -63,6 +63,8 @@ class RoundParser:
         rnd.player = None
 
         # current trick should be the trick at the end of the game
-        rnd.current_trick = rnd.tricks[8, :]
+        #rnd.current_trick = rnd.tricks[8, :]
+        # no current trick at the end of a game
+        rnd.current_trick = None
 
         return rnd
