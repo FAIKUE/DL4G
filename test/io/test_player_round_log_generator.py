@@ -155,16 +155,16 @@ class PlayerRoundLogGeneratorCase(unittest.TestCase):
 
         self.assertListEqual([], result[4]["currenttrick"])
 
-    def test_writefile(self):
+    def _test_writefile(self):
         rnd = self.get_multiple_identical_rounds(3)
 
         testee = PlayerRoundLogGenerator("", "")
         result = testee._rounds_to_player_rounds_dict(rnd)
-        testee._generate_logs(result, "..//test_results//test.json")
+        testee._generate_logs(result, "..\\test_results\\test.json")
 
-    def test_log_to_playerroundlog(self):
+    def _test_log_to_playerroundlog(self):
         testee = PlayerRoundLogGenerator("", "")
-        testee._parse_file("..\\resources\\small_log.txt", "..\\test_results")
+        testee._generate_from_file("..\\resources\\small_log.txt", "..\\test_results")
 
     def get_round(self):
         rnd = RoundSchieber(dealer=WEST)
