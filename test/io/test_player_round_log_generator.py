@@ -155,6 +155,12 @@ class PlayerRoundLogGeneratorCase(unittest.TestCase):
 
         self.assertListEqual([], result[4]["currenttrick"])
 
+    def test_adds_jass_type(self):
+        rnd = self.get_multiple_identical_rounds(5)
+        testee = PlayerRoundLogGenerator("", "")
+        result = testee._rounds_to_player_rounds_dict(rnd)
+        self.assertEqual("SCHIEBER_1000", result[4]["jassTyp"])
+
     def _test_writefile(self):
         rnd = self.get_multiple_identical_rounds(3)
 

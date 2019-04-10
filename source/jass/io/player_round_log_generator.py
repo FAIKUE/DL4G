@@ -104,6 +104,7 @@ class PlayerRoundLogGenerator:
         player_round_dict["hand"] = convert_one_hot_encoded_cards_to_str_encoded_list(player_round.hand)
         player_round_dict["nrcardsintrick"] = player_round.nr_cards_in_trick
         player_round_dict["currenttrick"] = [card_strings[card] for card in player_round.current_trick if card != -1]
+        player_round_dict["jassTyp"] = player_round.jass_type
         PlayerRoundLogGenerator._add_tricks_to_dict(player_round, player_round_dict)
 
         return player_round_dict
