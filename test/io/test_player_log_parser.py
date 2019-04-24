@@ -37,9 +37,9 @@ class PlayerRoundLogGeneratorCase(unittest.TestCase):
         for rnd in result:
             rnd.assert_invariants()
 
-    def _test_more_data_consistency(self):
+    def test_cheating_consistency(self):
         testee = PlayerRoundLogParser()
-        result = testee.parse_rounds_from_file("..\\test_results\\player_round_small_log.txt")
+        result = testee.parse_cheating_rounds_from_file("..\\resources\\small_cheating_player_log.txt")
         for rnd in result:
             rnd.assert_invariants()
 

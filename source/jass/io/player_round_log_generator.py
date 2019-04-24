@@ -8,7 +8,7 @@ from jass.base.player_round import PlayerRound
 from jass.base.player_round_cheating import PlayerRoundCheating
 from jass.io.log_parser import LogParser
 
-PREFIX_CHEATING_FILENAME = "\player_round_cheating"
+PREFIX_CHEATING_FILENAME = "\player_round_cheating_"
 
 PREFIX_FILENAME = "\player_round_"
 

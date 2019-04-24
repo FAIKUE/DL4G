@@ -6,26 +6,57 @@ from jass.base.player_round import PlayerRound
 
 import numpy as np
 
+from jass.base.player_round_cheating import PlayerRoundCheating
+
+
 class PlayerRoundLogParser:
 
     def __init__(self):
         self._logger = logging.getLogger(__name__)
-
 
     def parse_rounds_from_file(self, filename) -> [PlayerRound]:
         file = open(filename)
         player_rounds = []
         try:
             for line in file:
-                player_rounds.append(self.parse_line(line))
+                round_dict = json.loads(line)
+                rnd = self.initialize_round(round_dict)
+                rnd = self.add_round_information(rnd, round_dict)
+                player_rounds.append(rnd)
         finally:
             file.close()
 
         return player_rounds
 
+    def parse_cheating_rounds_from_file(self, filename) -> [PlayerRoundCheating]:
+        file = open(filename)
+        player_rounds = []
+        try:
+            for line in file:
+                round_dict = json.loads(line)
+                rnd = self.initialize_round_cheating(round_dict)
+                rnd = self.add_round_information(rnd, round_dict)
+                rnd = self.add_cheating_information(rnd, round_dict)
+                player_rounds.append(rnd)
+        finally:
+            file.close()
 
-    def parse_line(self, line: str):
-        round_dict = json.loads(line)
+        return player_rounds
+
+    def initialize_round_cheating(self, round_dict):
+        rnd = PlayerRoundCheating(
+            dealer=round_dict['dealer'],
+            player=round_dict['player'],
+            trump=round_dict['trump'],
+            forehand=round_dict['forehand'],
+            declared_trump=round_dict['declaredtrump'],
+            jass_type=round_dict['jassTyp'],
+            rule=None
+        )
+
+        return rnd
+
+    def initialize_round(self, round_dict):
         rnd = PlayerRound(
             dealer=round_dict['dealer'],
             player=round_dict['player'],
@@ -36,6 +67,9 @@ class PlayerRoundLogParser:
             rule=None
         )
 
+        return rnd
+
+    def add_round_information(self, rnd, round_dict):
         tricks = round_dict['tricks']
         for i, trick in enumerate(tricks):
             cards = self.get_id_trick_from_constants(trick["cards"])
@@ -63,8 +97,9 @@ class PlayerRoundLogParser:
 
         return np.array(cards)
 
+    def add_cheating_information(self, rnd, round_dict):
+        for i, hand in enumerate(round_dict['hands']):
+            for card_constant in hand:
+                rnd.hands[i][card_ids[card_constant]] = 1
 
-if __name__ == '__main__':
-    filename = "C:\\Users\\Cyrille\\Documents\\abiz\\results\\2017_10\\player_round_MLAI_0-0_log.txt"
-    parser = PlayerRoundLogParser()
-    parser.parse_rounds_from_file(filename)
+        return rnd
