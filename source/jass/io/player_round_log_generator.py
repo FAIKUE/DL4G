@@ -57,10 +57,13 @@ class PlayerRoundLogGenerator:
 
         # The first element is always empty (it points to the initial directory) with the initial source
         directories[0] = self.source
-        for directory in directories:
-            print(directory)
+        number_of_directories = len(directories)
+
+        for i, directory in enumerate(directories):
+            print("converting directory (" + str(i + 1) + "/" + str(number_of_directories) + ")")
             subdirectory = directory.replace(self.source, '')
             self._generate_from_directory(directory, self.destination + subdirectory)
+
 
     def _generate_from_directory(self, source_directory, destination_directory):
         if not os.path.exists(destination_directory):
@@ -73,8 +76,11 @@ class PlayerRoundLogGenerator:
 
         os.chdir(source_directory)
         files = glob.glob("*.txt")
-
-        for file in files:
+        number_of_files = len(files)
+        for i, file in enumerate(files):
+            print("###################################################################################")
+            print("converting file " + file + " (" + str(i + 1) + "/" + str(number_of_files) + ")")
+            print("###################################################################################")
             self._generate_from_file(source_directory + "\\" + file, destination_directory)
 
     def _generate_from_file(self, file_path_name: str, destination_directory: str):
