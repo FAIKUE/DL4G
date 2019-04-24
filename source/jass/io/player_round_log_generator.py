@@ -28,7 +28,7 @@ class PlayerRoundLogGenerator:
     python player_round_log_generator.py -src ..\\..\\..\\test\\resources -dest .\\results --dir
 
     Parse folders recursively:
-    python player_round_log_generator.py -src ..\\..\\..\\test\\resources -dest .\\results --dir --r
+    python player_round_log_generator.py -src ..\\..\\..\\test\\resources -dest .\\results --r
 
     """
 
