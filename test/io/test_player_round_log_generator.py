@@ -161,6 +161,38 @@ class PlayerRoundLogGeneratorCase(unittest.TestCase):
         result = testee._rounds_to_player_rounds_dict(rnd)
         self.assertEqual("SCHIEBER_1000", result[4]["jassTyp"])
 
+    def test_cheating_has_opponents_hands(self):
+        rnd = self.get_multiple_identical_rounds(5)
+        testee = PlayerRoundLogGenerator("", "", cheating=True)
+        result = testee._rounds_to_player_rounds_dict(rnd)
+        self.assertEqual(4, len(result[0]["hands"]))
+
+    def test_cheating_firsthand_has_C7(self):
+        rnd = self.get_multiple_identical_rounds(5)
+        testee = PlayerRoundLogGenerator("", "", cheating=True)
+        result = testee._rounds_to_player_rounds_dict(rnd)
+        self.assertTrue("C7" in result[0]["hands"][2])
+
+    def test_hand_same_as_in_hands(self):
+        rnd = self.get_multiple_identical_rounds(5)
+        testee = PlayerRoundLogGenerator("", "", cheating=True)
+        results = testee._rounds_to_player_rounds_dict(rnd)
+        for result in results:
+            current_hand = result["hand"]
+            hand_from_list = result["hands"][result["player"]]
+            self.assertListEqual(current_hand, hand_from_list)
+
+    def test_hands_correct_len(self):
+        rnd = self.get_multiple_identical_rounds(5)
+        testee = PlayerRoundLogGenerator("", "", cheating=True)
+        results = testee._rounds_to_player_rounds_dict(rnd)
+        for result in results:
+            nr_tricks = len(result["tricks"])
+            player = result["player"]
+            hands = result["hands"]
+            self.assertEqual(9 - (nr_tricks), len(hands[player]))
+
+
     def _test_writefile(self):
         rnd = self.get_multiple_identical_rounds(3)
 
@@ -168,8 +200,12 @@ class PlayerRoundLogGeneratorCase(unittest.TestCase):
         result = testee._rounds_to_player_rounds_dict(rnd)
         testee._generate_logs(result, "..\\test_results\\test.json")
 
-    def _test_log_to_playerroundlog(self):
+    def test_log_to_playerroundlog(self):
         testee = PlayerRoundLogGenerator("", "")
+        testee._generate_from_file("..\\resources\\small_log.txt", "..\\test_results")
+
+    def test_log_to_playerroundlog_cheating(self):
+        testee = PlayerRoundLogGenerator("", "", cheating=True)
         testee._generate_from_file("..\\resources\\small_log.txt", "..\\test_results")
 
     def get_round(self):
