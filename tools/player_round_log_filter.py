@@ -70,7 +70,6 @@ class PlayerRoundLogFilter:
         if not os.path.isabs(destination_directory):
             destination_directory = os.getcwd() + "\\" + destination_directory
 
-        # os.chdir(source_directory)
         files = glob.glob(source_directory + "\\*.txt")
         number_of_files = len(files)
         for i, file in enumerate(files):

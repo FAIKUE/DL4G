@@ -2,6 +2,10 @@ import argparse
 import glob
 import json
 import os
+import sys
+
+sys.path.insert(0, './source')
+sys.path.insert(0, '../source')
 
 from jass.base.const import *
 from jass.base.player_round import PlayerRound
@@ -19,13 +23,13 @@ class PlayerRoundLogGenerator:
     Can be called via command line
 
     Parse one file:
-    python player_round_log_generator.py -src ..\\..\\..\\test\\resources\\log.txt -dest .\\results
+    python player_round_log_generator.py -src ..\\resources\\log.txt -dest results
 
     Parse one file with cheating player (flag can be used in directory or recursvly as well):
-    python player_round_log_generator.py -src ..\\..\\..\\test\\resources\\log.txt -dest .\\results --cheating
+    python player_round_log_generator.py -src ..\\resources\\log.txt -dest .\\results --cheating
 
     Parse one folder:
-    python player_round_log_generator.py -src ..\\..\\..\\test\\resources -dest .\\results --dir
+    python player_round_log_generator.py -src ..\\resources -dest .\\results --dir
 
     Parse folders recursively:
     python player_round_log_generator.py -src ..\\..\\..\\test\\resources -dest .\\results --r
@@ -64,7 +68,6 @@ class PlayerRoundLogGenerator:
             subdirectory = directory.replace(self.source, '')
             self._generate_from_directory(directory, self.destination + subdirectory)
 
-
     def _generate_from_directory(self, source_directory, destination_directory):
         if not os.path.exists(destination_directory):
             os.makedirs(destination_directory)
@@ -74,16 +77,18 @@ class PlayerRoundLogGenerator:
         if not os.path.isabs(destination_directory):
             destination_directory = os.getcwd() + "\\" + destination_directory
 
-        os.chdir(source_directory)
-        files = glob.glob("*.txt")
+        files = glob.glob(source_directory + "\\*.txt")
         number_of_files = len(files)
         for i, file in enumerate(files):
             print("###################################################################################")
             print("converting file " + file + " (" + str(i + 1) + "/" + str(number_of_files) + ")")
             print("###################################################################################")
-            self._generate_from_file(source_directory + "\\" + file, destination_directory)
+            self._generate_from_file(file, destination_directory)
 
     def _generate_from_file(self, file_path_name: str, destination_directory: str):
+        if not os.path.exists(destination_directory):
+            os.makedirs(destination_directory)
+
         filename = os.path.basename(file_path_name)
         log_parser = LogParser(file_path_name)
         rounds_with_player = log_parser.parse_rounds_and_players()
