@@ -1,7 +1,7 @@
 import pandas as pd
 
 
-class PlayerFilter:
+class PlayerIdFilter:
     """
     Abstract class. Used to implement filters for the Player Statistics
     """
@@ -19,13 +19,13 @@ class PlayerFilter:
             raise ValueError("Parameter has to be be between 0 and 1")
 
 
-class PlayerStatFilter(PlayerFilter):
+class PlayerStatFilter(PlayerIdFilter):
     def __init__(self, path_to_stat_file) -> None:
         self.stat_path = path_to_stat_file
         self._player_stats = self._read_stat()
         self._filters = []
 
-    def add_filter(self, stat_filter: PlayerFilter):
+    def add_filter(self, stat_filter: PlayerIdFilter):
         stat_filter.set_data(self._player_stats)
         self._filters.append(stat_filter)
 
@@ -50,7 +50,7 @@ class PlayerStatFilter(PlayerFilter):
         return player_stats
 
 
-class FilterMeanAbsolute(PlayerFilter):
+class FilterMeanAbsolute(PlayerIdFilter):
     """
     Filters the mean points of the players with an absolute threshold
     """
@@ -63,7 +63,7 @@ class FilterMeanAbsolute(PlayerFilter):
         return filtered['id']
 
 
-class FilterStdAbsolute(PlayerFilter):
+class FilterStdAbsolute(PlayerIdFilter):
     """
     Filters the STD of the points of the players with an absolute threshold
     """
@@ -76,7 +76,7 @@ class FilterStdAbsolute(PlayerFilter):
         return filtered['id']
 
 
-class FilterPlayedGamesAbsolute(PlayerFilter):
+class FilterPlayedGamesAbsolute(PlayerIdFilter):
     """
     Filters the players with the most played games based on a threshold
     """
@@ -89,7 +89,7 @@ class FilterPlayedGamesAbsolute(PlayerFilter):
         return filtered['id']
 
 
-class FilterStdRelative(PlayerFilter):
+class FilterStdRelative(PlayerIdFilter):
     """
     Filters players corresponding to the given quantile of the STD.
     """
@@ -104,7 +104,7 @@ class FilterStdRelative(PlayerFilter):
         return filtered['id']
 
 
-class FilterMeanRelative(PlayerFilter):
+class FilterMeanRelative(PlayerIdFilter):
     """
     Filters players corresponding to the given quantile of the mean points achieved.
     """
@@ -119,7 +119,7 @@ class FilterMeanRelative(PlayerFilter):
         return filtered['id']
 
 
-class FilterPlayedGamesRelative(PlayerFilter):
+class FilterPlayedGamesRelative(PlayerIdFilter):
     """
     Filters the players with the most played games based on a quantile
     """

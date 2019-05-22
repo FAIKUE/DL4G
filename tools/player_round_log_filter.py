@@ -1,8 +1,3 @@
-# Filter Players
-# Mean points
-# STD
-# functionality: filter by points, filter by STD, combination of both, percentage of players
-# fill
 import argparse
 import glob
 import os
