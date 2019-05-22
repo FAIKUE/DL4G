@@ -28,6 +28,11 @@ class PlayerRoundLogParser:
 
         return player_rounds
 
+
+    def get_player_from_log_line(self, line):
+        round_dict = json.loads(line)
+        return round_dict['player']
+
     def parse_cheating_rounds_from_file(self, filename) -> [PlayerRoundCheating]:
         file = open(filename)
         player_rounds = []

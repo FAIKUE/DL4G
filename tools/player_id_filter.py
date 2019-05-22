@@ -1,6 +1,3 @@
-import json
-
-from jass.base.single_player_stat import SinglePlayerStat
 import pandas as pd
 
 
@@ -38,9 +35,11 @@ class PlayerStatFilter(PlayerFilter):
         :return: List of the filtered player ids
         """
         ids = set(self._player_stats['id'])
-
-        for flt in self._filters:
+        print("Players befor filter: " + str(len(ids)))
+        for i, flt in enumerate(self._filters):
             ids.intersection_update(flt.filter())
+            print("Players after " + str(i + 1) + " filter(s): " + str(len(ids)))
+
 
         return ids
 

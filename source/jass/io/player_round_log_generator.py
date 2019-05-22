@@ -189,6 +189,6 @@ if __name__ == '__main__':
                              'parsed to player logs)')
 
     args = parser.parse_args()
-    parser = PlayerRoundLogGenerator(args.src, args.dest, args.search_directory,
+    log_generator = PlayerRoundLogGenerator(args.src, args.dest, args.search_directory,
                                      args.recursive_file_search, args.cheating)
-    parser.generate()
+    log_generator.generate()
