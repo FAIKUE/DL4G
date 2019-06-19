@@ -2,7 +2,7 @@ import unittest
 
 from jass.base.const import *
 from jass.base.round_schieber import RoundSchieber
-from jass.io.player_round_log_generator import PlayerRoundLogGenerator
+from player_round_log_generator import PlayerRoundLogGenerator
 
 
 class PlayerRoundLogGeneratorCase(unittest.TestCase):
@@ -200,11 +200,11 @@ class PlayerRoundLogGeneratorCase(unittest.TestCase):
         result = testee._rounds_to_player_rounds_dict(rnd)
         testee._generate_logs(result, "..\\test_results\\test.json")
 
-    def test_log_to_playerroundlog(self):
+    def _test_log_to_playerroundlog(self):
         testee = PlayerRoundLogGenerator("", "")
         testee._generate_from_file("..\\resources\\small_log.txt", "..\\test_results")
 
-    def test_log_to_playerroundlog_cheating(self):
+    def _test_log_to_playerroundlog_cheating(self):
         testee = PlayerRoundLogGenerator("", "", cheating=True)
         testee._generate_from_file("..\\resources\\small_log.txt", "..\\test_results")
 

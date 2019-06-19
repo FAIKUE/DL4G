@@ -2,10 +2,6 @@ import argparse
 import glob
 import json
 import os
-import sys
-
-sys.path.insert(0, './source')
-sys.path.insert(0, '../source')
 
 from jass.base.const import *
 from jass.base.player_round import PlayerRound

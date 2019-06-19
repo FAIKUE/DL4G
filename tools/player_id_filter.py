@@ -1,6 +1,5 @@
 import pandas as pd
 
-
 class PlayerIdFilter:
     """
     Abstract class. Used to implement filters for the Player Statistics

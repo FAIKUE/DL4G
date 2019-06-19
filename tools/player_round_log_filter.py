@@ -1,19 +1,17 @@
 import argparse
 import glob
 import os
-import sys
 
-sys.path.insert(0, './source')
-sys.path.insert(0, '../source')
-
-from player_id_filter import *
 from jass.io.player_round_log_parser import PlayerRoundLogParser
+from player_id_filter import *
 
 PREFIX_FILENAME = "filtered_"
 
 # >python tools\player_round_log_filter.py -src tools/player_logs.txt -dest tools/ -statfile tools/player_all_
 # stat.json -mean_abs 75 -mean_best_perc 0.5 -played_ga
 # mes_abs 30 -std_abs 90 -std_best_perc 0.5 -played_games_most_perc 0.1
+
+
 class PlayerRoundLogFilter:
 
     def __init__(self, source: str, destination: str, player_filter, directory=False, recursive=False):
