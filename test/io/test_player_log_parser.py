@@ -6,13 +6,13 @@ from jass.io.player_round_log_parser import PlayerRoundLogParser
 class PlayerRoundLogGeneratorCase(unittest.TestCase):
 
     def test_file_can_be_loaded(self):
-        testee = PlayerRoundLogParser()
-        result = testee.parse_rounds_from_file("..\\resources\\small_player_log.txt")
+        testee = PlayerRoundLogParser("..\\resources\\small_player_log.txt")
+        result = testee.parse_rounds()
         self.assertTrue(len(result) == 11)
 
     def test_parsing(self):
-        testee = PlayerRoundLogParser()
-        result = testee.parse_rounds_from_file("..\\resources\\small_player_log.txt")
+        testee = PlayerRoundLogParser("..\\resources\\small_player_log.txt")
+        result = testee.parse_rounds()
         single_player_round = result[0]
 
         self.assertEqual(5, single_player_round.trump)
@@ -32,14 +32,14 @@ class PlayerRoundLogGeneratorCase(unittest.TestCase):
         self.assertListEqual(expected_hand, single_player_round.hand.tolist())
 
     def test_consistency(self):
-        testee = PlayerRoundLogParser()
-        result = testee.parse_rounds_from_file("..\\resources\\small_player_log.txt")
+        testee = PlayerRoundLogParser("..\\resources\\small_player_log.txt")
+        result = testee.parse_rounds()
         for rnd in result:
             rnd.assert_invariants()
 
     def test_cheating_consistency(self):
-        testee = PlayerRoundLogParser()
-        result = testee.parse_cheating_rounds_from_file("..\\resources\\small_cheating_player_log.txt")
+        testee = PlayerRoundLogParser("..\\resources\\small_cheating_player_log.txt")
+        result = testee.parse_cheating_rounds_from_file()
         for rnd in result:
             rnd.assert_invariants()
 
