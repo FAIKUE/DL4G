@@ -9,7 +9,11 @@ from jass.base.round import Round
 
 class RoundGenerator:
     """
-    Class for generation of the dict/json representation of Round
+    Class for generation of the dict/json representation of Round. While the format used for the round information is
+    the same as for the log files, additional data can be added for the players and the date (both optionally).
+    These will be added directly as json.
+
+
     """
     @staticmethod
     def generate_dict(rnd: Round) -> dict:
@@ -33,6 +37,9 @@ class RoundGenerator:
             data['trump'] = int(rnd.trump)
 
         data['dealer'] = int(rnd.dealer)
+
+        # for complete rounds, the player is still set for the first action (declare trump or play first card)
+        data['player'] = int(rnd.player)
 
         # tss only needs to be present if its value is 1
         if rnd.forehand is False:
@@ -60,4 +67,21 @@ class RoundGenerator:
         # (it is not clear from the documentation if 'player' is mandatory)
 
         data['jass_typ'] = rnd.jass_type
+        return data
+
+    @staticmethod
+    def generate_dict_all(rnd: Round, date:str, players):
+        """
+
+        Args:
+            rnd:
+            date:
+            players:
+
+        Returns:
+
+        """
+        data = RoundGenerator.generate_dict(rnd)
+        data['date'] = date
+        data['players'] = players
         return data

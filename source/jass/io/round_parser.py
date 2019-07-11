@@ -2,6 +2,7 @@
 #
 # Created by Thomas Koller on 24.08.18
 #
+import json
 
 from jass.base.const import *
 from jass.base.round import Round
@@ -10,7 +11,9 @@ from jass.base.round_factory import get_round
 
 class RoundParser:
     """
-    Class to parse a Round from dict/json
+    Class to parse a Round from dict/json. While the format used for the round information is the same as for the
+    log files, additional data can be parsed for the players and the date (both optionally). These will be added
+    as json.
     """
     @staticmethod
     def parse_round(data: dict) -> Round or None:
@@ -59,8 +62,12 @@ class RoundParser:
         rnd.nr_tricks = 9
         rnd.nr_played_cards = 36
 
-        # end of game, no player
-        rnd.player = None
+        # end of game, there should be no player, but we take what is on the file as to be compatible to the log file
+        # format
+        if 'player' in data:
+            rnd.player = data['player']
+        else:
+            rnd.player = None
 
         # current trick should be the trick at the end of the game
         #rnd.current_trick = rnd.tricks[8, :]
@@ -68,3 +75,45 @@ class RoundParser:
         rnd.current_trick = None
 
         return rnd
+
+    @staticmethod
+    def parse_round_all(data: dict):
+        """
+        Parse dict to reconstruct a round and additional data like date and players.
+        Returns:
+            a tuple of round, date and players
+        """
+        rnd = RoundParser.parse_round(data)
+        if 'date' in data:
+            date = data['date']
+        else:
+            date = None
+
+        if 'players' in data:
+            players = data['players']
+        else:
+            players = None
+
+        return rnd, date, players
+
+    @staticmethod
+    def parse_rounds(filename: str):
+        """
+        Parse all rounds in a file and return them
+        Args:
+            filename: the filename to parse
+
+        Returns:
+            a list of rounds
+        """
+        rnds = []
+        with open(filename, "r") as file:
+            # each line contains one round
+            for line in file:
+                # get the line first as dict
+                round_dict = json.loads(line)
+                rnd = RoundParser.parse_round(round_dict)
+                rnds.append(rnd)
+
+        return rnds
+

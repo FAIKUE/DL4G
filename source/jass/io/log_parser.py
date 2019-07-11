@@ -5,14 +5,16 @@
 #
 
 """
-Parse the log files containing the game play data
+Parse the log files containing the game play data.
 """
 
 import json
 import logging
 from typing import Optional, Dict
+from datetime import datetime
 from jass.base.const import *
 from jass.base.round import Round
+from jass.io.round_log_entry import RoundLogEntry
 from jass.base.round_factory import get_round
 
 
@@ -26,12 +28,22 @@ class LogParser:
         only after parse_rounds is called.
 
         Args:
-            filename:
+            filename: file to read logs from
         """
         self._filename = filename
         self._logger = logging.getLogger(__name__)
 
-    def parse_rounds(self) -> List[Round]:
+
+    def parse_rounds(self) -> List[RoundLogEntry]:
+        """
+        Parse rounds including information about the players and the date which is stored in a list of objects.
+
+        The log file is in the format specified and supplied by Swisslos, which includes multiple rounds with
+        the same information about the date and players.
+
+        Returns:
+            A list of objects of type RoundLogEntry
+        """
         rnds = []
         with open(self._filename, 'r') as file:
             nr_lines = 0
@@ -44,35 +56,13 @@ class LogParser:
                 # 27.11.17 20:10:08,140 | INFO |  |  |  |  |
                 # so we read until the first {
                 index = line.find('{')
-                if index != -1:
-                    line_json = json.loads(line[index:])
-                    # read the players for those rounds
-                    for r in line_json['rounds']:
-                        if r is not None:
-                            rnd_read = self.read_round(r)
-                            if rnd_read is not None:
-                                nr_rounds += 1
-                                rnds.append(rnd_read)
-                            else:
-                                nr_skipped += 1
+                # if we find an index, we attempt to read the date
+                if index > 17:
+                    datetime_string = line[0:17]
+                    date = datetime.strptime(datetime_string, '%d.%m.%y %H:%M:%S')
+                else:
+                    date = None
 
-        self._logger.info('Read {} valid rounds from file'.format(nr_rounds))
-        self._logger.info('Skipped {} rounds'.format(nr_skipped))
-        return rnds
-
-    def parse_rounds_and_players(self) -> List[Dict]:
-        rnds = []
-        with open(self._filename, 'r') as file:
-            nr_lines = 0
-            nr_rounds = 0
-            nr_skipped = 0
-            # one line contains one log record (with multiple rounds)
-            for line in file:
-                nr_lines += 1
-                # start of line contains:
-                # 27.11.17 20:10:08,140 | INFO |  |  |  |  |
-                # so we read until the first {
-                index = line.find('{')
                 if index != -1:
                     line_json = json.loads(line[index:])
                     # read the players for those rounds
@@ -85,7 +75,7 @@ class LogParser:
                             rnd_read = self.read_round(r)
                             if rnd_read is not None:
                                 nr_rounds += 1
-                                rnds.append(dict(players=players, round=rnd_read))
+                                rnds.append(RoundLogEntry(rnd=rnd_read, date=date, players=players))
                             else:
                                 nr_skipped += 1
 
