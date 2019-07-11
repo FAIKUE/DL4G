@@ -1,16 +1,32 @@
-import pandas as pd
+import json
+import numpy as np
+
+
+class PlayerStat:
+    """
+    Class to contain the player information (instead of using dict directly)
+    """
+    def __init__(self, id: int, mean: float, std:float, nr: int):
+        self.id = id
+        self.mean = mean
+        self.std = std
+        self.nr = nr
+
 
 class PlayerIdFilter:
     """
     Abstract class. Used to implement filters for the Player Statistics
     """
-    data = None
+
+    def __init__(self):
+        self.player_stats = None
 
     def filter(self) -> [int]:
         raise NotImplementedError
 
-    def set_data(self, data):
-        self.data = data
+    def set_data(self, player_stat: [PlayerStat]):
+        # (renamed from data)
+        self.player_stats = player_stat
 
     @staticmethod
     def _check_relative_parameter(parameter):
@@ -33,8 +49,9 @@ class PlayerStatFilter(PlayerIdFilter):
         Uses every filter added via the add_filter method
         :return: List of the filtered player ids
         """
-        ids = set(self._player_stats['id'])
-        print("Players befor filter: " + str(len(ids)))
+        #ids = set(self._player_stats['id'])
+        ids = set([p.id for p in self._player_stats])
+        print("Players before filter: " + str(len(ids)))
         for i, flt in enumerate(self._filters):
             ids.intersection_update(flt.filter())
             print("Players after " + str(i + 1) + " filter(s): " + str(len(ids)))
@@ -42,11 +59,10 @@ class PlayerStatFilter(PlayerIdFilter):
 
         return ids
 
-    def _read_stat(self) -> pd.DataFrame:
+    def _read_stat(self) -> [PlayerStat]:
         with open(self.stat_path) as file:
-            player_stats = pd.read_json(file)
-
-        return player_stats
+            data = json.load(file)
+        return [PlayerStat(id=el['id'], mean=el['mean'], std=el['std'], nr=el['nr']) for el in data]
 
 
 class FilterMeanAbsolute(PlayerIdFilter):
@@ -58,8 +74,8 @@ class FilterMeanAbsolute(PlayerIdFilter):
         self.bound_mean = bound_mean
 
     def filter(self) -> [int]:
-        filtered = self.data[self.data['mean'] > self.bound_mean]
-        return filtered['id']
+        filtered = [p.id for p in self.player_stats if p.mean > self.bound_mean]
+        return filtered
 
 
 class FilterStdAbsolute(PlayerIdFilter):
@@ -71,8 +87,8 @@ class FilterStdAbsolute(PlayerIdFilter):
         self.bound_std = bound_std
 
     def filter(self) -> [int]:
-        filtered = self.data[self.data['std'] < self.bound_std]
-        return filtered['id']
+        filtered = [p.id for p in self.player_stats if p.std < self.bound_std]
+        return filtered
 
 
 class FilterPlayedGamesAbsolute(PlayerIdFilter):
@@ -84,8 +100,8 @@ class FilterPlayedGamesAbsolute(PlayerIdFilter):
         self.bound_played_games = bound_played_games
 
     def filter(self) -> [int]:
-        filtered = self.data[self.data['nr'] > self.bound_played_games]
-        return filtered['id']
+        filtered = [p.id for p in self.player_stats if p.nr > self.bound_played_games]
+        return filtered
 
 
 class FilterStdRelative(PlayerIdFilter):
@@ -98,9 +114,11 @@ class FilterStdRelative(PlayerIdFilter):
 
     def filter(self) -> [int]:
         self._check_relative_parameter(self.rel_std)
-        quantile = self.data['std'].quantile(self.rel_std)
-        filtered = self.data[self.data['std'] < quantile]
-        return filtered['id']
+        #quantile = self.player_stats['std'].quantile(self.rel_std)
+        std_data = [p.std for p in self.player_stats]
+        quantile = np.quantile(std_data, self.rel_std)
+        filtered = [p.id for p in self.player_stats if p.std >quantile]
+        return filtered
 
 
 class FilterMeanRelative(PlayerIdFilter):
@@ -113,9 +131,10 @@ class FilterMeanRelative(PlayerIdFilter):
 
     def filter(self) -> [int]:
         self._check_relative_parameter(self.rel_mean)
-        quantile = self.data['mean'].quantile(self.rel_mean)
-        filtered = self.data[self.data['mean'] > quantile]
-        return filtered['id']
+        mean_data = [p.mean for p in self.player_stats]
+        quantile = np.quantile(mean_data, self.rel_mean)
+        filtered = [p.id for p in self.player_stats if p.mean > quantile]
+        return filtered
 
 
 class FilterPlayedGamesRelative(PlayerIdFilter):
@@ -128,8 +147,9 @@ class FilterPlayedGamesRelative(PlayerIdFilter):
 
     def filter(self) -> [int]:
         self._check_relative_parameter(self.rel_played_games)
-        quantile = self.data['nr'].quantile(self.rel_played_games)
-        filtered = self.data[self.data['nr'] > quantile]
-        return filtered['id']
 
+        nr_data = [p.nr for p in self.player_stats]
+        quantile = np.quantile(nr_data, self.rel_played_games)
+        filtered = [p.id for p in self.player_stats if p.nr > quantile]
+        return filtered
 

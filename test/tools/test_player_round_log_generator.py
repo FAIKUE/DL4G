@@ -2,7 +2,7 @@ import unittest
 
 from jass.base.const import *
 from jass.base.round_schieber import RoundSchieber
-from player_round_log_generator import PlayerRoundLogGenerator
+from jass.io.player_round_log_generator import PlayerRoundLogGenerator
 
 
 class PlayerRoundLogGeneratorCase(unittest.TestCase):

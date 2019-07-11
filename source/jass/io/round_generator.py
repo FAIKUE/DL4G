@@ -37,9 +37,7 @@ class RoundGenerator:
             data['trump'] = int(rnd.trump)
 
         data['dealer'] = int(rnd.dealer)
-
-        # for complete rounds, the player is still set for the first action (declare trump or play first card)
-        data['player'] = int(rnd.player)
+        data['player'] = rnd.player
 
         # tss only needs to be present if its value is 1
         if rnd.forehand is False:
