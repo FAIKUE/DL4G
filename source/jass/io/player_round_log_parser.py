@@ -11,11 +11,12 @@ from jass.base.player_round_cheating import PlayerRoundCheating
 
 class PlayerRoundLogParser:
 
-    def __init__(self):
+    def __init__(self, filename):
         self._logger = logging.getLogger(__name__)
+        self.filename = filename
 
-    def parse_rounds_from_file(self, filename) -> [PlayerRound]:
-        file = open(filename)
+    def parse_rounds(self) -> [PlayerRound]:
+        file = open(self.filename)
         player_rounds = []
         try:
             for line in file:
@@ -33,8 +34,8 @@ class PlayerRoundLogParser:
         round_dict = json.loads(line)
         return round_dict['player']
 
-    def parse_cheating_rounds_from_file(self, filename) -> [PlayerRoundCheating]:
-        file = open(filename)
+    def parse_cheating_rounds_from_file(self) -> [PlayerRoundCheating]:
+        file = open(self.filename)
         player_rounds = []
         try:
             for line in file:
