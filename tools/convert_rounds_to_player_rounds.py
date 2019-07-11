@@ -7,12 +7,13 @@ PREFIX_FILENAME = "\player_round_"
 
 def main():
     parser = argparse.ArgumentParser(description='argparse for log conversion to player round')
-    parser.add_argument('-src', help='Single log (no special command) or folder (--dir or --r) containing logs '
+    parser.add_argument('--src', help='Single log (no special command) or folder (--dir or --r) containing logs '
                                      'to convert. Absolute paths and relative paths to the work directory (not '
-                                     'necessarily script directory) work')
-    parser.add_argument('-dest', help='Directory, where the logs will be saved. Filename is automatically generated. '
+                                     'necessarily script directory) work',
+                        required=True)
+    parser.add_argument('--dest', help='Directory, where the logs will be saved. Filename is automatically generated. '
                                       'Absolute paths and relative paths to the work directory (not '
-                                      'necessarily script directory) work')
+                                      'necessarily script directory) work', required=True)
     parser.add_argument('--dir', dest='search_directory', action='store_const',
                         const=True, default=False,
                         help='Converts all the files in a directory (default: only one file)')
@@ -26,6 +27,7 @@ def main():
                              'parsed to player logs)')
 
     args = parser.parse_args()
+
     log_generator = PlayerRoundLogGenerator(args.src, args.dest, args.search_directory,
                                             args.recursive_file_search, args.cheating)
     log_generator.generate()

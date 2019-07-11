@@ -12,7 +12,8 @@ from jass.io.log_parser import LogParser
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Read log files and convert them to train, val and test files')
+    parser = argparse.ArgumentParser(description='Read log files and convert them to train, val and test files with '
+                                                 'one round per line.')
     parser.add_argument('--output', type=str, help='Base name of the output files', default='')
     parser.add_argument('--output_dir', type=str, help='Directory for output files')
     parser.add_argument('--train_split', type=float, default=0.4, help='Percentage of train data')
@@ -47,7 +48,7 @@ def main():
             nr_total += len(round_log_entries)
 
             for entry in round_log_entries:
-                players = entry.players ['players']
+                players = entry.players
                 rnd = entry.rnd
                 date = entry.date
                 set_chosen = np.random.choice(3, p=prob)

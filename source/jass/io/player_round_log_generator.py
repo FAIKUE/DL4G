@@ -86,8 +86,8 @@ class PlayerRoundLogGenerator:
             os.makedirs(destination_directory)
 
         filename = os.path.basename(file_path_name)
-        log_parser = LogParser(file_path_name)
-        rounds_with_player = log_parser.parse_rounds_all()
+        #log_parser = LogParser(file_path_name)
+        #rounds_with_player = log_parser.parse_rounds_all()
         player_round_dictionaries = self._rounds_to_player_rounds_dict(rounds_with_player)
         prefix = PREFIX_FILENAME if not self.cheating else PREFIX_CHEATING_FILENAME
         self._generate_logs(player_round_dictionaries, destination_directory + prefix + filename)
