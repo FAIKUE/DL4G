@@ -2,7 +2,7 @@ import logging
 import unittest
 
 from jass.io.log_parser import LogParser
-from jass.io.round_generator import RoundGenerator
+from jass.io.round_generator import RoundSerializer
 from jass.io.round_parser import RoundParser
 
 
@@ -15,7 +15,7 @@ class LogRoundParserTestCase(unittest.TestCase):
         rnd_log_entries = log_parser.parse_rounds()
 
         for rnd_log_entry in rnd_log_entries:
-            generated_dict = RoundGenerator.generate_dict_all(rnd_log_entry.rnd, rnd_log_entry.date, rnd_log_entry.players)
+            generated_dict = RoundSerializer.generate_dict_all(rnd_log_entry.rnd, rnd_log_entry.date, rnd_log_entry.players)
 
             rnd_parsed, date_parsed, players_parsed = RoundParser.parse_round_all(generated_dict)
 

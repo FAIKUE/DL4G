@@ -4,7 +4,7 @@
 #
 
 from jass.base.game import Game
-from jass.io.round_generator import RoundGenerator
+from jass.io.round_generator import RoundSerializer
 
 
 class GameGenerator:
@@ -44,7 +44,7 @@ class GameGenerator:
 
         rounds = []
         for i in range(game.nr_rounds):
-            round_data = RoundGenerator.generate_dict(game.round[i])
+            round_data = RoundSerializer.generate_dict(game.round[i])
             rounds.append(round_data)
         data['rounds'] = rounds
 

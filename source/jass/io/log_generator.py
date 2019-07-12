@@ -9,7 +9,7 @@ import random
 from typing import List
 
 from jass.base.round import Round
-from jass.io.round_generator import RoundGenerator
+from jass.io.round_generator import RoundSerializer
 
 
 class LogGenerator:
@@ -63,7 +63,7 @@ class LogGenerator:
 
     def add_round(self, rnd: Round, players: List[str], date: datetime.datetime):
         date_string = date.strftime('%d.%m.%y %H:%M:%S')
-        rounds_dict = RoundGenerator.generate_dict_all(rnd, date_string, players)
+        rounds_dict = RoundSerializer.generate_dict_all(rnd, date_string, players)
         line = json.dumps(rounds_dict, separators=(',', ':'))
         self._buffer.append(line)
         if len(self._buffer) > self._max_buffer:

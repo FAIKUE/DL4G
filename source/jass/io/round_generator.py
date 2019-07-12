@@ -7,13 +7,9 @@ from jass.base.const import *
 from jass.base.round import Round
 
 
-class RoundGenerator:
+class RoundSerializer:
     """
-    Class for generation of the dict/json representation of Round. While the format used for the round information is
-    the same as for the log files, additional data can be added for the players and the date (both optionally).
-    These will be added directly as json.
-
-
+    Class for generation of the dict/json representation of a Round.
     """
     @staticmethod
     def generate_dict(rnd: Round) -> dict:
@@ -79,7 +75,7 @@ class RoundGenerator:
         Returns:
 
         """
-        data = RoundGenerator.generate_dict(rnd)
+        data = RoundSerializer.generate_dict(rnd)
         data['date'] = date
         data['players'] = players
         return data
