@@ -3,7 +3,6 @@ import glob
 import os
 
 from jass.io.player_round_log_parser import PlayerRoundLogParser
-from player_id_filter import *
 
 PREFIX_FILENAME = "filtered_"
 

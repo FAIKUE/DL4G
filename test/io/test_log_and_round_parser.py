@@ -3,6 +3,8 @@ import unittest
 
 from jass.io.log_parser import LogParser
 from jass.io.round_generator import RoundSerializer
+from jass.io.log_parser_swisslos import LogParserSwisslos
+from jass.io.round_generator import RoundGenerator
 from jass.io.round_parser import RoundParser
 
 
@@ -11,7 +13,7 @@ class LogRoundParserTestCase(unittest.TestCase):
         # read a log file and convert it
         root_logger = logging.getLogger()
         root_logger.setLevel(logging.DEBUG)
-        log_parser = LogParser('../resources/small_log.txt')
+        log_parser = LogParserSwisslos('../resources/small_log.txt')
         rnd_log_entries = log_parser.parse_rounds()
 
         for rnd_log_entry in rnd_log_entries:
@@ -21,7 +23,7 @@ class LogRoundParserTestCase(unittest.TestCase):
 
             self.assertEqual(rnd_log_entry.rnd, rnd_parsed)
             self.assertEqual(rnd_log_entry.date, date_parsed)
-            self.assertEqual(rnd_log_entry.players, players_parsed)
+            self.assertEqual(rnd_log_entry.player_ids, players_parsed)
 
 
 if __name__ == '__main__':

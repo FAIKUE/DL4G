@@ -5,7 +5,7 @@
 #
 
 """
-Parse the log files containing the game play data.
+Parse the log files containing the game play data in the data obtained from swisslos.
 """
 
 import json
@@ -18,14 +18,14 @@ from jass.io.round_log_entry import RoundLogEntry
 from jass.base.round_factory import get_round
 
 
-class LogParser:
+class LogParserSwisslos:
     """
     Class to parse the log files.
     """
     def __init__(self, filename: str or None) -> None:
         """
         Initialise the parser with the given filename. The parsing is not done during initialisation, but
-        only after parse_rounds is called.
+        only after parse_rounds_from_file is called.
 
         Args:
             filename: file to read logs from
@@ -75,7 +75,7 @@ class LogParser:
                             rnd_read = self.read_round(r)
                             if rnd_read is not None:
                                 nr_rounds += 1
-                                rnds.append(RoundLogEntry(rnd=rnd_read, date=date, players=players))
+                                rnds.append(RoundLogEntry(rnd=rnd_read, date=date, player_ids=players))
                             else:
                                 nr_skipped += 1
 

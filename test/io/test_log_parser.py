@@ -1,6 +1,6 @@
 import unittest
 import logging
-from jass.io.log_parser import LogParser
+from jass.io.log_parser_swisslos import LogParserSwisslos
 from jass.base.player_round import PlayerRound
 
 
@@ -9,7 +9,7 @@ class LogParserTestCase(unittest.TestCase):
     def test_log_parser(self):
         root_logger = logging.getLogger()
         root_logger.setLevel(logging.DEBUG)
-        log_parser = LogParser('../resources/small_log.txt')
+        log_parser = LogParserSwisslos('../resources/small_log.txt')
         rnds = log_parser.parse_rounds()
 
         self.assertEqual(19, len(rnds))
@@ -19,7 +19,7 @@ class LogParserTestCase(unittest.TestCase):
         for rnd_log_entry in rnds:
             rnd = rnd_log_entry.rnd
             self.assertIsNotNone(rnd_log_entry.date)
-            self.assertIsNotNone(rnd_log_entry.players)
+            self.assertIsNotNone(rnd_log_entry.player_ids)
             # some basic tests if the rnds are valid
             rnd.assert_invariants()
             self.assertEqual(36, rnd.nr_played_cards)
@@ -34,7 +34,7 @@ class LogParserTestCase(unittest.TestCase):
     def test_valid_cards(self):
         root_logger = logging.getLogger()
         root_logger.setLevel(logging.DEBUG)
-        log_parser = LogParser('../resources/small_log.txt')
+        log_parser = LogParserSwisslos('../resources/small_log.txt')
         rnds = log_parser.parse_rounds()
 
         self.assertEqual(19, len(rnds))

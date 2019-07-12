@@ -7,13 +7,12 @@ import argparse
 import os
 
 import numpy as np
-from jass.io.log_generator import LogGenerator
-from jass.io.log_parser import LogParser
+from jass.io.round_file_generator import RoundFileGenerator
+from jass.io.log_parser_swisslos import LogParserSwisslos
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Read log files and convert them to train, val and test files with '
-                                                 'one round per line.')
+    parser = argparse.ArgumentParser(description='Read log files and convert them to train, val and test files')
     parser.add_argument('--output', type=str, help='Base name of the output files', default='')
     parser.add_argument('--output_dir', type=str, help='Directory for output files')
     parser.add_argument('--train_split', type=float, default=0.4, help='Percentage of train data')
@@ -39,27 +38,27 @@ def main():
     prob = [arg.train_split, arg.val_split, arg. test_split]
     np.random.seed(arg.seed)
 
-    with LogGenerator(basename + 'train_', arg.max_rounds) as train, \
-            LogGenerator(basename + 'val_', arg.max_rounds) as val, \
-            LogGenerator(basename + 'test_', arg.max_rounds) as test:
+    with RoundFileGenerator(basename + 'train_', arg.max_rounds) as train, \
+            RoundFileGenerator(basename + 'val_', arg.max_rounds) as val, \
+            RoundFileGenerator(basename + 'test_', arg.max_rounds) as test:
         for f in arg.files:
-            parser = LogParser(f)
-            round_log_entries = parser.parse_rounds()
-            nr_total += len(round_log_entries)
+            parser = LogParserSwisslos(f)
+            log_entries = parser.parse_rounds()
+            nr_total += len(log_entries)
 
-            for entry in round_log_entries:
-                players = entry.players
+            for entry in log_entries:
+                players = entry.player_ids
                 rnd = entry.rnd
                 date = entry.date
                 set_chosen = np.random.choice(3, p=prob)
                 if set_chosen == 0:
-                    train.add_round(rnd, players, date)
+                    train.add_entry(rnd, players, date)
                     nr_train += 1
                 elif set_chosen == 1:
-                    val.add_round(rnd, players, date)
+                    val.add_entry(rnd, players, date)
                     nr_val += 1
                 elif set_chosen == 2:
-                    test.add_round(rnd, players, date)
+                    test.add_entry(rnd, players, date)
                     nr_test += 1
 
                 _print_progress(nr_total)

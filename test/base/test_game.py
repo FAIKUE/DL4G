@@ -3,7 +3,7 @@ import json
 import datetime
 
 from jass.base.game import Game
-from jass.io.log_parser import LogParser
+from jass.io.log_parser_swisslos import LogParserSwisslos
 from jass.io.game_generator import GameGenerator
 from jass.io.game_parser import GameParser
 
@@ -22,7 +22,7 @@ class GameTestCase(unittest.TestCase):
                        '{"cards":["S10","D7","C8","D8"],"points":31,"win":0,"first":0}],' \
                        '"player":[{"hand":[]},{"hand":[]},{"hand":[]},{"hand":[]}],"jassTyp":"SCHIEBER_2500"}'
         round_dict = json.loads(round_string)
-        parser = LogParser(None)
+        parser = LogParserSwisslos(None)
         rnd = parser.read_round(round_dict)
 
         game = Game()
@@ -60,7 +60,7 @@ class GameTestCase(unittest.TestCase):
                        '{"cards":["S10","D7","C8","D8"],"points":31,"win":0,"first":0}],' \
                        '"player":[{"hand":[]},{"hand":[]},{"hand":[]},{"hand":[]}],"jassTyp":"SCHIEBER_2500"}'
         round_dict = json.loads(round_string)
-        parser = LogParser(None)
+        parser = LogParserSwisslos(None)
         rnd = parser.read_round(round_dict)
 
         game = Game()
