@@ -30,7 +30,7 @@ class GameParser:
         game.time_finished = data['timeFinished']
 
         rounds = data['rounds']
-        # use temporary list for rounds (as Game.add_round changes the points)
+        # use temporary list for rounds (as Game.add_entry changes the points)
         rnds = []
 
         for round_data in rounds:

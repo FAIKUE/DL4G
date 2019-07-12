@@ -12,8 +12,6 @@ class RoundGenerator:
     Class for generation of the dict/json representation of Round. While the format used for the round information is
     the same as for the log files, additional data can be added for the players and the date (both optionally).
     These will be added directly as json.
-
-
     """
     @staticmethod
     def generate_dict(rnd: Round) -> dict:
@@ -67,19 +65,26 @@ class RoundGenerator:
         data['jass_typ'] = rnd.jass_type
         return data
 
+class PlayerRoundGenerator:
+    """
+    Class for generation of the dict/json representation of PlayerRound.
+    """
+
     @staticmethod
-    def generate_dict_all(rnd: Round, date:str, players):
+    def generate_dict(rnd: PlayerRound) -> dict:
         """
+        Generate dict for the player round that corresponds to the json description.
+
+        We use the same format as defined by Swisslos for the log file for the json representation.
+
+        Precondition:
+            rnd must represent a full round of 36 cards played.
 
         Args:
-            rnd:
-            date:
-            players:
+            rnd: the round to convert
 
         Returns:
-
+            dict representation of the round that can be converted to json
         """
-        data = RoundGenerator.generate_dict(rnd)
-        data['date'] = date
-        data['players'] = players
+        data = dict()
         return data

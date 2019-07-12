@@ -1,4 +1,4 @@
-import argparse
+
 import glob
 import json
 import os
@@ -6,7 +6,9 @@ import os
 from jass.base.const import *
 from jass.base.player_round import PlayerRound
 from jass.base.player_round_cheating import PlayerRoundCheating
-from jass.io.log_parser import LogParser
+from jass.base.round import Round
+from jass.io.round_log_entry import RoundLogEntry
+from jass.io.round_parser import RoundParser
 
 PREFIX_CHEATING_FILENAME = "\player_round_cheating_"
 
@@ -86,13 +88,17 @@ class PlayerRoundLogGenerator:
             os.makedirs(destination_directory)
 
         filename = os.path.basename(file_path_name)
-        #log_parser = LogParser(file_path_name)
+        #log_parser = LogParserSwisslos(file_path_name)
         #rounds_with_player = log_parser.parse_rounds_all()
+
+        # replaced with parser for json format with one round per line
+        round_entries = RoundParser.parse_rounds_from_file(filename)
+
         player_round_dictionaries = self._rounds_to_player_rounds_dict(rounds_with_player)
         prefix = PREFIX_FILENAME if not self.cheating else PREFIX_CHEATING_FILENAME
         self._generate_logs(player_round_dictionaries, destination_directory + prefix + filename)
 
-    def _rounds_to_player_rounds_dict(self, rounds: List[dict]) -> List[dict]:
+    def _rounds_to_player_rounds_dict(self, rounds: List[RoundLogEntry]) -> List[dict]:
         player_rounds = self._rounds_to_player_rounds(rounds)
         player_round_dicts = []
         for rnd in player_rounds:
@@ -104,22 +110,19 @@ class PlayerRoundLogGenerator:
 
         return player_round_dicts
 
-    def _rounds_to_player_rounds(self, rounds: List[dict]):
+    def _rounds_to_player_rounds(self, rounds: List[RoundLogEntry]):
         player_rounds = []
         for rnd in rounds:
             player_rounds += self._round_to_player_rounds(rnd)
 
         return player_rounds
 
-    def _round_to_player_rounds(self, rnd: dict):
+    def _round_to_player_rounds(self, rnd: Round):
         if self.cheating:
-            player_rounds = [(player_round, rnd["players"]) for player_round in
-                             PlayerRoundCheating.all_from_complete_round(rnd["round"])]
+            return PlayerRoundCheating.all_from_complete_round(rnd)
         else:
-            player_rounds = [(player_round, rnd["players"]) for player_round in
-                             PlayerRound.all_from_complete_round(rnd["round"])]
+            return PlayerRound.all_from_complete_round(rnd)
 
-        return player_rounds
 
     @staticmethod
     def _dict_from_round(round_with_players: dict) -> dict:

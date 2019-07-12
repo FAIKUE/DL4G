@@ -1,7 +1,7 @@
 import unittest
 import json
 from jass.base.player_round import PlayerRound
-from jass.io.log_parser import LogParser
+from jass.io.log_parser_swisslos import LogParserSwisslos
 from jass.player_service.request_generator import PlayerRoundRequestGenerator
 from jass.player_service.request_parser import PlayerRoundParser
 
@@ -9,7 +9,7 @@ from jass.player_service.request_parser import PlayerRoundParser
 class PlayerRoundGeneratorTestCase(unittest.TestCase):
     def test_generator(self):
         # load some data to use for the tests
-        log_parser = LogParser('../resources/small_log.txt')
+        log_parser = LogParserSwisslos('../resources/small_log.txt')
         rnd_entries = log_parser.parse_rounds()
         for rnd_entry in rnd_entries:
             player_rnds = PlayerRound.all_from_complete_round(rnd_entry.rnd)

@@ -97,7 +97,7 @@ class RoundParser:
         return rnd, date, players
 
     @staticmethod
-    def parse_rounds(filename: str):
+    def parse_rounds_from_file(filename: str):
         """
         Parse all rounds in a file and return them
         Args:

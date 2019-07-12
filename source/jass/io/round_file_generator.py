@@ -12,7 +12,7 @@ from jass.base.round import Round
 from jass.io.round_generator import RoundGenerator
 
 
-class LogGenerator:
+class RoundFileGenerator:
     """
     Create a log entry in a similar format as the original log file, but with the following changes:
     - date and player information are inside the json for each round
@@ -61,7 +61,7 @@ class LogGenerator:
             self._nr_lines_in_file += 1
         self._buffer.clear()
 
-    def add_round(self, rnd: Round, players: List[str], date: datetime.datetime):
+    def add_entry(self, rnd: Round, players: List[str], date: datetime.datetime):
         date_string = date.strftime('%d.%m.%y %H:%M:%S')
         rounds_dict = RoundGenerator.generate_dict_all(rnd, date_string, players)
         line = json.dumps(rounds_dict, separators=(',', ':'))
