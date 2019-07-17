@@ -236,7 +236,7 @@ class PlayerRound:
         self.jass_type = rnd.jass_type
         self.rule = rnd.rule
 
-    def _calculate_points_from_tricks(self) -> None:
+    def calculate_points_from_tricks(self) -> None:
         """
         Calculate the points of the teams from the trick points and trick winners.
         """
@@ -288,10 +288,12 @@ class PlayerRound:
         # calculate the number of tricks played and how many cards in the current trick
         player_rnd.nr_tricks, player_rnd.nr_cards_in_trick = divmod(cards_played, 4)
 
-        # copy the trick first player, this is also available after making trump, when no trick has been played yet
-        player_rnd.trick_first_player[0:player_rnd.nr_tricks + 1] = rnd.trick_first_player[0:player_rnd.nr_tricks + 1]
-
         if cards_played > 0:
+            # copy the trick first player,
+            # Changed: don't copy this right after trump, so that is is only available when the trick
+            # has actually started
+            player_rnd.trick_first_player[0:player_rnd.nr_tricks] = rnd.trick_first_player[
+                                                                        0:player_rnd.nr_tricks]
             if player_rnd.nr_cards_in_trick == 0:
                 # only full tricks
                 player_rnd.tricks[0:player_rnd.nr_tricks, :] = rnd.tricks[0:player_rnd.nr_tricks, :]
@@ -316,7 +318,7 @@ class PlayerRound:
             player_rnd.trick_winner[0:player_rnd.nr_tricks] = rnd.trick_winner[0:player_rnd.nr_tricks]
             player_rnd.trick_points[0:player_rnd.nr_tricks] = rnd.trick_points[0:player_rnd.nr_tricks]
 
-            player_rnd._calculate_points_from_tricks()
+            player_rnd.calculate_points_from_tricks()
 
             # determine player
             player_rnd.player = (player_rnd.trick_first_player[player_rnd.nr_tricks]-player_rnd.nr_cards_in_trick) % 4

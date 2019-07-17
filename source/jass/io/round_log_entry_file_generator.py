@@ -4,26 +4,34 @@
 #
 #
 import json
-import datetime
 import random
-from typing import List
+import logging
 
-from jass.base.round import Round
-from jass.io.round_generator import RoundSerializer
+from jass.io.round_log_entry import RoundLogEntry
+from jass.io.round_log_entry_serializer import RoundLogEntrySerializer
 
 
-class RoundFileGenerator:
+class RoundLogEntryFileGenerator:
     """
-    Create a log entry in a similar format as the original log file, but with the following changes:
-    - date and player information are inside the json for each round
-    - there is one round on each line formatted as one json dict
+    Create a file of log entries with each entry in a separate line of the file. Files are split to contain
+    no more than the indicated max_entries lines. Entries are first collected into a buffer and shuffled
+    before writing.
 
-    A line from the file can be parsed usind Round_Parser.parse_round_all
+    The class should be used as a context manager within "with" in python
     """
+    EXTENSION = '.txt'
 
-    def __init__(self, basename: str, max_entries: int, max_buffer=10000):
+    def __init__(self, basename: str, max_entries: int, max_buffer: int=10000):
+        """
+        Initialize the generator.
+
+        Args:
+            basename: basename of the generated files, this should include the whole file path
+            max_entries: maximal entries per file
+            max_buffer: size of the buffer that will be shuffled
+        """
         self._basename = basename
-        self._extension = '.txt'
+        self._extension = RoundLogEntryFileGenerator.EXTENSION
         self._max_entries = max_entries
         self._max_buffer = max_buffer
         self._current_file_number = 0
@@ -33,9 +41,15 @@ class RoundFileGenerator:
         self._buffer = []
 
     def __enter__(self):
+        """
+        Start of context region.
+        """
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
+        """
+        End of context region, writes the buffer and closes the file.
+        """
         if len(self._buffer) > 0:
             self._write_buffer()
         if self._file is not None:
@@ -46,7 +60,7 @@ class RoundFileGenerator:
             self._file.close()
         self._current_file_number += 1
         filename = self._basename + '{:02d}'.format(self._current_file_number) + self._extension
-        print(filename)
+        logging.getLogger(__name__).info('Writing file: {}'.format(filename))
         self._file = open(filename, mode='w')
         self._nr_lines_in_file = 0
 
@@ -61,9 +75,13 @@ class RoundFileGenerator:
             self._nr_lines_in_file += 1
         self._buffer.clear()
 
-    def add_entry(self, rnd: Round, players: List[str], date: datetime.datetime):
-        date_string = date.strftime('%d.%m.%y %H:%M:%S')
-        rounds_dict = RoundSerializer.generate_dict_all(rnd, date_string, players)
+    def add_entry(self, rnd_log_entry: RoundLogEntry) -> None:
+        """
+        Add an entry to the file
+        Args:
+            rnd_log_entry: entry to add
+        """
+        rounds_dict = RoundLogEntrySerializer.round_log_entry_to_dict(rnd_log_entry)
         line = json.dumps(rounds_dict, separators=(',', ':'))
         self._buffer.append(line)
         if len(self._buffer) > self._max_buffer:

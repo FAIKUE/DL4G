@@ -130,17 +130,16 @@ class PlayerRoundLogGenerator:
         player_ids = round_with_players[1]
         player_round_dict = dict()
         player_round_dict["dealer"] = player_round.dealer
-        player_round_dict["declaredtrump"] = player_round.declared_trump
+        player_round_dict["declaredTrump"] = player_round.declared_trump
         player_round_dict["trump"] = player_round.trump
         player_round_dict["forehand"] = player_round.forehand
-        player_round_dict["pointsteamown"] = int(player_round.points_team_own)
-        player_round_dict["pointsteamopponent"] = int(player_round.points_team_opponent)
-        player_round_dict["nrplayedcards"] = player_round.nr_played_cards
+        player_round_dict["pointsTeam0"] = int(player_round.points_team_0)
+        player_round_dict["pointsTeam1"] = int(player_round.points_team_1)
+        player_round_dict["nrPlayedCards"] = player_round.nr_played_cards
         player_round_dict["player"] = int(player_round.player)
-        player_round_dict["player_id"] = player_ids[player_round.player]
         player_round_dict["hand"] = convert_one_hot_encoded_cards_to_str_encoded_list(player_round.hand)
-        player_round_dict["nrcardsintrick"] = player_round.nr_cards_in_trick
-        player_round_dict["currenttrick"] = [card_strings[card] for card in player_round.current_trick if card != -1]
+        player_round_dict["nrCardsInTrick"] = player_round.nr_cards_in_trick
+        player_round_dict["currentTrick"] = [card_strings[card] for card in player_round.current_trick if card != -1]
         player_round_dict["jassTyp"] = player_round.jass_type
         PlayerRoundLogGenerator._add_tricks_to_dict(player_round, player_round_dict)
 

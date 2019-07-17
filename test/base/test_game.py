@@ -4,8 +4,8 @@ import datetime
 
 from jass.base.game import Game
 from jass.io.log_parser_swisslos import LogParserSwisslos
-from jass.io.game_generator import GameGenerator
-from jass.io.game_parser import GameParser
+from jass.io.game_serializer import GameSerializer
+from jass.io.game_parser import GameSerializer
 
 
 class GameTestCase(unittest.TestCase):
@@ -68,8 +68,8 @@ class GameTestCase(unittest.TestCase):
         game.add_round(rnd)
         game.add_round(rnd)
         game.winner = 0
-        data = GameGenerator.generate_dict(game)
-        game_restored = GameParser.parse_game(data)
+        data = GameSerializer.game_to_dict(game)
+        game_restored = GameSerializer.dict_to_game(data)
 
         self.assertTrue(game, game_restored)
 

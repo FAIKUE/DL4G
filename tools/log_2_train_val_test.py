@@ -7,7 +7,7 @@ import argparse
 import os
 
 import numpy as np
-from jass.io.round_file_generator import RoundFileGenerator
+from jass.io.round_log_entry_file_generator import RoundLogEntryFileGenerator
 from jass.io.log_parser_swisslos import LogParserSwisslos
 
 
@@ -38,27 +38,23 @@ def main():
     prob = [arg.train_split, arg.val_split, arg. test_split]
     np.random.seed(arg.seed)
 
-    with RoundFileGenerator(basename + 'train_', arg.max_rounds) as train, \
-            RoundFileGenerator(basename + 'val_', arg.max_rounds) as val, \
-            RoundFileGenerator(basename + 'test_', arg.max_rounds) as test:
+    with RoundLogEntryFileGenerator(basename + 'train_', arg.max_rounds) as train, \
+            RoundLogEntryFileGenerator(basename + 'val_', arg.max_rounds) as val, \
+            RoundLogEntryFileGenerator(basename + 'test_', arg.max_rounds) as test:
         for f in arg.files:
-            parser = LogParserSwisslos(f)
-            log_entries = parser.parse_rounds()
+            log_entries = LogParserSwisslos.parse_rounds(f)
             nr_total += len(log_entries)
 
             for entry in log_entries:
-                players = entry.player_ids
-                rnd = entry.rnd
-                date = entry.date
                 set_chosen = np.random.choice(3, p=prob)
                 if set_chosen == 0:
-                    train.add_entry(rnd, players, date)
+                    train.add_entry(entry)
                     nr_train += 1
                 elif set_chosen == 1:
-                    val.add_entry(rnd, players, date)
+                    val.add_entry(entry)
                     nr_val += 1
                 elif set_chosen == 2:
-                    test.add_entry(rnd, players, date)
+                    test.add_entry(entry)
                     nr_test += 1
 
                 _print_progress(nr_total)

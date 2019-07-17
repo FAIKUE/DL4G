@@ -6,8 +6,8 @@ import datetime
 from typing import List
 
 from jass.base.player_round import PlayerRound
+from jass.base.player_round_cheating import PlayerRoundCheating
 from jass.base.round import Round
-from jass.io.round_generator import RoundGenerator
 
 
 class RoundLogEntry:
@@ -27,19 +27,6 @@ class RoundLogEntry:
         self.date = date
         self.player_ids = player_ids
 
-    def generate_dict(self):
-        """
-        Generate the dict for this entry. The entry for the round is generated using the RoundGenerator
-        class.
-
-        Returns:
-            a dict for this round log entry
-        """
-        data = RoundGenerator.generate_dict(self.rnd)
-        data['date'] = self.date
-        data['player_ids'] = self.player_ids
-        return data
-
 
 class PlayerRoundLogEntry:
     """
@@ -48,5 +35,16 @@ class PlayerRoundLogEntry:
     """
     def __init__(self, player_rnd: PlayerRound, date: datetime.datetime = None, player_id: int = None):
         self.player_rnd = player_rnd
+        self.date = date
+        self.player_id = player_id
+
+
+class PlayerRoundCheatingLogEntry:
+    """
+    Class to capture the information stored in a entry for a player round. It includes additional information
+    that might be necessary for training or for statistical data.
+    """
+    def __init__(self, player_rnd_cheating: PlayerRoundCheating, date: datetime.datetime = None, player_id: int = None):
+        self.player_rnd_cheating = player_rnd_cheating
         self.date = date
         self.player_id = player_id

@@ -3,14 +3,15 @@ import logging
 from jass.io.log_parser_swisslos import LogParserSwisslos
 from jass.base.player_round import PlayerRound
 
+TEST_FILE = '../resources/small_log.txt'
+
 
 class LogParserTestCase(unittest.TestCase):
 
     def test_log_parser(self):
         root_logger = logging.getLogger()
         root_logger.setLevel(logging.DEBUG)
-        log_parser = LogParserSwisslos('../resources/small_log.txt')
-        rnds = log_parser.parse_rounds()
+        rnds = LogParserSwisslos.parse_rounds(TEST_FILE)
 
         self.assertEqual(19, len(rnds))
 
@@ -34,8 +35,7 @@ class LogParserTestCase(unittest.TestCase):
     def test_valid_cards(self):
         root_logger = logging.getLogger()
         root_logger.setLevel(logging.DEBUG)
-        log_parser = LogParserSwisslos('../resources/small_log.txt')
-        rnds = log_parser.parse_rounds()
+        rnds = LogParserSwisslos.parse_rounds(TEST_FILE)
 
         self.assertEqual(19, len(rnds))
 

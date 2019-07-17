@@ -154,7 +154,7 @@ class PlayerRoundCheating(PlayerRound):
             player_rnd.trick_winner[0:player_rnd.nr_tricks] = rnd.trick_winner[0:player_rnd.nr_tricks]
             player_rnd.trick_points[0:player_rnd.nr_tricks] = rnd.trick_points[0:player_rnd.nr_tricks]
 
-            player_rnd._calculate_points_from_tricks()
+            player_rnd.calculate_points_from_tricks()
 
             # determine player
             player_rnd.player = (player_rnd.trick_first_player[player_rnd.nr_tricks]-player_rnd.nr_cards_in_trick) % 4

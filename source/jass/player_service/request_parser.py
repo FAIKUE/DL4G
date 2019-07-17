@@ -168,7 +168,7 @@ class PlayerRoundParser(BasicRequestParser):
                         # the player with the hand is the current player
                         player_round.player = i
 
-        player_round._calculate_points_from_tricks()
+        player_round.calculate_points_from_tricks()
         # during debugging
         player_round.assert_invariants()
         self._rnd = player_round
