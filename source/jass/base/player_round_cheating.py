@@ -157,7 +157,7 @@ class PlayerRoundCheating(PlayerRound):
             player_rnd.calculate_points_from_tricks()
 
             # determine player
-            player_rnd.player = (player_rnd.trick_first_player[player_rnd.nr_tricks]-player_rnd.nr_cards_in_trick) % 4
+            player_rnd.player = (rnd.trick_first_player[player_rnd.nr_tricks]-player_rnd.nr_cards_in_trick) % 4
         else:
             # no cards played yet
             player_rnd.player = next_player[player_rnd.dealer]

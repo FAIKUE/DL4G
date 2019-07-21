@@ -156,7 +156,7 @@ class PlayerRoundSerializer:
         data['dealer'] = int(player_rnd.dealer)
 
         # additionally to the specification, save the current player
-        data['currentPlayer'] = player_rnd.player
+        data['currentPlayer'] = int(player_rnd.player)
 
         if player_rnd.trump is not None:
             data['trump'] = int(player_rnd.trump)
@@ -186,7 +186,7 @@ class PlayerRoundSerializer:
             cards = convert_int_encoded_cards_to_str_encoded(cards_int)
             trick = dict(
                 cards=cards,
-                first=player_rnd.trick_first_player[player_rnd.nr_tricks])
+                first=int(player_rnd.trick_first_player[player_rnd.nr_tricks]))
             tricks.append(trick)
         data['tricks'] = tricks
 

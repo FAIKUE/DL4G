@@ -14,7 +14,7 @@ DATE_FORMAT = '%d.%m.%y %H:%M:%S'
 
 class RoundSerializer:
     """
-    Class for generation of the dict/json representation of a Round and vice versa.
+    Class for generation and parsing of the dict/json representation of a Round.
     """
     @staticmethod
     def round_to_dict(rnd: Round) -> dict:

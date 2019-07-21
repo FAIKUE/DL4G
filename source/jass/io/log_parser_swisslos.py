@@ -12,7 +12,7 @@ import json
 import logging
 from typing import List
 from datetime import datetime
-from jass.io.round_log_entry import RoundLogEntry
+from jass.io.log_entries import RoundLogEntry
 from jass.io.round_serializer import DATE_FORMAT, RoundSerializer
 
 

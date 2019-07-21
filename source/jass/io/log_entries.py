@@ -5,6 +5,7 @@
 import datetime
 from typing import List
 
+from jass.base.label_play import LabelPlay
 from jass.base.player_round import PlayerRound
 from jass.base.player_round_cheating import PlayerRoundCheating
 from jass.base.round import Round
@@ -33,10 +34,14 @@ class PlayerRoundLogEntry:
     Class to capture the information stored in a entry for a player round. It includes additional information
     that might be necessary for training or for statistical data.
     """
-    def __init__(self, player_rnd: PlayerRound, date: datetime.datetime = None, player_id: int = None):
+    def __init__(self, player_rnd: PlayerRound,
+                 date: datetime.datetime = None,
+                 player_id: int = None,
+                 label: LabelPlay = None):
         self.player_rnd = player_rnd
         self.date = date
         self.player_id = player_id
+        self.label = label
 
 
 class PlayerRoundCheatingLogEntry:

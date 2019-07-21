@@ -74,7 +74,7 @@ class GameSerializer:
         rnds = []
 
         for round_data in rounds:
-            rnd = RoundParser.parse_round(round_data)
+            rnd = RoundSerializer.round_from_dict(round_data)
             rnds.append(rnd)
 
         game._rounds = rnds

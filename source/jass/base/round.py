@@ -148,6 +148,17 @@ class Round:
         """
         return str(self.__dict__)
 
+    def get_points_for_player(self, player: int):
+        """
+        Get the points for the specific player
+        Returns:
+            The points for the player
+        """
+        if player == 0 or player == 2:
+            return self.points_team_0
+        else:
+            return self.points_team_1
+
     def deal_cards(self)->None:
         """
         Deal cards randomly at beginning of the game.

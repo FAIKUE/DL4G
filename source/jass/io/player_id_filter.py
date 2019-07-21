@@ -117,7 +117,8 @@ class FilterStdRelative(PlayerIdFilter):
         #quantile = self.player_stats['std'].quantile(self.rel_std)
         std_data = [p.std for p in self.player_stats]
         quantile = np.quantile(std_data, self.rel_std)
-        filtered = [p.id for p in self.player_stats if p.std >quantile]
+        print(quantile)
+        filtered = [p.id for p in self.player_stats if p.std < quantile]
         return filtered
 
 

@@ -59,7 +59,7 @@ class PlayerRound:
 
         # player of the next action, i.e. declaring trump or playing a card, i.e. player whose view of the
         # round this class describes
-        self.player = player
+        self.player = player        # type: int
 
         # selected trump
         self.trump = trump               # type: int
@@ -292,11 +292,14 @@ class PlayerRound:
             # copy the trick first player,
             # Changed: don't copy this right after trump, so that is is only available when the trick
             # has actually started
-            player_rnd.trick_first_player[0:player_rnd.nr_tricks] = rnd.trick_first_player[
-                                                                        0:player_rnd.nr_tricks]
+
             if player_rnd.nr_cards_in_trick == 0:
                 # only full tricks
                 player_rnd.tricks[0:player_rnd.nr_tricks, :] = rnd.tricks[0:player_rnd.nr_tricks, :]
+
+                # copy first player for the completed tricks
+                player_rnd.trick_first_player[0:player_rnd.nr_tricks] = rnd.trick_first_player[
+                                                                        0:player_rnd.nr_tricks]
 
                 # current trick is empty (or none if last card)
                 if cards_played == 36:
@@ -314,6 +317,10 @@ class PlayerRound:
                 # make sure the current trick points to that
 
                 player_rnd.current_trick = player_rnd.tricks[player_rnd.nr_tricks]
+
+                # copy first player for the completed tricks and the current trick
+                player_rnd.trick_first_player[0:player_rnd.nr_tricks+1] = rnd.trick_first_player[
+                                                                        0:player_rnd.nr_tricks+1]
             # copy the results from the tricks
             player_rnd.trick_winner[0:player_rnd.nr_tricks] = rnd.trick_winner[0:player_rnd.nr_tricks]
             player_rnd.trick_points[0:player_rnd.nr_tricks] = rnd.trick_points[0:player_rnd.nr_tricks]
@@ -321,7 +328,7 @@ class PlayerRound:
             player_rnd.calculate_points_from_tricks()
 
             # determine player
-            player_rnd.player = (player_rnd.trick_first_player[player_rnd.nr_tricks]-player_rnd.nr_cards_in_trick) % 4
+            player_rnd.player = (rnd.trick_first_player[player_rnd.nr_tricks]-player_rnd.nr_cards_in_trick) % 4
         else:
             # no cards played yet
             player_rnd.player = next_player[player_rnd.dealer]
@@ -346,6 +353,19 @@ class PlayerRound:
             the list of player_rounds for cards 0..35
         """
         return [PlayerRound.from_complete_round(rnd, i) for i in range(0, 36)]
+
+    @staticmethod
+    def all_from_complete_round_except_last(rnd: Round) -> List['PlayerRound']:
+        """
+        Get the first 35 player rounds from a complete round. The last round is excluded for usage of the player
+        rounds for training, as there are no actions after the last round
+        Args:
+            rnd: The Round from which to create the PlayerRound.
+
+        Returns:
+            the list of player_rounds for cards 0..34
+        """
+        return [PlayerRound.from_complete_round(rnd, i) for i in range(0, 35)]
 
     @staticmethod
     def trump_from_complete_round(rnd: Round, forehand: bool) -> 'PlayerRound' or None:

@@ -5,7 +5,7 @@ import datetime
 from jass.base.game import Game
 from jass.io.log_parser_swisslos import LogParserSwisslos
 from jass.io.game_serializer import GameSerializer
-from jass.io.game_parser import GameSerializer
+from jass.io.round_serializer import RoundSerializer
 
 
 class GameTestCase(unittest.TestCase):
@@ -22,8 +22,7 @@ class GameTestCase(unittest.TestCase):
                        '{"cards":["S10","D7","C8","D8"],"points":31,"win":0,"first":0}],' \
                        '"player":[{"hand":[]},{"hand":[]},{"hand":[]},{"hand":[]}],"jassTyp":"SCHIEBER_2500"}'
         round_dict = json.loads(round_string)
-        parser = LogParserSwisslos(None)
-        rnd = parser.read_round(round_dict)
+        rnd = RoundSerializer.round_from_dict(round_dict)
 
         game = Game()
         game.set_players('north', 'east', 'south', 'west')
@@ -60,8 +59,7 @@ class GameTestCase(unittest.TestCase):
                        '{"cards":["S10","D7","C8","D8"],"points":31,"win":0,"first":0}],' \
                        '"player":[{"hand":[]},{"hand":[]},{"hand":[]},{"hand":[]}],"jassTyp":"SCHIEBER_2500"}'
         round_dict = json.loads(round_string)
-        parser = LogParserSwisslos(None)
-        rnd = parser.read_round(round_dict)
+        rnd = RoundSerializer.round_from_dict(round_dict)
 
         game = Game()
         game.set_players('north', 'east', 'south', 'west')

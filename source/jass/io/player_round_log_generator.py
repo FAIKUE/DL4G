@@ -7,7 +7,7 @@ from jass.base.const import *
 from jass.base.player_round import PlayerRound
 from jass.base.player_round_cheating import PlayerRoundCheating
 from jass.base.round import Round
-from jass.io.round_log_entry import RoundLogEntry
+from jass.io.log_entries import RoundLogEntry
 from jass.io.round_parser import RoundParser
 
 PREFIX_CHEATING_FILENAME = "\player_round_cheating_"
@@ -166,6 +166,6 @@ class PlayerRoundLogGenerator:
 
     def _add_cheating_to_dict(self, rnd_dict, rnd: PlayerRoundCheating):
         rnd_dict["hands"] = []
-        for hand in rnd[0].hands:
+        for hand in rnd.hands:
             hand_values = convert_one_hot_encoded_cards_to_str_encoded_list(hand)
             rnd_dict["hands"].append(hand_values)
