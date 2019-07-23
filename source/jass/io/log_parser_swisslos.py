@@ -10,6 +10,7 @@ Parse the log files containing the game play data in the data obtained from swis
 
 import json
 import logging
+from json import JSONDecodeError
 from typing import List
 from datetime import datetime
 from jass.io.log_entries import RoundLogEntry
@@ -37,7 +38,8 @@ class LogParserSwisslos:
         with open(filename, 'r') as file:
             nr_lines = 0
             nr_rounds = 0
-            nr_skipped = 0
+            nr_skipped_lines = 0
+            nr_skipped_rounds = 0
             # one line contains one log record (with multiple rounds)
             for line in file:
                 nr_lines += 1
@@ -53,7 +55,13 @@ class LogParserSwisslos:
                     date = None
 
                 if index != -1:
-                    line_json = json.loads(line[index:])
+                    try:
+                        line_json = json.loads(line[index:])
+                    except JSONDecodeError as e:
+                        logging.getLogger(__name__).error('Error decoding json: at line {}, {}, '
+                                                          'skipping line'.format(nr_lines, e))
+                        nr_skipped_lines += 1
+                        continue
                     # read the players for those rounds
                     if 'players' in line_json:
                         players = line_json['players']
@@ -66,8 +74,9 @@ class LogParserSwisslos:
                                 nr_rounds += 1
                                 rnds.append(RoundLogEntry(rnd=rnd_read, date=date, player_ids=players))
                             else:
-                                nr_skipped += 1
+                                nr_skipped_rounds += 1
 
         logging.getLogger(__name__).info('Read {} valid rounds from file'.format(nr_rounds))
-        logging.getLogger(__name__).info('Skipped {} rounds'.format(nr_skipped))
+        logging.getLogger(__name__).info('Skipped {} lines'.format(nr_skipped_lines))
+        logging.getLogger(__name__).info('Skipped {} rounds'.format(nr_skipped_rounds))
         return rnds
