@@ -61,7 +61,7 @@ class LogEntryFileGenerator:
         if self._file is not None:
             self._file.close()
         self._current_file_number += 1
-        filename = self._basename + '{:02d}'.format(self._current_file_number) + self._extension
+        filename = self._basename + '{:04d}'.format(self._current_file_number) + self._extension
         logging.getLogger(__name__).info('Writing file: {}'.format(filename))
         self._file = open(filename, mode='w')
         self._nr_lines_in_file = 0

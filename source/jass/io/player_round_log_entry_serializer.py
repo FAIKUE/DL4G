@@ -46,7 +46,7 @@ class PlayerRoundLogEntrySerializer:
         date = datetime.strptime(entry_dict['date'], DATE_FORMAT)
         player_rnd = PlayerRoundSerializer.player_round_from_dict(entry_dict['round'])
         player_id = entry_dict['player_id']
-        label = LabelPlaySerializer.label_from_dict(entry_dict)
+        label = LabelPlaySerializer.label_from_dict(entry_dict['label'])
         return PlayerRoundLogEntry(player_rnd=player_rnd, date=date, player_id=player_id, label=label)
 
     @staticmethod

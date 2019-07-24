@@ -1,5 +1,6 @@
 import json
 import numpy as np
+import logging
 
 
 class PlayerStat:
@@ -55,7 +56,6 @@ class PlayerStatFilter(PlayerIdFilter):
         for i, flt in enumerate(self._filters):
             ids.intersection_update(flt.filter())
             print("Players after " + str(i + 1) + " filter(s): " + str(len(ids)))
-
 
         return ids
 
@@ -117,7 +117,7 @@ class FilterStdRelative(PlayerIdFilter):
         #quantile = self.player_stats['std'].quantile(self.rel_std)
         std_data = [p.std for p in self.player_stats]
         quantile = np.quantile(std_data, self.rel_std)
-        print(quantile)
+        print('Quantile calculated for relative std: {}'.format(quantile))
         filtered = [p.id for p in self.player_stats if p.std < quantile]
         return filtered
 
@@ -134,6 +134,7 @@ class FilterMeanRelative(PlayerIdFilter):
         self._check_relative_parameter(self.rel_mean)
         mean_data = [p.mean for p in self.player_stats]
         quantile = np.quantile(mean_data, self.rel_mean)
+        print('Quantile calculated for relative mean: {}'.format(quantile))
         filtered = [p.id for p in self.player_stats if p.mean > quantile]
         return filtered
 
@@ -151,6 +152,7 @@ class FilterPlayedGamesRelative(PlayerIdFilter):
 
         nr_data = [p.nr for p in self.player_stats]
         quantile = np.quantile(nr_data, self.rel_played_games)
+        print('Quantile calculated for relative played games: {}'.format(quantile))
         filtered = [p.id for p in self.player_stats if p.nr > quantile]
         return filtered
 

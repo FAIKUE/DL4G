@@ -31,13 +31,13 @@ def generate_logs(files, output: str, output_dir: str, max_rounds: int):
             entries = RoundLogEntrySerializer.round_log_entries_from_file(file)
             for entry in entries:
                 nr_entries_read += 1
-                player_rounds = PlayerRound.all_from_complete_round_except_last(entry.rnd)
+                player_rounds = PlayerRound.all_from_complete_round(entry.rnd)
                 hands = calculate_starting_hands_from_round(entry.rnd)
                 for card_id, player_rnd in enumerate(player_rounds):
                     # look at the trick information for the next card
                     trick = card_id % 4 + 1
                     trick_winner = entry.rnd.trick_winner[trick]
-                    if same_team(player_rnd.player, trick_winner):
+                    if same_team[player_rnd.player, trick_winner]:
                         points_in_trick_own = entry.rnd.trick_points[trick]
                         points_in_trick_other = 0
                     else:
@@ -66,7 +66,7 @@ def main():
     parser = argparse.ArgumentParser(description='Convert files with rounds to player rounds')
     parser.add_argument('--output', type=str, help='Base name of the output files', default='')
     parser.add_argument('--output_dir', type=str, help='Directory for output files', default='')
-    parser.add_argument('--max_rounds', type=int, default=50000, help='Maximal number of rounds in one file')
+    parser.add_argument('--max_rounds', type=int, default=100000, help='Maximal number of rounds in one file')
     parser.add_argument('files', type=str, nargs='+', help='The log files')
 
     args = parser.parse_args()
@@ -76,4 +76,4 @@ def main():
 
 
 if __name__ == '__main__':
-   main()
+    main()

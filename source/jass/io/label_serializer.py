@@ -3,6 +3,7 @@
 # Created by Thomas Koller on 19.07.19
 #
 import numpy as np
+import logging
 
 from jass.base.const import convert_one_hot_encoded_cards_to_str_encoded_list, get_cards_encoded, \
     get_cards_encoded_from_str
@@ -47,10 +48,13 @@ class LabelPlaySerializer:
             label from the data in the dict
         """
         hands = np.zeros(shape=[4, 36], dtype=np.int32)
-        hands[0, :] = get_cards_encoded_from_str(data['hands_player_0'])
-        hands[1, :] = get_cards_encoded_from_str(data['hands_player_1'])
-        hands[2, :] = get_cards_encoded_from_str(data['hands_player_2'])
-        hands[3, :] = get_cards_encoded_from_str(data['hands_player_3'])
+        try:
+            hands[0, :] = get_cards_encoded_from_str(data['hands_player_0'])
+            hands[1, :] = get_cards_encoded_from_str(data['hands_player_1'])
+            hands[2, :] = get_cards_encoded_from_str(data['hands_player_2'])
+            hands[3, :] = get_cards_encoded_from_str(data['hands_player_3'])
+        except KeyError as e:
+            logging.getLogger(__name__).error('Key error: {}, data: {}'.format(e, data))
 
         return LabelPlay(card_played=data['card_played'],
                          points_in_trick_own=data['points_in_trick_own'],
