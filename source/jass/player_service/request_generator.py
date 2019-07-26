@@ -56,18 +56,21 @@ class PlayerRoundRequestGenerator:
             cards = convert_int_encoded_cards_to_str_encoded(cards_int)
         else:
             cards = []
-        trick = dict(
-            cards=cards,
-            first=int(player_rnd.trick_first_player[player_rnd.nr_tricks])
-        )
-        tricks.append(trick)
-        data['tricks'] = tricks
 
-        # hand of player
         hand_empty = dict(hand=[])
         player = [hand_empty, hand_empty, hand_empty, hand_empty]
-        hand = dict(hand=convert_one_hot_encoded_cards_to_str_encoded_list(player_rnd.hand))
-        player[player_rnd.player] = hand
+        if player_rnd.nr_tricks < 9:
+            trick = dict(
+                cards=cards,
+                first=int(player_rnd.trick_first_player[player_rnd.nr_tricks])
+            )
+            tricks.append(trick)
+
+            # hand of player
+            hand = dict(hand=convert_one_hot_encoded_cards_to_str_encoded_list(player_rnd.hand))
+            player[player_rnd.player] = hand
+
+        data['tricks'] = tricks
         data['player'] = player
 
         # we
