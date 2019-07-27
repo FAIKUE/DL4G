@@ -46,4 +46,4 @@ Trigger Builds:
     - qa
   trigger:
     project: jassbot/jass-server
-    branch: $CI_COMMIT_REF_NAME
+#    branch: $CI_COMMIT_REF_NAME   # unknown bug
