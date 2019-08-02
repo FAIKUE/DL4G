@@ -1,7 +1,8 @@
 import unittest
 import json
 from jass.base.player_round import PlayerRound
-from jass.io.log_parser import LogParser
+from jass.io.log_parser_swisslos import LogParserSwisslos
+from jass.io.round_serializer import RoundSerializer
 from jass.player_service.request_generator import PlayerRoundRequestGenerator
 from jass.player_service.request_parser import PlayerRoundParser
 
@@ -9,10 +10,9 @@ from jass.player_service.request_parser import PlayerRoundParser
 class PlayerRoundGeneratorTestCase(unittest.TestCase):
     def test_generator(self):
         # load some data to use for the tests
-        log_parser = LogParser('../resources/small_log.txt')
-        rnds = log_parser.parse_rounds()
-        for rnd in rnds:
-            player_rnds = PlayerRound.all_from_complete_round(rnd)
+        rnd_entries = LogParserSwisslos.parse_rounds('../resources/small_log.txt')
+        for rnd_entry in rnd_entries:
+            player_rnds = PlayerRound.all_from_complete_round(rnd_entry.rnd)
             for player_rnd in player_rnds:
                 json_data = PlayerRoundRequestGenerator.generate_json(player_rnd)
                 # in the service, we directly get the json dict

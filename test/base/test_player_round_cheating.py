@@ -4,7 +4,8 @@ import json
 from jass.base.const import *
 from jass.base.round_schieber import RoundSchieber
 from jass.base.player_round_cheating import PlayerRoundCheating
-from jass.io.log_parser import LogParser
+from jass.io.log_parser_swisslos import LogParserSwisslos
+from jass.io.round_serializer import RoundSerializer
 
 
 class PlayerRoundCheatingTestCase(unittest.TestCase):
@@ -103,8 +104,7 @@ class PlayerRoundCheatingTestCase(unittest.TestCase):
                        '{"cards":["S10","D7","C8","D8"],"points":31,"win":0,"first":0}],' \
                        '"player":[{"hand":[]},{"hand":[]},{"hand":[]},{"hand":[]}],"jassTyp":"SCHIEBER_2500"}'
         round_dict = json.loads(round_string)
-        parser = LogParser(None)
-        rnd = parser.read_round(round_dict)
+        rnd = RoundSerializer.round_from_dict(round_dict)
         player_rnds = PlayerRoundCheating.all_from_complete_round(rnd)
         self.assertEqual(36, len(player_rnds))
 

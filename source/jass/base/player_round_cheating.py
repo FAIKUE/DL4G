@@ -117,7 +117,9 @@ class PlayerRoundCheating(PlayerRound):
         player_rnd = PlayerRoundCheating(dealer=rnd.dealer,
                                          trump=rnd.trump,
                                          declared_trump=rnd.declared_trump,
-                                         forehand=rnd.forehand)
+                                         forehand=rnd.forehand,
+                                         jass_type=rnd.jass_type,
+                                         rule=rnd.rule)
 
         player_rnd.nr_played_cards = cards_played
 
@@ -128,18 +130,34 @@ class PlayerRoundCheating(PlayerRound):
         player_rnd.trick_first_player[0:player_rnd.nr_tricks + 1] = rnd.trick_first_player[0:player_rnd.nr_tricks + 1]
 
         if cards_played > 0:
-            # copy all the tricks
-            player_rnd.tricks[0:player_rnd.nr_tricks, :] = rnd.tricks[0:player_rnd.nr_tricks, :]
-            player_rnd.current_trick[0:player_rnd.nr_cards_in_trick] = \
-                rnd.tricks[player_rnd.nr_tricks, 0:player_rnd.nr_cards_in_trick]
+            if player_rnd.nr_cards_in_trick == 0:
+                # only full tricks
+                player_rnd.tricks[0:player_rnd.nr_tricks, :] = rnd.tricks[0:player_rnd.nr_tricks, :]
+
+                # current trick is empty (or none if last card)
+                if cards_played == 36:
+                    player_rnd.current_trick = None
+                else:
+                    # this is the next trick, after the full ones
+                    player_rnd.current_trick = player_rnd.tricks[player_rnd.nr_tricks]
+
+            else:
+                # copy all the full tricks first
+                player_rnd.tricks[0:player_rnd.nr_tricks, :] = rnd.tricks[0:player_rnd.nr_tricks, :]
+
+                # copy the trick in progress
+                player_rnd.tricks[player_rnd.nr_tricks, 0:player_rnd.nr_cards_in_trick] = \
+                    rnd.tricks[player_rnd.nr_tricks, 0:player_rnd.nr_cards_in_trick]
+                # make sure the current trick points to that
+                player_rnd.current_trick = player_rnd.tricks[player_rnd.nr_tricks]
             # copy the results from the tricks
             player_rnd.trick_winner[0:player_rnd.nr_tricks] = rnd.trick_winner[0:player_rnd.nr_tricks]
             player_rnd.trick_points[0:player_rnd.nr_tricks] = rnd.trick_points[0:player_rnd.nr_tricks]
 
-            player_rnd._calculate_points_from_tricks()
+            player_rnd.calculate_points_from_tricks()
 
             # determine player
-            player_rnd.player = (player_rnd.trick_first_player[player_rnd.nr_tricks]-player_rnd.nr_cards_in_trick) % 4
+            player_rnd.player = (rnd.trick_first_player[player_rnd.nr_tricks]-player_rnd.nr_cards_in_trick) % 4
         else:
             # no cards played yet
             player_rnd.player = next_player[player_rnd.dealer]
@@ -242,8 +260,17 @@ class PlayerRoundCheating(PlayerRound):
 
         # cards in hand
         assert self.hands.sum() == 36 - self.nr_played_cards
-        print(self.hands)
-        print(self.hand)
-        print(self.hand.sum())
+        # print(self.hands)
+        # print(self.hand)
+        # print(self.hand.sum())
         assert self.hand.sum() == 9 - self.nr_tricks
+
+        # check current trick
+        if self.nr_played_cards == 36:
+            assert self.current_trick is None
+        else:
+            nr_cards_in_current_trick = np.count_nonzero(self.current_trick[:] > -1)
+            expected_cards_in_current_trick = (self.nr_played_cards % 4)
+            assert nr_cards_in_current_trick == expected_cards_in_current_trick
+
 

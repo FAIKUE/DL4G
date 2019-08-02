@@ -121,7 +121,7 @@ class AllStat:
 
     def add_round(self, r: RoundSchieber):
         for s in self.stat:
-            s.add_round(r)
+            s.add_entry(r)
 
     def add_hand(self, hand, trump, forehand):
         for s in self.stat:
