@@ -64,6 +64,31 @@ class JassConstTestCase(unittest.TestCase):
         self.assertFalse(same_team[3, 0])
         self.assertFalse(same_team[3, 2])
 
+    def test_array_reshape(self):
+        # test to see how 1D arrays are reshaped to 2D
+        a = np.zeros(36, dtype=np.int32)
+
+        # set all cards of heart 1
+        a[HA] = 1
+        a[HK] = 1
+        a[HQ] = 1
+        a[HJ] = 1
+        a[H10] = 1
+        a[H9] = 1
+        a[H8] = 1
+        a[H7] = 1
+        a[H6] = 1
+
+        # row major (C-style) ordering, index on last dim varies quickest
+        b = a.reshape((4, 9))
+        self.assertEqual(b[H, :].sum(), 9)
+        print(a)
+        print(b)
+
+        c = np.reshape(a, newshape=(4, 9))
+        self.assertEqual(c[H, :].sum(), 9)
+
+
 
 if __name__ == '__main__':
     unittest.main()

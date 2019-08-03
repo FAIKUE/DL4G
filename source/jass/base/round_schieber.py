@@ -83,7 +83,7 @@ class RoundSchieber(Round):
             assert self.dealer is not None
 
         # trick winners
-        if self.nr_tricks > 0:
+        if self.nr_played_cards > 0:
             assert self.trick_first_player[0] == next_player[self.dealer]
         for i in range(1, self.nr_tricks):
             assert self.trick_winner[i-1] == self.trick_first_player[i]

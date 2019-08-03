@@ -59,16 +59,11 @@ class RoundFactoryTestCase(unittest.TestCase):
         player_rnd.player = SOUTH
         player_rnd.nr_played_cards = 1
         player_rnd.nr_cards_in_trick = 1
+        player_rnd.trick_first_player[0] = next_player[player_rnd.dealer]
         player_rnd.assert_invariants()
 
         rnd = get_round_from_player_round(player_rnd, hands)
         rnd.assert_invariants()
-
-
-
-
-
-
 
 
 if __name__ == '__main__':
