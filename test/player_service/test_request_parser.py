@@ -22,7 +22,7 @@ class RequestValidatorTest(unittest.TestCase):
         self.assertFalse(result)
 
     def test_parse_select_trump_request_ok(self):
-        request_data = '{"dealer":0,"tss":1,"tricks":[],"player":[{"hand":[]},' \
+        request_data = '{"dealer":0,"tss":1,"tricks":[],"currentPlayer":3,"player":[{"hand":[]},' \
                        '{"hand":[]},{"hand":[]},{"hand":["HJ","S9","SJ","C7","C8","HA",' \
                        '"C6","H7","CJ"]}],"jassTyp":"SCHIEBER_1000"}'
         request_dict = json.loads(request_data)
@@ -57,7 +57,7 @@ class RequestValidatorTest(unittest.TestCase):
         self.assertFalse(result)
 
     def test_parse_play_card_request_valid_middle_of_game(self):
-        request_data = '{"trump":4,"dealer":3,"tss":1,"tricks":[' \
+        request_data = '{"trump":4,"dealer":3,"tss":1,"currentPlayer":2,"tricks":[' \
                        '{"cards":["SA","S7","SQ","S6"],"points":14,"win":2,"first":2},' \
                        '{"cards":["C8","CJ","CQ","CK"],"points":17,"win":3,"first":2},' \
                        '{"cards":["D6","D7","DJ","DA"],"points":13,"win":0,"first":3},' \
@@ -80,8 +80,9 @@ class RequestValidatorTest(unittest.TestCase):
         self.assertEqual(expected_hand, rnd.hand.tolist())
         rnd.assert_invariants()
 
-    def test_parse_play_card_request_valid_middle_of_game_no_points_and_winner(self):
-        request_data = '{"trump":4,"dealer":3,"tss":1,"tricks":[' \
+    # old test, data is now illegal as points and winner must be present in complete tricks
+    def do_not_test_parse_play_card_request_valid_middle_of_game_no_points_and_winner(self):
+        request_data = '{"trump":4,"dealer":3,"tss":1,"currentPlayer":2,"tricks":[' \
                        '{"cards":["SA","S7","SQ","S6"],"first":2},' \
                        '{"cards":["C8","CJ","CQ","CK"],"first":2},' \
                        '{"cards":["D6","D7","DJ","DA"],"first":3},' \
@@ -108,8 +109,8 @@ class RequestValidatorTest(unittest.TestCase):
         rnd.assert_invariants()
 
     def test_parse_play_card_request_valid_first_trick(self):
-        request_data = '{"trump":0,"dealer":3,"tss":0,"tricks":[' \
-                       '{"cards":["DJ","D7","D10"],"points":0,"win":0,"first":0}],' \
+        request_data = '{"trump":0,"dealer":3,"tss":0,"currentPlayer":3, "tricks":[' \
+                       '{"cards":["DJ","D7","D10"],"points":0,"win":0,"first":2}],' \
                        '"player":[{"hand":[]},{"hand":[]},{"hand":[]},' \
                        '{"hand":["S6","S7","S8","C6","C7","C8","D6","D8","HJ"]}],' \
                        '"jassTyp":"SCHIEBER_1000"}'
@@ -131,7 +132,7 @@ class RequestValidatorTest(unittest.TestCase):
         rnd.assert_invariants()
 
     def test_parse_play_card_request_valid_last_trick(self):
-        request_data = '{"trump":2,"dealer":2,"tss":1,"tricks":[' \
+        request_data = '{"trump":2,"dealer":2,"tss":1,"currentPlayer":3,"tricks":[' \
                        '{"cards":["SJ","S8","S6","S7"],"points":20,"win":1,"first":1},' \
                        '{"cards":["S9","S10","SQ","SK"],"points":31,"win":1,"first":1},' \
                        '{"cards":["CJ","CA","C6","C10"],"points":23,"win":0,"first":1},' \
@@ -159,8 +160,9 @@ class RequestValidatorTest(unittest.TestCase):
         self.assertEqual([18, 5, 14, -1], current_trick)
         rnd.assert_invariants()
 
-    def test_parse_play_card_request_valid_last_trick_no_points_and_win(self):
-        request_data = '{"trump":2,"dealer":2,"tss":1,"tricks":[' \
+    # old test, data is now illegal as points and winner must be present in complete tricks
+    def do_not_test_parse_play_card_request_valid_last_trick_no_points_and_win(self):
+        request_data = '{"trump":2,"dealer":2,"tss":1,"currentPlayer":3,"tricks":[' \
                        '{"cards":["SJ","S8","S6","S7"],"first":1},' \
                        '{"cards":["S9","S10","SQ","SK"],"first":1},' \
                        '{"cards":["CJ","CA","C6","C10"],"first":1},' \
