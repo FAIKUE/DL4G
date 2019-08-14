@@ -158,8 +158,9 @@ class PlayerRoundSerializer:
         data['version'] = PlayerRoundSerializer.FORMAT_VERSION
         data['dealer'] = int(player_rnd.dealer)
 
-        # additionally to the specification, save the current player
-        data['currentPlayer'] = int(player_rnd.player)
+        # additionally to the specification, save the current player (if set)
+        if player_rnd.player is not None:
+            data['currentPlayer'] = int(player_rnd.player)
 
         if player_rnd.trump is not None:
             data['trump'] = int(player_rnd.trump)
