@@ -86,7 +86,7 @@ class PlayerRoundSerializer:
         if 'tss' in round_dict and round_dict['tss'] == 1:
             forehand = False
             declared_trump = partner_player[next_player[dealer]]
-        elif trump:
+        elif trump is not None:
             # only set if trump has been declared
             forehand = True
             declared_trump = next_player[dealer]
@@ -114,8 +114,11 @@ class PlayerRoundSerializer:
                 rnd.trick_winner[i] = trick['win']
             if 'points' in trick:
                 rnd.trick_points[i] = trick['points']
+            # first must be present for all tricks
             if 'first' in trick:
                 rnd.trick_first_player[i] = trick['first']
+            else:
+                logging.getLogger(__name__).error('No first player set in trick {}'.format(i))
 
         rnd.nr_tricks, rnd.nr_cards_in_trick = divmod(rnd.nr_played_cards, 4)
 

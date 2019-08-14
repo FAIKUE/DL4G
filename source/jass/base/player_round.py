@@ -292,14 +292,11 @@ class PlayerRound:
             # copy the trick first player,
             # Changed: don't copy this right after trump, so that is is only available when the trick
             # has actually started
-
             if player_rnd.nr_cards_in_trick == 0:
-                # only full tricks
-                player_rnd.tricks[0:player_rnd.nr_tricks, :] = rnd.tricks[0:player_rnd.nr_tricks, :]
-
-                # copy first player for the completed tricks
                 player_rnd.trick_first_player[0:player_rnd.nr_tricks] = rnd.trick_first_player[
                                                                         0:player_rnd.nr_tricks]
+                # only full tricks
+                player_rnd.tricks[0:player_rnd.nr_tricks, :] = rnd.tricks[0:player_rnd.nr_tricks, :]
 
                 # current trick is empty (or none if last card)
                 if cards_played == 36:
@@ -414,9 +411,12 @@ class PlayerRound:
             # self player is only allowed to be None at the end of the game
             assert self.player is not None or self.nr_played_cards == 36
 
-        # trick winners
-        if self.nr_tricks > 0:
+        # first player should be set, after a card has been played
+        if self.nr_played_cards > 0:
             assert self.trick_first_player[0] == next_player[self.dealer]
+
+
+        # trick winners
         for i in range(1, self.nr_tricks):
             assert self.trick_winner[i - 1] == self.trick_first_player[i]
 
