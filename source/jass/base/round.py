@@ -116,6 +116,12 @@ class Round:
             True if the objects are the same.
         """
         # noinspection PyPep8
+        if self.nr_played_cards == 36:
+            assert self.current_trick is None
+            assert other.current_trick is None
+            current_tricks_same = True
+        else:
+            current_tricks_same = (self.current_trick == other.current_trick).all()
         return self.dealer == other.dealer and \
                self.player == other.player and \
                self.trump == other.trump and \
@@ -127,7 +133,7 @@ class Round:
                (self.trick_winner == other.trick_winner).all() and \
                (self.trick_points == other.trick_points).all() and \
                self.nr_tricks == other.nr_tricks and \
-               (self.current_trick == other.current_trick).all() and \
+               current_tricks_same and \
                self.nr_cards_in_trick == other.nr_cards_in_trick and \
                self.nr_played_cards == other.nr_played_cards and \
                self.points_team_0 == other.points_team_0 and \
@@ -141,6 +147,17 @@ class Round:
             String describing the round
         """
         return str(self.__dict__)
+
+    def get_points_for_player(self, player: int):
+        """
+        Get the points for the specific player
+        Returns:
+            The points for the player
+        """
+        if player == 0 or player == 2:
+            return self.points_team_0
+        else:
+            return self.points_team_1
 
     def deal_cards(self)->None:
         """
@@ -259,6 +276,7 @@ class Round:
         else:
             # end of round
             self.player = None
+            self.current_trick = None
 
     def assert_invariants(self)->None:
         """

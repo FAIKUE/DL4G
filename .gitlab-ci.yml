@@ -1,0 +1,56 @@
+#
+# ToolChain ABIZ Lab
+# roland.christen@hslu.ch
+#
+##
+
+stages:
+  - release
+  - trigger rebuilds
+
+publish:
+  stage: release
+  image: hub.lab.abiz.ch/sys/agents/docker:stable
+  services:
+    - docker:dind
+  only:
+    - qa
+    - master
+  variables:
+    HUB_NAME: gitlab.enterpriselab.ch:4567
+    IMAGE_NAME: gitlab.enterpriselab.ch:4567/jassbot/jass-kit
+
+  before_script:
+    # gather access to docker registry
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $HUB_NAME
+
+    # load branch specifics
+    - source .${CI_COMMIT_REF_NAME}.env
+    - export IMAGE_ID=$IMAGE_NAME:$IMAGE_TAG
+
+  script:
+    # create and publish docker image
+    - docker build . -t $IMAGE_ID
+    - docker push $IMAGE_ID
+
+  after_script:
+    # clean up
+    - docker logout $HUB_NAME
+
+Trigger Builds (qa):
+  stage: trigger rebuilds
+  only:
+    - qa
+  trigger:
+    project: jassbot/jass-server
+#    branch: $CI_COMMIT_REF_NAME   # unknown bug
+    branch: qa
+
+Trigger Builds (prod):
+  stage: trigger rebuilds
+  only:
+    - master
+  trigger:
+    project: jassbot/jass-server
+#    branch: $CI_COMMIT_REF_NAME   # unknown bug
+    branch: master

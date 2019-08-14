@@ -21,6 +21,7 @@ from jass.player_service.request_parser import PlayerRoundParser
 JASS_PATH_PREFIX = '/jass-service/players/'
 SELECT_TRUMP_PATH_PREFIX = '/select_trump'
 PLAY_CARD_PATH_PREFIX = '/play_card'
+SEND_INFO_PREFIX = '/game_info'
 
 players = Blueprint(JASS_PATH_PREFIX, __name__)
 

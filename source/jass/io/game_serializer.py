@@ -4,15 +4,16 @@
 #
 
 from jass.base.game import Game
-from jass.io.round_generator import RoundGenerator
+from jass.io.round_serializer import RoundSerializer
 
 
-class GameGenerator:
+class GameSerializer:
     """
-    Class for generation of the dict/json representation of a game (Game)
+    Class for generation of the dict/json representation of a game (Game) and vice
+    versa.
     """
     @staticmethod
-    def generate_dict(game: Game) -> dict:
+    def game_to_dict(game: Game) -> dict:
         """
         Generate dict for the game that corresponds to the json description. RoundGenerator is used to generate
         the rounds for the game.
@@ -44,8 +45,37 @@ class GameGenerator:
 
         rounds = []
         for i in range(game.nr_rounds):
-            round_data = RoundGenerator.generate_dict(game.round[i])
+            round_data = RoundSerializer.round_to_dict(game.round[i])
             rounds.append(round_data)
         data['rounds'] = rounds
 
         return data
+
+    @staticmethod
+    def dict_to_game(data: dict) -> Game or None:
+        """
+        Parse a dict to reconstruct a Game
+        Args:
+            data: dict containing the game data
+
+        Returns:
+            the game
+        """
+        game = Game()
+        game.set_players(data['north'], data['east'], data['south'], data['west'])
+        game.winner = data['winner']
+        game._points_team0 = data['pointsTeam0']
+        game._points_team1 = data['pointsTeam1']
+        game.time_started = data['timeStarted']
+        game.time_finished = data['timeFinished']
+
+        rounds = data['rounds']
+        # use temporary list for rounds (as Game.add_entry changes the points)
+        rnds = []
+
+        for round_data in rounds:
+            rnd = RoundSerializer.round_from_dict(round_data)
+            rnds.append(rnd)
+
+        game._rounds = rnds
+        return game

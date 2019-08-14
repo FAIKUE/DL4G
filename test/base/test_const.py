@@ -36,11 +36,14 @@ class JassConstTestCase(unittest.TestCase):
         self.assertEqual(2, len(card_list))
         self.assertEqual(['DA', 'H10'], card_list)
 
-        card_list = convert_one_hot_encoded_cards_to_int_encoded_list(cards)
-        self.assertEqual(2, len(card_list))
-        self.assertEqual([DA, H10], card_list)
+        card_list_int = convert_one_hot_encoded_cards_to_int_encoded_list(cards)
+        self.assertEqual(2, len(card_list_int))
+        self.assertEqual([DA, H10], card_list_int)
 
-
+        cards_from_int = get_cards_encoded(card_list_int)
+        cards_from_str = get_cards_encoded_from_str(card_list)
+        np.testing.assert_array_equal(cards, cards_from_int)
+        np.testing.assert_array_equal(cards, cards_from_str)
 
     def test_same_player(self):
         self.assertTrue(same_team[0, 0])

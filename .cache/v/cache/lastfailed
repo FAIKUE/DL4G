@@ -1,0 +1,22 @@
+{
+  "test/arena/test_arena_hearts.py": true, 
+  "test/arena/test_arena_hearts_cheating.py": true, 
+  "test/arena/test_arena_nr_rounds.py": true, 
+  "test/arena/test_arena_random_trump.py": true, 
+  "test/arena/test_arena_schieber_cheating.py": true, 
+  "test/arena/test_select_trump.py": true, 
+  "test/base/rule_hearts_test.py": true, 
+  "test/base/test_const.py": true, 
+  "test/base/test_game.py": true, 
+  "test/base/test_player_round.py": true, 
+  "test/base/test_player_round_cheating.py": true, 
+  "test/base/test_round_factory.py": true, 
+  "test/base/test_round_hearts.py": true, 
+  "test/base/test_round_schieber.py": true, 
+  "test/base/test_rule_schieber.py": true, 
+  "test/io/test_log_parser.py": true, 
+  "test/io/test_round_parser.py": true, 
+  "test/player_service/test_request_generator.py": true, 
+  "test/player_service/test_request_parser.py": true, 
+  "test/stat/test_trump_stat.py": true
+}

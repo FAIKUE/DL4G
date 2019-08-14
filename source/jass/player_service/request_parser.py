@@ -147,8 +147,10 @@ class PlayerRoundParser(BasicRequestParser):
                 # first copy the data to the trick array
                 for j in range(len(cards)):
                     player_round.tricks[player_round.nr_tricks, j] = card_ids[cards[j]]
-                # then make sure the current trick points to the correct position...
-                player_round.current_trick = player_round.tricks[player_round.nr_tricks]
+
+
+        # then make sure the current trick points to the correct position...
+        player_round.current_trick = player_round.tricks[player_round.nr_tricks]
 
         found_current_hand = False
         for i, player_data in enumerate(self._request_dict['player']):
@@ -166,7 +168,7 @@ class PlayerRoundParser(BasicRequestParser):
                         # the player with the hand is the current player
                         player_round.player = i
 
-        player_round._calculate_points_from_tricks()
+        player_round.calculate_points_from_tricks()
         # during debugging
         player_round.assert_invariants()
         self._rnd = player_round

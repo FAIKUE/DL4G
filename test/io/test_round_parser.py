@@ -2,8 +2,7 @@ import unittest
 
 from jass.base.const import *
 from jass.base.round_schieber import RoundSchieber
-from jass.io.round_generator import RoundGenerator
-from jass.io.round_parser import RoundParser
+from jass.io.round_serializer import RoundSerializer
 
 
 class RoundParserCase(unittest.TestCase):
@@ -51,8 +50,8 @@ class RoundParserCase(unittest.TestCase):
         rnd.assert_invariants()
         self.assertEqual(36, rnd.nr_played_cards)
 
-        rnd_data = RoundGenerator.generate_dict(rnd)
-        rnd_from_data = RoundParser.parse_round(rnd_data)
+        rnd_data = RoundSerializer.round_to_dict(rnd)
+        rnd_from_data = RoundSerializer.round_from_dict(rnd_data)
         rnd_from_data.assert_invariants()
 
         # reconstructed round should be the same
