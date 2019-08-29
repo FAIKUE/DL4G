@@ -254,6 +254,16 @@ color_of_card = np.array(
 )
 
 #
+# 1D array of offset of each card
+offset_of_card = np.array(
+    [A_offset, K_offset, Q_offset, J_offset, Ten_offset, Nine_offset, Eight_offset, Seven_offset, Six_offset,
+     A_offset, K_offset, Q_offset, J_offset, Ten_offset, Nine_offset, Eight_offset, Seven_offset, Six_offset,
+     A_offset, K_offset, Q_offset, J_offset, Ten_offset, Nine_offset, Eight_offset, Seven_offset, Six_offset,
+     A_offset, K_offset, Q_offset, J_offset, Ten_offset, Nine_offset, Eight_offset, Seven_offset, Six_offset],
+    np.int32
+)
+#
+#
 # 2D array of higher trump cards, i.e. higher_trump[DA,:] will give the mask of higher trumps than DA (i.e. DJ, DN)
 # (used to make the logic for determining the valid moves slightly easier to read). The full array is constructed
 # from a smaller array higher_trump_card for the card values only
@@ -306,7 +316,8 @@ same_team = np.array(
 
 def get_cards_encoded(cards: List[int]) -> np.ndarray:
     """
-    Get the 1-hot encoded array of the cards in the list
+    Get the 1-hot encoded array of the cards in the list.
+
     Args:
         cards: the cards
 
@@ -315,6 +326,22 @@ def get_cards_encoded(cards: List[int]) -> np.ndarray:
     """
     result = np.zeros(36, np.int32)
     result[cards] = 1
+    return result
+
+
+def get_cards_encoded_from_str(cards: List[str]) -> np.ndarray:
+    """
+    Get the 1-hot encoded array of the cards in the list.
+
+    Args:
+        cards: the cards
+
+    Returns:
+        1-hot encoded numpy array of the cards in the list
+    """
+    cards_int = convert_str_encoded_cards_to_int_encoded(cards)
+    result = np.zeros(36, np.int32)
+    result[cards_int] = 1
     return result
 
 

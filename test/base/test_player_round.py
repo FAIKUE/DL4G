@@ -4,7 +4,8 @@ import json
 from jass.base.const import *
 from jass.base.round_schieber import RoundSchieber
 from jass.base.player_round import PlayerRound
-from jass.io.log_parser import LogParser
+from jass.io.log_parser_swisslos import LogParserSwisslos
+from jass.io.round_serializer import RoundSerializer
 
 
 class PlayerRoundTestCase(unittest.TestCase):
@@ -225,7 +226,6 @@ class PlayerRoundTestCase(unittest.TestCase):
         player_rnd.set_from_round(rnd)
         player_rnd.assert_invariants()
 
-
     def test_game_state_from_round(self):
         # take game string from a record
         round_string = '{"trump":5,"dealer":3,"tss":1,"tricks":[' \
@@ -240,8 +240,7 @@ class PlayerRoundTestCase(unittest.TestCase):
                        '{"cards":["S10","D7","C8","D8"],"points":31,"win":0,"first":0}],' \
                        '"player":[{"hand":[]},{"hand":[]},{"hand":[]},{"hand":[]}],"jassTyp":"SCHIEBER_2500"}'
         round_dict = json.loads(round_string)
-        parser = LogParser(None)
-        rnd = parser.read_round(round_dict)
+        rnd = RoundSerializer.round_from_dict(round_dict)
         player_rnds = PlayerRound.all_from_complete_round(rnd)
         self.assertEqual(36, len(player_rnds))
 
