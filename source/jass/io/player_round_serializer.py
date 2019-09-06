@@ -52,6 +52,33 @@ class PlayerRoundSerializer:
         return data
 
     @staticmethod
+    def player_round_to_dict_for_other_player(player_rnd: PlayerRound, player: int) -> dict:
+        """
+        Generate dict from player round, if the player view is for one player, but it is another players
+        turn.
+
+        TODO: Add information directly to the class.
+
+        Args:
+            player_rnd: round to generate dict from
+
+        Returns:
+            generated dict
+        """
+        data = PlayerRoundSerializer._player_round_to_dict_base(player_rnd)
+
+        # Information for the 4 players
+        # currently only hand is used, and it is only filled out for the current player, other data could
+        # be supported in the future, for example 'weisen'
+        hand_empty = dict(hand=[])
+        player_data = [hand_empty, hand_empty, hand_empty, hand_empty]
+        hand = dict(hand=convert_one_hot_encoded_cards_to_str_encoded_list(player_rnd.hand))
+        player_data[player] = hand
+        data['player'] = player_data
+
+        return data
+
+    @staticmethod
     def player_round_from_dict(round_dict: dict) -> PlayerRound or None:
         """
         Generate a player round from a dict representation
@@ -128,11 +155,14 @@ class PlayerRoundSerializer:
         for i, player_data in enumerate(round_dict['player']):
             if 'hand' in player_data and len(player_data['hand']) > 0:
                 hand = player_data['hand']
-                if rnd.player != i:
+
+                # Changed to support player round for one player point of view, when another player has
+                # the next move...
+                #if rnd.player != i:
                     # found hand at the wrong position
-                    logging.getLogger(__name__).error('Found hand at position for wrong player: pos={}, '
-                                                      'id={}'.format(i, rnd.player))
-                    return None
+                #    logging.getLogger(__name__).error('Found hand at position for wrong player: pos={}, '
+                #                                      'id={}'.format(i, rnd.player))
+                #    return None
                 for card_constant in hand:
                     rnd.hand[card_ids[card_constant]] = 1
 

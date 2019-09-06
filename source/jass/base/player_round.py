@@ -177,7 +177,7 @@ class PlayerRound:
 
     def set_from_round(self, rnd: Round):
         """
-        Initialize PlayerRound from a full Round at the same card. The data in arrays is copied from the round.
+        Initialize PlayerRound from a Round at the same card. The data in arrays is copied from the round.
         Args:
             rnd:
         """
@@ -189,6 +189,42 @@ class PlayerRound:
 
         if rnd.nr_played_cards < 36:
             self.hand[:] = rnd.hands[self.player, :]
+        self.tricks[:, :] = rnd.tricks[:, :]
+        self.trick_winner[:] = rnd.trick_winner[:]
+        self.trick_points[:] = rnd.trick_points[:]
+        self.trick_first_player[:] = rnd.trick_first_player[:]
+        self.nr_tricks = rnd.nr_tricks
+        self.nr_cards_in_trick = rnd.nr_cards_in_trick
+        # current trick is a view to the trick
+        if rnd.nr_played_cards < 36:
+            self.current_trick = self.tricks[self.nr_tricks]
+        else:
+            self.current_trick = None
+        self.nr_tricks = rnd.nr_tricks
+        self.nr_cards_in_trick = rnd.nr_cards_in_trick
+        self.nr_played_cards = rnd.nr_played_cards
+        self.points_team_0 = rnd.points_team_0
+        self.points_team_1 = rnd.points_team_1
+        self.jass_type = rnd.jass_type
+        self.rule = rnd.rule
+
+    def set_from_round_for_player(self, rnd: Round, player: int):
+        """
+        Initialize PlayerRound from a Round at the same card, but not from the point of the current player, but from
+         another player. This is used in the server to send information about the current game to a client without
+         revealing any other players cards. I.e. the hand array will be the one from the player submitted as argument
+         whilte the rnd.player is the one taking the next turn. The data in arrays is copied from the round.
+        Args:
+            rnd:
+        """
+        self.dealer = rnd.dealer
+        self.player = rnd.player
+        self.trump = rnd.trump
+        self.forehand = rnd.forehand
+        self.declared_trump = rnd.declared_trump
+
+        if rnd.nr_played_cards < 36:
+            self.hand[:] = rnd.hands[player, :]
         self.tricks[:, :] = rnd.tricks[:, :]
         self.trick_winner[:] = rnd.trick_winner[:]
         self.trick_points[:] = rnd.trick_points[:]
