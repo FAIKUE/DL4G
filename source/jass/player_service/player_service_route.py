@@ -15,6 +15,7 @@ from http import HTTPStatus
 from flask import request, jsonify, Blueprint, current_app
 
 from jass.base.const import card_strings
+from jass.io.round_serializer import RoundSerializer
 from jass.player_service.request_parser import PlayerRoundParser
 
 
@@ -80,6 +81,33 @@ def select_trump(player_name: str):
         logging.warning(parser.get_error_message())
         return jsonify(parser.get_error_message()), HTTPStatus.BAD_REQUEST
 
+@players.route('/<string:player_name>' + SEND_INFO_PREFIX, methods=['POST'])
+def game_info(player_name: str):
+    """
+    Receives a game info message about a current changes in the game, which does not require
+    an action from the player.
+
+    This might be used to inform a player about cards played by the other player or the result
+    at the end of the game.
+
+    Args:
+        player_name: the name of the desired player
+    Returns:
+        the http response to answer the given request
+
+    """
+    if not request.is_json:
+        return jsonify(error='json data expected'), HTTPStatus.UNSUPPORTED_MEDIA_TYPE
+
+    request_dict = request.get_json()
+    # currently this is a round that is sent only at the end of the game, to test this
+    # we parse it directly
+    try:
+        rnd = RoundSerializer.round_from_dict(request_dict)
+        return jsonify(''), HTTPStatus.OK
+    except:
+        logging.warning('Could not parse game_info request')
+        return jsonify(''), HTTPStatus.BAD_REQUEST
 
 @players.route('/<string:player_name>', methods=['GET'])
 def smoke_test(player_name: str):

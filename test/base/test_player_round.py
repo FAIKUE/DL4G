@@ -5,6 +5,7 @@ from jass.base.const import *
 from jass.base.round_schieber import RoundSchieber
 from jass.base.player_round import PlayerRound
 from jass.io.log_parser_swisslos import LogParserSwisslos
+from jass.io.player_round_serializer import PlayerRoundSerializer
 from jass.io.round_serializer import RoundSerializer
 
 
@@ -225,6 +226,57 @@ class PlayerRoundTestCase(unittest.TestCase):
         player_rnd = PlayerRound()
         player_rnd.set_from_round(rnd)
         player_rnd.assert_invariants()
+
+    def test_from_partial_round_for_other_player(self):
+        # create  round
+        np.set_printoptions(precision=2, threshold=np.inf, linewidth=np.inf, floatmode='fixed', suppress=True)
+
+        hands = np.array([
+            get_cards_encoded([DK, H10, S8, C8, C9, H8, D8, H9, H6]),
+            get_cards_encoded([D10, HK, SK, CA, C10, SA, D9, C6, S10]),
+            get_cards_encoded([D7, HJ, S7, C7, CK, S6, DJ, SQ, S9]),
+            get_cards_encoded([D6, HQ, SJ, CQ, CJ, HA, DQ, DA, H7]),
+        ], dtype=np.int32)
+
+        # make a round object, as would be done in the arena
+        rnd = RoundSchieber(dealer=WEST)
+        rnd.set_hands(hands=hands)
+        rnd.action_trump(OBE_ABE)
+        rnd.assert_invariants()
+
+        # the played cards
+        actions = [D7, D10, DK, D6,
+                   H10, HQ, HJ, HK,
+                   SK, S8, SJ, S7,
+                   CA, C8, CQ, C7,
+                   C10, C9, CJ, CK,
+                   S6, SA, H8, HA,
+                   D9, D8, DQ, DJ,
+                   DA, SQ, C6, H9,
+                   H7, S9, S10, H6]
+
+        player_rnd = PlayerRound()
+
+        for action in actions:
+            # make sure the action is valid
+            valid = rnd.get_valid_cards()
+            self.assertEqual(1, valid[action])
+            player_rnd.set_from_round(rnd)
+            player_rnd.assert_invariants()
+
+            for other_player in range(4):
+                player_rnd.set_from_round_for_player(rnd, other_player)
+                # invariants are not preserved, as this is from another players view
+                # player_rnd.assert_invariants()
+                np.testing.assert_array_equal(player_rnd.hand, rnd.hands[other_player])
+                data = PlayerRoundSerializer.player_round_to_dict(player_rnd)
+                player_rnd2 = PlayerRoundSerializer.player_round_from_dict(data)
+                # currently, first player is set even if the trick is not yet started, but that is not preserved in the
+                # dict representation
+                # self.assertTrue(player_rnd == player_rnd2)
+
+            rnd.action_play_card(action)
+
 
     def test_game_state_from_round(self):
         # take game string from a record
