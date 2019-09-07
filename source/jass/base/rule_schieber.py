@@ -228,4 +228,3 @@ class RuleSchieber(Rule):
                         winner = i
         # adjust actual winner by first player
         return (first_player - winner) % 4
-

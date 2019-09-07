@@ -215,6 +215,10 @@ class Round:
         self.nr_played_cards += 1
 
         if self.nr_cards_in_trick < 3:
+            if self.nr_cards_in_trick == 0:
+                # make sure the first player is set on the first card of a new trick
+                # (it will not have been set, if the round has been restored from dict)
+                self.trick_first_player[self.nr_tricks] = self.player
             # trick is not yet finished
             self.nr_cards_in_trick += 1
             self.player = next_player[self.player]
