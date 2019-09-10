@@ -6,6 +6,7 @@ import datetime
 from typing import List
 
 from jass.base.label_play import LabelPlay
+from jass.base.label_trump import LabelTrump
 from jass.base.player_round import PlayerRound
 from jass.base.player_round_cheating import PlayerRoundCheating
 from jass.base.round import Round
@@ -53,3 +54,17 @@ class PlayerRoundCheatingLogEntry:
         self.player_rnd_cheating = player_rnd_cheating
         self.date = date
         self.player_id = player_id
+
+
+class PlayerRoundTrumpLogEntry:
+    """
+    Class to capture the information stored in a entry for a player round for trump actions.
+    """
+    def __init__(self, player_rnd: PlayerRound,
+                 date: datetime.datetime = None,
+                 player_id: int = None,
+                 label: LabelTrump = None):
+        self.player_rnd = player_rnd
+        self.date = date
+        self.player_id = player_id
+        self.label = label
