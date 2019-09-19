@@ -40,7 +40,7 @@ class LogParserTestCase(unittest.TestCase):
         self.assertEqual(19, len(rnds))
 
         for rnd_log_entry in rnds:
-            player_rnds = PlayerRound.all_from_complete_round_except_last(rnd_log_entry.rnd)
+            player_rnds = PlayerRound.all_from_complete_round(rnd_log_entry.rnd)
             for i, player_rnd in enumerate(player_rnds):
                 self.assertIsNotNone(player_rnd.rule)
                 nr_trick, move_in_trick = divmod(i, 4)

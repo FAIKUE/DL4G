@@ -178,6 +178,8 @@ class PlayerRound:
     def set_from_round(self, rnd: Round):
         """
         Initialize PlayerRound from a Round at the same card. The data in arrays is copied from the round.
+        This should be able to be used both for playing card stage and trump selection (then the rnd must be in the
+        trump selection state too).
         Args:
             rnd:
         """
@@ -388,20 +390,41 @@ class PlayerRound:
         return [PlayerRound.from_complete_round(rnd, i) for i in range(0, 36)]
 
     @staticmethod
-    def all_from_complete_round_except_last(rnd: Round) -> List['PlayerRound']:
+    def trump_from_complete_round(rnd: Round, forehand: bool) -> 'PlayerRound' or None:
         """
-        Get the first 35 player rounds from a complete round. The last round is excluded for usage of the player
-        rounds for training, as there are no actions after the last round
+        Create a player round from a complete round for the state of trump selection.
         Args:
-            rnd: The Round from which to create the PlayerRound.
+            rnd: a complete round
+            forehand: true if the trump selection should be for the forehand player, false if it should be for the
+            rearhand player after push
 
         Returns:
-            the list of player_rounds for cards 0..34
+            a PlayerRound for trump selection or None if trump selection was asked to be returned for rearhand, when
+            there was no rearhand trump selection in that round
         """
-        return [PlayerRound.from_complete_round(rnd, i) for i in range(0, 35)]
+        if not forehand and rnd.forehand:
+            return None
+
+        player_rnd = PlayerRound(dealer=rnd.dealer, jass_type=rnd.jass_type, rule=rnd.rule)
+
+        if forehand:
+            player_rnd.player = next_player[player_rnd.dealer]
+            player_rnd.forehand = None
+        else:
+            player_rnd.player = partner_player[next_player[player_rnd.dealer]]
+            player_rnd.forehand = False
+
+        # determine hand still held by the player, which are the cards that the player will play in the next
+        # tricks of the full rnd, that are not played yet
+        for i in range(0, 9):
+            # determine which card was played in this trick by the player
+            index = (rnd.trick_first_player[i] - player_rnd.player) % 4
+            card_played = rnd.tricks[i, index]
+            player_rnd.hand[card_played] = 1
+        return player_rnd
 
     @staticmethod
-    def trump_from_complete_round(rnd: Round, forehand: bool) -> 'PlayerRound' or None:
+    def trump_from_round_start(rnd: Round, forehand: bool) -> 'PlayerRound' or None:
         """
         Create a player round from a complete round for the state of trump selection.
         Args:
