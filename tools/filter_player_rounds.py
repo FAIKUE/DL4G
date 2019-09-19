@@ -50,6 +50,7 @@ def main():
 
     parser.add_argument('--output', type=str, help='Base name of the output files', default='')
     parser.add_argument('--output_dir', type=str, help='Directory for output files', default='')
+
     parser.add_argument('--max_rounds', type=int, default=100000, help='Maximal number of rounds in one file')
     parser.add_argument('--stat', help='filename json file containing the statistics.',
                         required=True)
