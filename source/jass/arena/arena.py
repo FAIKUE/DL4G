@@ -215,7 +215,7 @@ class Arena:
         self._rnd.action_play_card(card_action)
 
     def _play_card_checked(self, card_action: int) -> None:
-        assert card_action in np.flatnonzero(self._rnd.get_valid_cards())
+        assert card_action in np.flatnonzero(self._rnd.get_valid_cards()), "Invalid card played!"
         self._rnd.action_play_card(card_action)
 
     def play_round(self, dealer: int) -> None:
