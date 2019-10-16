@@ -15,7 +15,7 @@ from http import HTTPStatus
 from flask import request, jsonify, Blueprint, current_app
 
 from jass.base.const import card_strings
-from jass.io.round_serializer import RoundSerializer
+from jass.ion.round_serializer import RoundSerializer
 from jass.player_service.request_parser import PlayerRoundParser
 
 

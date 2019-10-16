@@ -1,5 +1,5 @@
 import argparse
-from jass.io.player_round_log_generator import PlayerRoundLogGenerator
+from jass.ion.player_round_log_generator import PlayerRoundLogGenerator
 
 PREFIX_CHEATING_FILENAME = "\player_round_cheating_"
 

@@ -2,9 +2,9 @@ import unittest
 import logging
 import os.path
 
-from jass.io.log_parser_swisslos import LogParserSwisslos
-from jass.io.round_log_entry_file_generator import RoundLogEntryFileGenerator
-from jass.io.round_log_entry_serializer import RoundLogEntrySerializer
+from jass.ion.log_parser_swisslos import LogParserSwisslos
+from jass.ion.round_log_entry_file_generator import RoundLogEntryFileGenerator
+from jass.ion.round_log_entry_serializer import RoundLogEntrySerializer
 
 TEST_FILE_IN = '../resources/small_log.txt'
 TEST_FILE_OUT = '__test_'

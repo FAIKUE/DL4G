@@ -7,8 +7,8 @@ import json
 import random
 import logging
 
-from jass.io.log_entries import RoundLogEntry
-from jass.io.round_log_entry_serializer import RoundLogEntrySerializer
+from jass.ion.log_entries import RoundLogEntry
+from jass.ion.round_log_entry_serializer import RoundLogEntrySerializer
 
 
 class RoundLogEntryFileGenerator:

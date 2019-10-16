@@ -4,9 +4,9 @@ import json
 from jass.base.const import *
 from jass.base.round_schieber import RoundSchieber
 from jass.base.player_round import PlayerRound
-from jass.io.log_parser_swisslos import LogParserSwisslos
-from jass.io.player_round_serializer import PlayerRoundSerializer
-from jass.io.round_serializer import RoundSerializer
+from jass.ion.log_parser_swisslos import LogParserSwisslos
+from jass.ion.player_round_serializer import PlayerRoundSerializer
+from jass.ion.round_serializer import RoundSerializer
 
 
 class PlayerRoundTestCase(unittest.TestCase):

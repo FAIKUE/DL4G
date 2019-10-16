@@ -57,7 +57,7 @@ class MyMCTSPlayer(PlayerCheating):
         rootNode.getAction().setPlayerNr(rnd.player)
         rootNode.getAction().setRound(rnd)
 
-        endtime = time.time() + 0.02
+        endtime = time.time() + 4
         while time.time() < endtime:
             promisingNode = self.selectPromisingNode(rootNode)
             if promisingNode.getAction().getRound().nr_cards_in_trick < 4:
@@ -81,14 +81,14 @@ class MyMCTSPlayer(PlayerCheating):
 
 
     def expandNode(self, node:Node, rnd: PlayerRoundCheating):
-        validCards =  np.flatnonzero(rnd.get_valid_cards())
+        validCards = np.flatnonzero(rnd.get_valid_cards())
         for card in validCards:
-            newNode = Node()
-            newNode.setParent(node)
-            newNode.getAction().setRound(rnd)
-            newNode.getAction().setPlayerNr(node.getAction().getRound().player)
-            newNode.getAction().setCard(card)
-            node.addChild(newNode)
+            new_node = Node()
+            new_node.setParent(node)
+            new_node.getAction().setRound(rnd)
+            new_node.getAction().setPlayerNr(node.getAction().getRound().player)
+            new_node.getAction().setCard(card)
+            node.addChild(new_node)
 
     def simulateRound(self, node: Node):
         rnd = get_round_from_player_round(node.getAction().getRound(), node.getAction().getRound().hands)

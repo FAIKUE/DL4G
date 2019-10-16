@@ -10,7 +10,7 @@ import logging
 
 from jass.base.const import *
 from jass.base.player_round import PlayerRound
-from jass.io.player_round_serializer import PlayerRoundSerializer
+from jass.ion.player_round_serializer import PlayerRoundSerializer
 
 ERROR_MSG_PREFIX = 'Request Parse Error: '
 VALID_JASS_TYPES = ['SCHIEBER_1000', 'SCHIEBER_2500']

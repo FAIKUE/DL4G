@@ -4,7 +4,7 @@
 #
 
 from jass.base.game import Game
-from jass.io.round_serializer import RoundSerializer
+from jass.ion.round_serializer import RoundSerializer
 
 
 class GameSerializer:

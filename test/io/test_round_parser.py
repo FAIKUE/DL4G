@@ -2,7 +2,7 @@ import unittest
 
 from jass.base.const import *
 from jass.base.round_schieber import RoundSchieber
-from jass.io.round_serializer import RoundSerializer
+from jass.ion.round_serializer import RoundSerializer
 
 
 class RoundParserCase(unittest.TestCase):

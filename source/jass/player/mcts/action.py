@@ -20,10 +20,10 @@ class Action(object):
     def getPlayerNr(self) -> int:
         return self._playerNr
 
-    def setRound(self, rnd: Round):
+    def setRound(self, rnd):
         self._round = rnd
 
-    def getRound(self)->Round:
+    def getRound(self):
         return self._round
 
     def setCard(self, card: int):

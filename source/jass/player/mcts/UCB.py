@@ -9,8 +9,8 @@ logging.basicConfig(level=logging.WARNING)
 logger = logging.getLogger('MyLogger')
 
 class UCB:
-    def __init__(self, c) -> None:
-        self._c = c = 1
+    def __init__(self, c = 1) -> None:
+        self._c = c
 
     def ucb_value(self, total_visits: int, node_win_score: float, node_visit: int) -> float:
         if node_visit == 0:

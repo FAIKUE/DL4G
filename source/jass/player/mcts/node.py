@@ -1,6 +1,6 @@
 import numpy as np
-from my_jass.mcts.action import Action
-from my_jass.mcts.const import Status
+from jass.player.mcts.action import Action
+from jass.player.mcts.const import Status
 from operator import methodcaller
 
 

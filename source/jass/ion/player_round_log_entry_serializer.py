@@ -6,10 +6,10 @@
 import json
 from datetime import datetime
 
-from jass.io.label_serializer import LabelPlaySerializer, LabelTrumpSerializer
-from jass.io.log_entries import RoundLogEntry, PlayerRoundLogEntry, PlayerRoundTrumpLogEntry
-from jass.io.player_round_serializer import PlayerRoundSerializer
-from jass.io.round_serializer import RoundSerializer, DATE_FORMAT
+from jass.ion.label_serializer import LabelPlaySerializer, LabelTrumpSerializer
+from jass.ion.log_entries import RoundLogEntry, PlayerRoundLogEntry, PlayerRoundTrumpLogEntry
+from jass.ion.player_round_serializer import PlayerRoundSerializer
+from jass.ion.round_serializer import RoundSerializer, DATE_FORMAT
 
 
 class PlayerRoundLogEntrySerializer:

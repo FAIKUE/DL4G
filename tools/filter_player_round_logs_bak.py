@@ -1,8 +1,8 @@
 import argparse
 
-from jass.io.player_id_filter import FilterPlayedGamesRelative, FilterPlayedGamesAbsolute, FilterStdRelative, \
+from jass.ion.player_id_filter import FilterPlayedGamesRelative, FilterPlayedGamesAbsolute, FilterStdRelative, \
     FilterStdAbsolute, FilterMeanRelative, FilterMeanAbsolute, PlayerStatFilter
-from jass.io.player_round_log_filter import PlayerRoundLogFilter
+from jass.ion.player_round_log_filter import PlayerRoundLogFilter
 
 
 PREFIX_FILENAME = "filtered_"

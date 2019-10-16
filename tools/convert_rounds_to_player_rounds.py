@@ -11,10 +11,10 @@ from jass.base.label_play import LabelPlay
 from jass.base.label_trump import LabelTrump
 from jass.base.player_round import PlayerRound
 from jass.base.round_utils import calculate_starting_hands_from_round
-from jass.io.log_entries import PlayerRoundLogEntry, PlayerRoundTrumpLogEntry
-from jass.io.log_entry_file_generator import LogEntryFileGenerator
-from jass.io.player_round_log_entry_serializer import PlayerRoundLogEntrySerializer, PlayerRoundLogTrumpEntrySerializer
-from jass.io.round_log_entry_serializer import RoundLogEntrySerializer
+from jass.ion.log_entries import PlayerRoundLogEntry, PlayerRoundTrumpLogEntry
+from jass.ion.log_entry_file_generator import LogEntryFileGenerator
+from jass.ion.player_round_log_entry_serializer import PlayerRoundLogEntrySerializer, PlayerRoundLogTrumpEntrySerializer
+from jass.ion.round_log_entry_serializer import RoundLogEntrySerializer
 
 
 def generate_logs(files, output: str, output_dir: str, max_rounds: int):

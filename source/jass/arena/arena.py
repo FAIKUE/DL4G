@@ -31,7 +31,7 @@ class Arena:
     """
     def __init__(self, jass_type: str,
                  trump_strategy: TrumpStrategy, play_game_strategy: PlayGameStrategy,
-                 print_every_x_games: int = 5):
+                 print_every_x_games: int = 1):
         self._nr_games_to_play = 0
 
         # the jass type, used to get the correct round

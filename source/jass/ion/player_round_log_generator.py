@@ -7,7 +7,7 @@ from jass.base.const import *
 from jass.base.player_round import PlayerRound
 from jass.base.player_round_cheating import PlayerRoundCheating
 from jass.base.round import Round
-from jass.io.log_entries import RoundLogEntry
+from jass.ion.log_entries import RoundLogEntry
 
 PREFIX_CHEATING_FILENAME = "\player_round_cheating_"
 

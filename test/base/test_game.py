@@ -3,9 +3,9 @@ import json
 import datetime
 
 from jass.base.game import Game
-from jass.io.log_parser_swisslos import LogParserSwisslos
-from jass.io.game_serializer import GameSerializer
-from jass.io.round_serializer import RoundSerializer
+from jass.ion.log_parser_swisslos import LogParserSwisslos
+from jass.ion.game_serializer import GameSerializer
+from jass.ion.round_serializer import RoundSerializer
 
 
 class GameTestCase(unittest.TestCase):

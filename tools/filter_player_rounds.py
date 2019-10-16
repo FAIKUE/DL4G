@@ -7,8 +7,8 @@ import os
 import logging
 import json
 
-from jass.io.log_entry_file_generator import LogEntryFileGenerator
-from jass.io.player_id_filter import PlayerStatFilter, FilterMeanAbsolute, FilterMeanRelative, FilterStdAbsolute, \
+from jass.ion.log_entry_file_generator import LogEntryFileGenerator
+from jass.ion.player_id_filter import PlayerStatFilter, FilterMeanAbsolute, FilterMeanRelative, FilterStdAbsolute, \
     FilterStdRelative, FilterPlayedGamesAbsolute, FilterPlayedGamesRelative
 
 

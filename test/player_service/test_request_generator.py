@@ -1,8 +1,8 @@
 import unittest
 import json
 from jass.base.player_round import PlayerRound
-from jass.io.log_parser_swisslos import LogParserSwisslos
-from jass.io.player_round_serializer import PlayerRoundSerializer
+from jass.ion.log_parser_swisslos import LogParserSwisslos
+from jass.ion.player_round_serializer import PlayerRoundSerializer
 from jass.player_service.request_generator import PlayerRoundRequestGenerator
 from jass.player_service.request_parser import PlayerRoundParser
 

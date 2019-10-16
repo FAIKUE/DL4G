@@ -13,8 +13,8 @@ import logging
 from json import JSONDecodeError
 from typing import List
 from datetime import datetime
-from jass.io.log_entries import RoundLogEntry
-from jass.io.round_serializer import DATE_FORMAT, RoundSerializer
+from jass.ion.log_entries import RoundLogEntry
+from jass.ion.round_serializer import DATE_FORMAT, RoundSerializer
 
 
 class LogParserSwisslos:
