@@ -1,7 +1,9 @@
 from jass.player.mcts.node import Node
+
+
 class Tree:
     def __init__(self) -> None:
-        self._rootNode = Node()
+        self._root_node = Node()
 
-    def getRootNode(self)-> Node:
-        return self._rootNode
+    def get_root_node(self) -> Node:
+        return self._root_node

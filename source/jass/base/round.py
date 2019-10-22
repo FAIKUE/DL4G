@@ -40,7 +40,7 @@ class Round:
         #
 
         # dealer of the round
-        self.dealer = dealer        # type: int
+        self.dealer = dealer  # type: int
 
         # player of the next action, i.e. declaring trump or playing a card
         if self.dealer is not None:
@@ -53,13 +53,13 @@ class Round:
         # (we keep the trump and forehand information in the base class, even as not all variations of the game will
         # need it)
         # selected trump
-        self.trump = None               # type: int
+        self.trump = None  # type: int
 
         # true if trump was declared forehand, false if it was declared rearhand, None if it has not been declared yet
-        self.forehand = None            # type: int
+        self.forehand = None  # type: int
 
         # the player, who declared trump (derived)
-        self.declared_trump = None      # type: int
+        self.declared_trump = None  # type: int
 
         #
         # information about held and played cards
@@ -94,8 +94,8 @@ class Round:
         # the total number of played cards
         self.nr_played_cards = 0
 
-        self.points_team_0 = 0          # points made by the team of players 0 and 2
-        self.points_team_1 = 0          # points made by the team of players 1 and 3
+        self.points_team_0 = 0  # points made by the team of players 0 and 2
+        self.points_team_1 = 0  # points made by the team of players 1 and 3
 
         # create an appropriate object of type Rule that implements the rules for this round
         # must be set in the derived class
@@ -159,7 +159,7 @@ class Round:
         else:
             return self.points_team_1
 
-    def deal_cards(self)->None:
+    def deal_cards(self) -> None:
         """
         Deal cards randomly at beginning of the game.
         """
@@ -180,7 +180,7 @@ class Round:
         """
         self.hands[:, :] = hands[:, :]
 
-    def action_trump(self, action: int)->None:
+    def action_trump(self, action: int) -> None:
         """
         Execute trump action on the current round. Must be implemented in the subclass
 
@@ -192,7 +192,7 @@ class Round:
         """
         raise NotImplementedError()
 
-    def action_play_card(self, card: int)->None:
+    def action_play_card(self, card: int) -> None:
         """
         Play a card as the current player and update the state of the round.
 
@@ -282,7 +282,7 @@ class Round:
             self.player = None
             self.current_trick = None
 
-    def assert_invariants(self)->None:
+    def assert_invariants(self) -> None:
         """
         Validates the internal consistency and throws an assertion exception if an error is detected.
         """

@@ -1,7 +1,7 @@
-from jass.base.const import *
-from jass.base.player_round import PlayerRound
+from jass.base.const import*
+from jass.base.player_round_cheating import PlayerRoundCheating
 from jass.base.round_factory import get_round_from_player_round
-from jass.player.player import Player
+from jass.player.player_cheating import PlayerCheating
 from jass.base.rule_schieber import RuleSchieber
 
 from jass.player.mcts.const import Status
@@ -11,13 +11,11 @@ from jass.player.mcts.UCB import UCB
 from jass.player.random_player_schieber import RandomPlayerSchieber
 import time
 
-
-class MyMCTSPlayerCheating(Player):
+class MyMCTSPlayerCheating(PlayerCheating):
     """
     Implementation of a player to play Jass using Monte Carlo Tree Search.
     """
-
-    def select_trump(self, rnd: PlayerRound) -> int:
+    def select_trump(self, rnd: PlayerRoundCheating) -> int:
         """
         Player chooses a trump based on the given round information.
 
@@ -37,7 +35,7 @@ class MyMCTSPlayerCheating(Player):
                 trump = c
         return trump
 
-    def play_card(self, rnd: PlayerRound) -> int:
+    def play_card(self, rnd: PlayerRoundCheating) -> int:
         """
         Player returns a card to play based on the given round information.
 
@@ -47,24 +45,25 @@ class MyMCTSPlayerCheating(Player):
         Returns:
             card to play, int encoded
         """
-        # Create Simulation stuff
-        # simRound = get_round_from_player_round(rnd, rnd.hands)
-        bestcard = self.monte_carlo_tree_search(rnd)
+        #Create Simulation stuff
+        #simRound = get_round_from_player_round(rnd, rnd.hands)
+        print(rnd.hands)
+        bestcard = self.montecarlotreesearch(rnd)
 
         return bestcard
 
-    def monte_carlo_tree_search(self, rnd: PlayerRound):
+    def montecarlotreesearch(self, rnd: PlayerRoundCheating):
         tree = Tree()
-        root_node = tree.get_root_node()
-        root_node.getAction().setPlayerNr(rnd.player)
-        root_node.getAction().setRound(rnd)
+        rootNode = tree.get_root_node()
+        rootNode.getAction().setPlayerNr(rnd.player)
+        rootNode.getAction().setRound(rnd)
 
         think_for_seconds = 2
         endtime = time.time() + think_for_seconds
         simulated_rounds = 0
         while time.time() < endtime:
             simulated_rounds += 1
-            promisingNode = self.selectPromisingNode(root_node)
+            promisingNode = self.selectPromisingNode(rootNode)
             if promisingNode.getAction().getRound().nr_cards_in_trick < 4:
                 self.expandNode(promisingNode, rnd)
 
@@ -74,18 +73,19 @@ class MyMCTSPlayerCheating(Player):
 
             winScore = self.simulateRound(nodeToExplore)
             self.backPropagation(nodeToExplore, rnd.player, winScore)
-        winner = root_node.getChildWithMaxVisitCount().getAction().getCard()
-        print(f"{simulated_rounds} rounds simulated in {think_for_seconds} seconds")
+        winner = rootNode.getChildWithMaxVisitCount().getAction().getCard()
+        print(f"{simulated_rounds} rounds simulated in {think_for_seconds} seconds\n")
         return winner
 
-    def selectPromisingNode(self, rootNode: Node) -> Node:
+    def selectPromisingNode(self, rootNode: Node)->Node:
         node = rootNode
         while len(node.getChilds()) != 0:
             ucb = UCB()
             node = ucb.find_best_node_ucb(node)
         return node
 
-    def expandNode(self, node: Node, rnd: PlayerRound):
+
+    def expandNode(self, node:Node, rnd: PlayerRoundCheating):
         validCards = np.flatnonzero(rnd.get_valid_cards())
         for card in validCards:
             new_node = Node()
@@ -96,25 +96,28 @@ class MyMCTSPlayerCheating(Player):
             node.addChild(new_node)
 
     def simulateRound(self, node: Node):
+        other_player_cards = np.ones(36, int)
+        tricks = node.getAction().getRound().tricks
+        for card in tricks.flatten():
+            if card is not -1:
+                other_player_cards[card] = 0
+        my_hand = node.getAction().getRound().hand
+        other_player_cards = np.ma.masked_where(my_hand == 1, other_player_cards).filled(0)
+        print(f"my hand:\n{my_hand}")
+        print(f"other player cards:\n{other_player_cards}")
+        other_player_cards = [index for index, value in enumerate(other_player_cards) if value == 1]
 
-        not_played_cards = np.ones(36, int)
-        for card in node.getAction().getRound().tricks.flatten():
-            not_played_cards[card] = 0
-        np.ma.masked_where(node.getAction().getRound().hand == 1, not_played_cards)
-        print("my hand: \n" + node.getAction().getRound().hand)
-        print("not played cards:\n" + not_played_cards)
-
-        time.sleep(2)
         rnd = get_round_from_player_round(node.getAction().getRound(), node.getAction().getRound().hands)
         rnd.action_play_card(node.getAction().getCard())
         cards = rnd.nr_played_cards
         randomPlayer = RandomPlayerSchieber()
         while cards < 36:
-            player_rnd = PlayerRound()
+            player_rnd = PlayerRoundCheating()
             player_rnd.set_from_round(rnd)
             card_action = randomPlayer.play_card(player_rnd)
             rnd.action_play_card(card_action)
             cards += 1
+
 
         myPoints = rnd.points_team_0
         pointsEnemy = rnd.points_team_1

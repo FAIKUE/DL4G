@@ -23,7 +23,7 @@ class Action(object):
     def setRound(self, rnd):
         self._round = rnd
 
-    def getRound(self):
+    def getRound(self) -> Round:
         return self._round
 
     def setCard(self, card: int):

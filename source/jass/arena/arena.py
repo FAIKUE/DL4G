@@ -217,6 +217,7 @@ class Arena:
         for cards in range(36):
             player_rnd.set_from_round(self._rnd)
             card_action = self._players[player_rnd.player].play_card(player_rnd)
+            print(card_action)
             self._rnd.action_play_card(card_action)
 
     def play_game(self):
