@@ -235,7 +235,7 @@ class Arena:
             if self.nr_games_played % self._print_every_x_games == 0:
                 points_to_write = int(self.nr_games_played / self._nr_games_to_play * 40)
                 spaces_to_write = 40 - points_to_write
-                sys.stdout.write("\r[{}{}] {:4}/{:4} games played".format('.' * points_to_write,
+                sys.stdout.write("\r[{}{}] {:4}/{:4} games played\n".format('.' * points_to_write,
                                                                           ' ' * spaces_to_write,
                                                                           self.nr_games_played,
                                                                           self._nr_games_to_play))

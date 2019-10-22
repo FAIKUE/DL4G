@@ -46,11 +46,13 @@ def play_card(player_name: str):
         if player is None:
             return jsonify(error='player not found'), HTTPStatus.BAD_REQUEST
         try:
-            card = player.play_card(parser.get_parsed_round())
+            rnd = parser.get_parsed_round()
+            card = player.play_card(rnd)
             # card is returned as string
             data = dict(card=card_strings[card])
             return jsonify(data), HTTPStatus.OK
         except Exception as e:
+            logging.error(e)
             return jsonify(error=str(e)), HTTPStatus.INTERNAL_SERVER_ERROR
     else:
         logging.warning(parser.get_error_message())
@@ -78,7 +80,7 @@ def select_trump(player_name: str):
         data = dict(trump=trump)
         return jsonify(data), HTTPStatus.OK
     else:
-        logging.warning(parser.get_error_message())
+        logging.error(parser.get_error_message())
         return jsonify(parser.get_error_message()), HTTPStatus.BAD_REQUEST
 
 @players.route('/<string:player_name>' + SEND_INFO_PREFIX, methods=['POST'])
