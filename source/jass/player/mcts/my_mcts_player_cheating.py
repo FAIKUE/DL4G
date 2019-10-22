@@ -3,13 +3,15 @@ from jass.base.player_round_cheating import PlayerRoundCheating
 from jass.base.round_factory import get_round_from_player_round
 from jass.player.player_cheating import PlayerCheating
 from jass.base.rule_schieber import RuleSchieber
-
 from jass.player.mcts.const import Status
 from jass.player.mcts.node import Node
 from jass.player.mcts.tree import Tree
 from jass.player.mcts.UCB import UCB
 from jass.player.random_player_schieber import RandomPlayerSchieber
+from jass.player.mcts.sampler import Sampler
+
 import time
+import random
 
 class MyMCTSPlayerCheating(PlayerCheating):
     """
@@ -96,16 +98,19 @@ class MyMCTSPlayerCheating(PlayerCheating):
             node.addChild(new_node)
 
     def simulateRound(self, node: Node):
-        other_player_cards = np.ones(36, int)
-        tricks = node.getAction().getRound().tricks
-        for card in tricks.flatten():
-            if card is not -1:
-                other_player_cards[card] = 0
-        my_hand = node.getAction().getRound().hand
-        other_player_cards = np.ma.masked_where(my_hand == 1, other_player_cards).filled(0)
-        print(f"my hand:\n{my_hand}")
-        print(f"other player cards:\n{other_player_cards}")
-        other_player_cards = [index for index, value in enumerate(other_player_cards) if value == 1]
+        # other_player_cards = np.ones(36, int)
+        # tricks = node.getAction().getRound().tricks.flatten()
+        # other_player_cards[tricks] = 0
+        # my_hand = node.getAction().getRound().hand
+        # other_player_cards = np.ma.masked_where(my_hand == 1, other_player_cards).filled(0)
+        # print(f"my hand:\n{my_hand}")
+        # print(f"other player cards:\n{other_player_cards}")
+        # other_player_cards = convert_one_hot_encoded_cards_to_int_encoded_list(other_player_cards)
+        # other_player_cards = np.split(np.array(other_player_cards), 3)
+        # hands = np.zeros(27, np.int32)
+        # hands[other_player_cards] = 1
+        # random.shuffle(hands)
+        # hands = hands.reshape((9, 3))
 
         rnd = get_round_from_player_round(node.getAction().getRound(), node.getAction().getRound().hands)
         rnd.action_play_card(node.getAction().getCard())

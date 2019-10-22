@@ -9,10 +9,12 @@ from jass.player.mcts.node import Node
 from jass.player.mcts.tree import Tree
 from jass.player.mcts.UCB import UCB
 from jass.player.random_player_schieber import RandomPlayerSchieber
+from jass.player.mcts.sampler import Sampler
+
 import time
 
 
-class MyMCTSPlayerCheating(Player):
+class MyMCTSPlayer(Player):
     """
     Implementation of a player to play Jass using Monte Carlo Tree Search.
     """
@@ -54,10 +56,11 @@ class MyMCTSPlayerCheating(Player):
         return bestcard
 
     def monte_carlo_tree_search(self, rnd: PlayerRound):
+        sampled_round = Sampler.sample(rnd)
         tree = Tree()
         root_node = tree.get_root_node()
         root_node.getAction().setPlayerNr(rnd.player)
-        root_node.getAction().setRound(rnd)
+        root_node.getAction().setRound(sampled_round)
 
         think_for_seconds = 2
         endtime = time.time() + think_for_seconds
@@ -66,14 +69,14 @@ class MyMCTSPlayerCheating(Player):
             simulated_rounds += 1
             promisingNode = self.selectPromisingNode(root_node)
             if promisingNode.getAction().getRound().nr_cards_in_trick < 4:
-                self.expandNode(promisingNode, rnd)
+                self.expandNode(promisingNode, sampled_round)
 
             nodeToExplore = promisingNode
             if len(promisingNode.getChilds()) > 0:
                 nodeToExplore = promisingNode.getRandomChild()
 
             winScore = self.simulateRound(nodeToExplore)
-            self.backPropagation(nodeToExplore, rnd.player, winScore)
+            self.backPropagation(nodeToExplore, sampled_round.player, winScore)
         winner = root_node.getChildWithMaxVisitCount().getAction().getCard()
         print(f"{simulated_rounds} rounds simulated in {think_for_seconds} seconds")
         return winner
@@ -96,15 +99,6 @@ class MyMCTSPlayerCheating(Player):
             node.addChild(new_node)
 
     def simulateRound(self, node: Node):
-
-        not_played_cards = np.ones(36, int)
-        for card in node.getAction().getRound().tricks.flatten():
-            not_played_cards[card] = 0
-        np.ma.masked_where(node.getAction().getRound().hand == 1, not_played_cards)
-        print("my hand: \n" + node.getAction().getRound().hand)
-        print("not played cards:\n" + not_played_cards)
-
-        time.sleep(2)
         rnd = get_round_from_player_round(node.getAction().getRound(), node.getAction().getRound().hands)
         rnd.action_play_card(node.getAction().getCard())
         cards = rnd.nr_played_cards
