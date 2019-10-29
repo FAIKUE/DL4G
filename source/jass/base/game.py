@@ -12,6 +12,7 @@ class Game:
 
     (Most of the logic and the available data is based on Rounds. The game is primarily used to store and load
     games that are played on the server. For that reason it is now extended to support the urls of the players
+    and error that occurred while playing.
     """
 
     def __init__(self):
@@ -26,6 +27,10 @@ class Game:
         # time is not set by default, as the game can also be created by reading from db
         self._time_started = None
         self._time_finished = None
+
+        # errors will be a list of str messages about possible errors while playing a game on the server
+        # such as timeout or connection problems
+        self._errors = []
 
     def __eq__(self, other: 'Game'):
         """
@@ -43,7 +48,8 @@ class Game:
             self.points_team0 == other.points_team0 and \
             self.points_team1 == other.points_team1 and \
             self.time_started == other.time_started and \
-            self.time_finished == other.time_finished
+            self.time_finished == other.time_finished and \
+            self.errors == other.errors
 
         if not result:
             return False
@@ -66,6 +72,10 @@ class Game:
     @property
     def round(self) -> [Round]:
         return self._rounds
+
+    @property
+    def errors(self) -> [str]:
+        return self._errors
 
     # Derived properties
     @property
@@ -229,3 +239,11 @@ class Game:
         self._rounds.append(rnd)
         self._points_team0 += rnd.points_team_0
         self._points_team1 += rnd.points_team_1
+
+    def add_error(self, error: str) -> None:
+        """
+        Add an error message.
+        Args:
+            error: Error message to add
+        """
+        self._errors.append(error)

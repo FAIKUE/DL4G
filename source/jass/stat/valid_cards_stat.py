@@ -16,11 +16,10 @@ class ValidCardsStat:
     """
     Calculate statistics about the number of valid cards from player rounds that are obtained from a full round.
     """
-    def __init__(self, rule):
+    def __init__(self):
         # the total of valid card moves per move number (cards played)
         self.valid_moves_sum = np.zeros(36, np.int64)
-        self.nr_total_moves = 0
-        self._rule = rule
+        self.nr_total_moves = np.zeros(36, np.int64)
 
     def add_round(self, rnd: Round) -> None:
         """
@@ -30,9 +29,14 @@ class ValidCardsStat:
         """
         player_rnds = PlayerRound.all_from_complete_round(rnd)
         for i, player_rnd in enumerate(player_rnds):
-            valid_cards = self._rule.get_valid_cards_from_player_round(player_rnd)
+            valid_cards = player_rnd.get_valid_cards()
             self.valid_moves_sum[i] += np.sum(valid_cards)
-        self.nr_total_moves += 1
+            self.nr_total_moves[i] += 1
+
+    def add_player_round(self, player_rnd: PlayerRound) -> None:
+        valid_cards = player_rnd.get_valid_cards()
+        self.valid_moves_sum[player_rnd.nr_played_cards] += np.sum(valid_cards)
+        self.nr_total_moves[player_rnd.nr_played_cards] += 1
 
     def get_stats(self):
         """
@@ -42,3 +46,6 @@ class ValidCardsStat:
             The average number of valid card actions.
         """
         return self.valid_moves_sum / self.nr_total_moves
+
+    def get(self) -> dict:
+        return dict(valid=self.get_stats().tolist())
