@@ -8,6 +8,10 @@ play only a single round or to play a complete game to a specific number of poin
 might be carried out differently.
 """
 import sys
+from types import FunctionType
+from typing import Callable
+
+import numpy as np
 from jass.base.const import *
 from jass.base.round import Round
 from jass.base.round_factory import get_round
@@ -31,7 +35,7 @@ class Arena:
     """
     def __init__(self, jass_type: str,
                  trump_strategy: TrumpStrategy, play_game_strategy: PlayGameStrategy,
-                 print_every_x_games: int = 1):
+                 print_every_x_games: int = 1, check_move_validity=True):
         self._nr_games_to_play = 0
 
         # the jass type, used to get the correct round
@@ -56,6 +60,8 @@ class Arena:
 
         # Print  progress
         self._print_every_x_games = print_every_x_games
+        self._play_card_strat: Callable[[int], None] = self._play_card_checked if \
+            check_move_validity else self._play_card_unchecked
 
     @property
     def nr_games_to_play(self):
@@ -205,6 +211,13 @@ class Arena:
         """
         self._rnd.deal_cards()
 
+    def _play_card_unchecked(self, card_action: int) -> None:
+        self._rnd.action_play_card(card_action)
+
+    def _play_card_checked(self, card_action: int) -> None:
+        assert card_action in np.flatnonzero(self._rnd.get_valid_cards()), "Invalid card played!"
+        self._rnd.action_play_card(card_action)
+
     def play_round(self, dealer: int) -> None:
         """
         Play a complete round (36 cards). The results remain in self._rnd
@@ -212,13 +225,12 @@ class Arena:
         self._init_round(dealer)
         self.deal_cards()
         self._trump_strategy.determine_trump(rnd=self._rnd, arena=self)
-
         player_rnd = self.get_player_round()
         for cards in range(36):
             player_rnd.set_from_round(self._rnd)
             card_action = self._players[player_rnd.player].play_card(player_rnd)
             print(card_action)
-            self._rnd.action_play_card(card_action)
+            self._play_card_strat(card_action)
 
     def play_game(self):
         """

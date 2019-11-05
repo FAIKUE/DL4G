@@ -19,7 +19,7 @@ class MonteCarloTreeSearch:
         root_node.getAction().setPlayerNr(rnd.player)
         root_node.getAction().setRound(sampled_round)
 
-        think_for_seconds = 1
+        think_for_seconds = 3
         endtime = time.time() + think_for_seconds
         simulated_rounds = 0
         while time.time() < endtime:

@@ -9,7 +9,7 @@ logger = logging.getLogger('MyLogger')
 
 
 class UCB:
-    def __init__(self, c=100) -> None:
+    def __init__(self, c=158) -> None:
         self._c = c
 
     def ucb_value(self, total_visits: int, node_win_score: float, node_visit: int) -> float:

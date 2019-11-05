@@ -81,7 +81,7 @@ def generate_logs_trump(files, output_dir: str, add_player_id: bool = False):
 def main():
     parser = argparse.ArgumentParser(description='Convert files with rounds to csv for trump')
     parser.add_argument('--output_dir', type=str, help='Directory for output files', default='')
-    parser.add_argument('--id', action='store_true', help='Set if playerr ids should be in the log file')
+    parser.add_argument('--id', action='store_true', help='Set if player ids should be in the log file')
 
     parser.add_argument('files', type=str, nargs='+', help='The input files')
 

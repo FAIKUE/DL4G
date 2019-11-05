@@ -43,6 +43,9 @@ class GameSerializer:
         data['timeStarted'] = game.time_started
         data['timeFinished'] = game.time_finished
 
+        if game.errors:
+            data['errors'] = game.errors
+
         rounds = []
         for i in range(game.nr_rounds):
             round_data = RoundSerializer.round_to_dict(game.round[i])
@@ -68,6 +71,9 @@ class GameSerializer:
         game._points_team1 = data['pointsTeam1']
         game.time_started = data['timeStarted']
         game.time_finished = data['timeFinished']
+
+        if 'errors' in data:
+            game._errors = data['errors']
 
         rounds = data['rounds']
         # use temporary list for rounds (as Game.add_entry changes the points)

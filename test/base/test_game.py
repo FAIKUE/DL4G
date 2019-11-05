@@ -43,6 +43,9 @@ class GameTestCase(unittest.TestCase):
 
         game.winner = 1
 
+        game.add_error('Error: There was an error')
+        game.add_error('Error: and another')
+
         # test __eq__
         self.assertTrue(game == game)
 
@@ -66,6 +69,10 @@ class GameTestCase(unittest.TestCase):
         game.add_round(rnd)
         game.add_round(rnd)
         game.winner = 0
+
+        game.add_error('Error: There was an error')
+        game.add_error('Error: and another')
+
         data = GameSerializer.game_to_dict(game)
         game_restored = GameSerializer.dict_to_game(data)
 
