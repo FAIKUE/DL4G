@@ -20,10 +20,13 @@ class Sampler:
 
         hands3, sampledCards = Sampler.__get_hands(sampledCards)
 
-        hands[0] = hands1
-        hands[1] = hands2
-        hands[2] = rnd.hand
-        hands[3] = hands3
+        players = list(range(0, 4))
+        players.remove(rnd.player)
+        hands[rnd.player] = rnd.hand
+
+        hands[players[0]] = hands1
+        hands[players[1]] = hands2
+        hands[players[2]] = hands3
 
         # anhand des Spielers die hand richtig setzen
         # for j in range(0,4):

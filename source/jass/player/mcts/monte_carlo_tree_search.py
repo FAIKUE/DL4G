@@ -36,6 +36,7 @@ class MonteCarloTreeSearch:
             MonteCarloTreeSearch.backPropagation(nodeToExplore, sampled_round.player, winScore)
         winner = root_node.getChildWithMaxVisitCount().getAction().getCard()
         print(f"{simulated_rounds} rounds simulated in {think_for_seconds} seconds")
+        print(f"winner: {winner}, valid cards: {np.flatnonzero(sampled_round.get_valid_cards())}")
         return winner
 
     @staticmethod

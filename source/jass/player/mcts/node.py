@@ -48,6 +48,6 @@ class Node:
     def getChildWithMaxVisitCount(self)-> 'Node':
         bestChild = self._childs[0]
         for child in self._childs:
-            if child.getAction().getWinScore() > bestChild.getAction().getVisitCount():
+            if child.getAction().getVisitCount() > bestChild.getAction().getVisitCount():
                 bestChild = child
         return bestChild
