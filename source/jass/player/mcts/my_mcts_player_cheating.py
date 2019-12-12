@@ -60,7 +60,7 @@ class MyMCTSPlayerCheating(PlayerCheating):
         rootNode.getAction().setPlayerNr(rnd.player)
         rootNode.getAction().setRound(rnd)
 
-        think_for_seconds = 2
+        think_for_seconds = 5
         endtime = time.time() + think_for_seconds
         simulated_rounds = 0
         while time.time() < endtime:

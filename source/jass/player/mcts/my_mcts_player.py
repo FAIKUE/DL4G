@@ -53,6 +53,6 @@ class MyMCTSPlayer(Player):
         Returns:
             card to play, int encoded
         """
-        bestcard = MonteCarloTreeSearch.monte_carlo_tree_search(player_rnd)
+        bestcard = MonteCarloTreeSearch.monte_carlo_tree_search_multisample(player_rnd)
 
         return bestcard

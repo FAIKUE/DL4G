@@ -19,7 +19,7 @@ class MonteCarloTreeSearch:
         root_node.getAction().setPlayerNr(rnd.player)
         root_node.getAction().setRound(sampled_round)
 
-        think_for_seconds = 3
+        think_for_seconds = 9
         endtime = time.time() + think_for_seconds
         simulated_rounds = 0
         while time.time() < endtime:
@@ -34,10 +34,55 @@ class MonteCarloTreeSearch:
 
             winScore = MonteCarloTreeSearch.simulateRound(nodeToExplore)
             MonteCarloTreeSearch.backPropagation(nodeToExplore, sampled_round.player, winScore)
-        winner = root_node.getChildWithMaxVisitCount().getAction().getCard()
+        winner = root_node.getChildWithMaxVisitCount().getAction()
         print(f"{simulated_rounds} rounds simulated in {think_for_seconds} seconds")
-        print(f"winner: {winner}, valid cards: {np.flatnonzero(sampled_round.get_valid_cards())}")
-        return winner
+        print(f"winner: {winner.getCard()} with visit count {winner.getVisitCount()} ({round(winner.getVisitCount()/simulated_rounds, 3)}), valid cards: {np.flatnonzero(sampled_round.get_valid_cards())}")
+        return winner.getCard()
+
+    @staticmethod
+    def monte_carlo_tree_search_multisample(rnd: PlayerRound):
+        think_for_seconds = 9
+        endtime = time.time() + think_for_seconds
+        best_visit_count = 0
+        best_winner = None
+        best_winner_score = 0
+        sampled_rounds = 0
+        simulated_rounds_total = 0
+        simulated_rounds = 0
+
+        while time.time() < endtime:
+            sampled_rounds += 1
+            sampled_round = Sampler.sample(rnd)
+            tree = Tree()
+            root_node = tree.get_root_node()
+            root_node.getAction().setPlayerNr(rnd.player)
+            root_node.getAction().setRound(sampled_round)
+
+            simulated_rounds_total += simulated_rounds
+            simulated_rounds = 0
+            start_time = time.time()
+            while (time.time() - start_time) < think_for_seconds / 5:
+                simulated_rounds += 1
+                promisingNode = MonteCarloTreeSearch.selectPromisingNode(root_node)
+                if promisingNode.getAction().getRound().nr_cards_in_trick < 4:
+                    MonteCarloTreeSearch.expandNode(promisingNode, sampled_round)
+
+                nodeToExplore = promisingNode
+                if len(promisingNode.getChilds()) > 0:
+                    nodeToExplore = promisingNode.getRandomChild()
+
+                winScore = MonteCarloTreeSearch.simulateRound(nodeToExplore)
+                MonteCarloTreeSearch.backPropagation(nodeToExplore, sampled_round.player, winScore)
+            winner = root_node.getChildWithMaxVisitCount()
+            print(f"winner of sampled round: {winner.getAction().getCard()} with score {winner.getAction().getVisitCount()/simulated_rounds}")
+            if winner.getAction().getVisitCount() > best_visit_count:
+                best_visit_count = winner.getAction().getVisitCount()
+                best_winner = winner.getAction().getCard()
+                best_winner_score = round(best_visit_count / simulated_rounds, 3)
+
+        print(f"sampled {sampled_rounds} times and simulated {simulated_rounds_total} rounds in {think_for_seconds} seconds")
+        print(f"winner: {best_winner} with score {best_visit_count} ({best_winner_score}), valid cards: {np.flatnonzero(rnd.get_valid_cards())}")
+        return best_winner
 
     @staticmethod
     def selectPromisingNode(rootNode: Node) -> Node:
