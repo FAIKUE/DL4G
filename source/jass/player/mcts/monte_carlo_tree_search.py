@@ -61,7 +61,7 @@ class MonteCarloTreeSearch:
             simulated_rounds_total += simulated_rounds
             simulated_rounds = 0
             start_time = time.time()
-            while (time.time() - start_time) < think_for_seconds / 5:
+            while (time.time() - start_time) < think_for_seconds / 8:
                 simulated_rounds += 1
                 promisingNode = MonteCarloTreeSearch.selectPromisingNode(root_node)
                 if promisingNode.getAction().getRound().nr_cards_in_trick < 4:
@@ -74,7 +74,7 @@ class MonteCarloTreeSearch:
                 winScore = MonteCarloTreeSearch.simulateRound(nodeToExplore)
                 MonteCarloTreeSearch.backPropagation(nodeToExplore, sampled_round.player, winScore)
             winner = root_node.getChildWithMaxVisitCount()
-            print(f"winner of sampled round: {winner.getAction().getCard()} with score {winner.getAction().getVisitCount()/simulated_rounds}")
+            print(f"winner of sampled round: {winner.getAction().getCard()} with score {round(winner.getAction().getVisitCount()/simulated_rounds, 3)} and ")
             if winner.getAction().getVisitCount() > best_visit_count:
                 best_visit_count = winner.getAction().getVisitCount()
                 best_winner = winner.getAction().getCard()

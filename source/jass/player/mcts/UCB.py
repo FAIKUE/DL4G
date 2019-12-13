@@ -9,13 +9,13 @@ logger = logging.getLogger('MyLogger')
 
 
 class UCB:
-    def __init__(self, c=156) -> None:
+    def __init__(self, c=1) -> None:
         self._c = c
 
     def ucb_value(self, total_visits: int, node_win_score: float, node_visit: int) -> float:
         if node_visit == 0:
             return sys.maxsize
-        ucb = (node_win_score / node_visit) + self._c * math.sqrt(math.log(total_visits, math.e) / node_visit)
+        ucb = round((node_win_score / node_visit) + self._c * math.sqrt(math.log(total_visits, math.e) / node_visit), 3)
         # print(f"UCB: {ucb} node_win_score ({node_win_score}) / node_visit ({node_visit}) + c ({self._c}) * math.sqrt(math.log(total_visits ({total_visits}), math.e) / node_visit ({node_visit}) ({math.sqrt(math.log(total_visits, math.e) / node_visit)})")
         return ucb
 
