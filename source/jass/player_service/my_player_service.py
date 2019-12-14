@@ -10,7 +10,7 @@ import logging
 from jass.player_service.player_service_app import PlayerServiceApp
 from jass.player.random_player_schieber import RandomPlayerSchieber
 from jass.player.stdin_player_schieber import StdinPlayerSchieber
-from jass.player.mcts.my_mcts_player import MyMCTSPlayer
+from jass.player.fabian_mcts.fabian_mcts_player import FabianMCTSPlayer
 
 
 def create_app():
@@ -31,7 +31,7 @@ def create_app():
     # app.config.from_pyfile('my_player_service.cfg', silent=False)
 
     # add some players
-    app.add_player('fabianmcts', MyMCTSPlayer())
+    app.add_player('fabianmcts', FabianMCTSPlayer())
     # app.add_player('stdin', StdinPlayerSchieber())
     app.add_player('random', RandomPlayerSchieber())
 

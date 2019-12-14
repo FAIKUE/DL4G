@@ -90,8 +90,8 @@ class MonteCarloTreeSearch:
 
     @staticmethod
     def monte_carlo_tree_search_multisample_threading(rnd: PlayerRound):
-        think_for_seconds = 9.5
-        sample_count = 20
+        think_for_seconds = 5
+        sample_count = 2
         start_time = time.time()
         best_visit_count = 0
         best_winner = None
