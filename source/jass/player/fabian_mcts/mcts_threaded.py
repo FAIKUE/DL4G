@@ -3,7 +3,7 @@ from source.jass.player.fabian_mcts.mcts import MCTS
 from operator import attrgetter
 
 class MCTSThreaded:
-    def __init__(self, player_rnd, thread_count=4):
+    def __init__(self, player_rnd, thread_count=2):
         self.player_rnd = player_rnd
         self.thread_count = thread_count
         self.winners = []

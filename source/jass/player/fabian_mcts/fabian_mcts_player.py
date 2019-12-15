@@ -51,22 +51,27 @@ class FabianMCTSPlayer(Player):
 
                 if has_bauer and len(cards_of_this_color) >= 4:
                     temp_score_in_trump = 50 + len(cards_of_this_color) - 4
+                    print(f"bauer und andere karten der farbe with score {temp_score_in_trump}")
                     if temp_score_in_trump > score_in_trump:
                         score_in_trump = temp_score_in_trump
                 elif has_ass and has_naell and len(cards_of_this_color) >= 5:
                     temp_score_in_trump = 50 + len(cards_of_this_color) - 5
+                    print(f"ass und näll und andere karten der farbe with score {temp_score_in_trump}")
                     if temp_score_in_trump > score_in_trump:
                         score_in_trump = temp_score_in_trump
                 elif has_ass and has_naell and has_bauer:
                     temp_score_in_trump = 50 + len(cards_of_this_color) - 3
+                    print(f"ass und näll und bauer with score {temp_score_in_trump}")
                     if temp_score_in_trump > score_in_trump:
                         score_in_trump = temp_score_in_trump
                 elif has_bauer and has_naell and len(cards_of_this_color) >= 3 and rnd.hand[DA] + rnd.hand[HA] + rnd.hand[SA] + rnd.hand[CA] >= 2:
-                    temp_score_in_trump = 40 + len(cards_of_this_color) - 3
+                    temp_score_in_trump = 40 + len(cards_of_this_color) - 3 + rnd.hand[DA] + rnd.hand[HA] + rnd.hand[SA] + rnd.hand[CA] - 2
+                    print(f"bauer und näll und andere karten der farbe und andere asse with score {temp_score_in_trump}")
                     if temp_score_in_trump > score_in_trump:
                         score_in_trump = temp_score_in_trump
                 elif has_bauer and has_naell and len(cards_of_this_color) >= 3 and len([i for i in cards_of_other_colors if i in high_cards]) >= 6:
-                    temp_score_in_trump = 30 + len(cards_of_this_color) - 3
+                    temp_score_in_trump = 40 + len(cards_of_this_color) - 3 + len([i for i in cards_of_other_colors if i in high_cards]) - 6
+                    print(f"bauer und näll und andere karten der farbe und andere gute karten with score {temp_score_in_trump}")
                     if temp_score_in_trump > score_in_trump:
                         score_in_trump = temp_score_in_trump
                 else:
@@ -80,6 +85,7 @@ class FabianMCTSPlayer(Player):
 
                 if len(high_cards_i_have) > 5:
                     temp_score_in_trump = 50 + len(high_cards_i_have) - 6
+                    print(f"hohe karten with score {temp_score_in_trump}")
                     if temp_score_in_trump > score_in_trump:
                         score_in_trump = temp_score_in_trump
             else:
@@ -93,6 +99,7 @@ class FabianMCTSPlayer(Player):
 
                 if len(low_cards_i_have) > 5:
                     temp_score_in_trump = 50 + len(low_cards_i_have) - 6
+                    print(f"tiefe karten with score {temp_score_in_trump}")
                     if temp_score_in_trump > score_in_trump:
                         score_in_trump = temp_score_in_trump
 
