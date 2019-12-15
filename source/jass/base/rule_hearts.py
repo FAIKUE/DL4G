@@ -3,8 +3,8 @@
 # Created by Thomas Koller on 05.09.2018
 
 import numpy as np
-from jass.base.const import color_of_card, color_masks, HEARTS, SQ
-from jass.base.rule import Rule
+from source.jass.base.const import color_of_card, color_masks, HEARTS, SQ
+from source.jass.base.rule import Rule
 
 
 class RuleHearts(Rule):

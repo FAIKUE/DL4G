@@ -3,7 +3,7 @@
 # Created by Thomas Koller on 05.09.18
 #
 
-from jass.arena.trump_selection_strategy import TrumpStrategy
+from source.jass.arena.trump_selection_strategy import TrumpStrategy
 
 
 class TrumpNoneStrategy(TrumpStrategy):

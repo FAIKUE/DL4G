@@ -3,11 +3,11 @@ import glob
 import json
 import os
 
-from jass.base.const import *
-from jass.base.player_round import PlayerRound
-from jass.base.player_round_cheating import PlayerRoundCheating
-from jass.base.round import Round
-from jass.ion.log_entries import RoundLogEntry
+from source.jass.base.const import *
+from source.jass.base.player_round import PlayerRound
+from source.jass.base.player_round_cheating import PlayerRoundCheating
+from source.jass.base.round import Round
+from source.jass.ion.log_entries import RoundLogEntry
 
 PREFIX_CHEATING_FILENAME = "\player_round_cheating_"
 

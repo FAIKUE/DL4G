@@ -1,5 +1,5 @@
 from threading import Thread
-from jass.player.fabian_mcts.mcts import MCTS
+from source.jass.player.fabian_mcts.mcts import MCTS
 from operator import attrgetter
 
 class MCTSThreaded:

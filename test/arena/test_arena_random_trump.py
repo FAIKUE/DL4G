@@ -1,9 +1,9 @@
 import unittest
-from jass.base.const import JASS_SCHIEBER_1000
-from jass.arena.arena import Arena
-from jass.arena.trump_selection_random_strategy import TrumpRandomStrategy
-from jass.arena.play_game_nr_rounds_strategy import PlayNrRoundsStrategy
-from jass.player.random_player_schieber import RandomPlayerSchieber
+from source.jass.base.const import JASS_SCHIEBER_1000
+from source.jass.arena.arena import Arena
+from source.jass.arena.trump_selection_random_strategy import TrumpRandomStrategy
+from source.jass.arena.play_game_nr_rounds_strategy import PlayNrRoundsStrategy
+from source.jass.player.random_player_schieber import RandomPlayerSchieber
 
 
 class ArenaRandomTrumpTestCase(unittest.TestCase):

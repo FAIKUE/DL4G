@@ -12,13 +12,13 @@ from types import FunctionType
 from typing import Callable
 
 import numpy as np
-from jass.base.const import *
-from jass.base.round import Round
-from jass.base.round_factory import get_round
-from jass.base.player_round import PlayerRound
-from jass.player.player import Player
-from jass.arena.trump_selection_strategy import TrumpStrategy
-from jass.arena.play_game_strategy import PlayGameStrategy
+from source.jass.base.const import *
+from source.jass.base.round import Round
+from source.jass.base.round_factory import get_round
+from source.jass.base.player_round import PlayerRound
+from source.jass.player.player import Player
+from source.jass.arena.trump_selection_strategy import TrumpStrategy
+from source.jass.arena.play_game_strategy import PlayGameStrategy
 
 
 class Arena:

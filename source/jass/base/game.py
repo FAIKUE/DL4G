@@ -2,8 +2,8 @@
 #
 # Created by Thomas Koller on 24.08.18
 #
-from jass.base.const import *
-from jass.base.round import Round
+from source.jass.base.const import *
+from source.jass.base.round import Round
 
 
 class Game:

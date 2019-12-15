@@ -1,9 +1,9 @@
 import unittest
 import logging
 
-from jass.ion.log_parser_swisslos import LogParserSwisslos
-from jass.ion.player_round_serializer import PlayerRoundSerializer
-from jass.base.player_round import PlayerRound
+from source.jass.ion.log_parser_swisslos import LogParserSwisslos
+from source.jass.ion.player_round_serializer import PlayerRoundSerializer
+from source.jass.base.player_round import PlayerRound
 
 TEST_FILE = '../resources/small_log.txt'
 

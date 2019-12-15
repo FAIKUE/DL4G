@@ -3,8 +3,8 @@
 # Created by Thomas Koller on 06.09.18
 #
 
-from jass.base.player_round import PlayerRound
-from jass.base.round import Round
+from source.jass.base.player_round import PlayerRound
+from source.jass.base.round import Round
 
 
 def validate_round(rnd: Round):

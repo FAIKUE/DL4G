@@ -6,15 +6,15 @@ import os
 import logging
 import argparse
 
-from jass.base.const import next_player, same_team, PUSH_ALT
-from jass.base.label_play import LabelPlay
-from jass.base.label_trump import LabelTrump
-from jass.base.player_round import PlayerRound
-from jass.base.round_utils import calculate_starting_hands_from_round
-from jass.ion.log_entries import PlayerRoundLogEntry, PlayerRoundTrumpLogEntry
-from jass.ion.log_entry_file_generator import LogEntryFileGenerator
-from jass.ion.player_round_log_entry_serializer import PlayerRoundLogEntrySerializer, PlayerRoundLogTrumpEntrySerializer
-from jass.ion.round_log_entry_serializer import RoundLogEntrySerializer
+from source.jass.base.const import next_player, same_team, PUSH_ALT
+from source.jass.base.label_play import LabelPlay
+from source.jass.base.label_trump import LabelTrump
+from source.jass.base.player_round import PlayerRound
+from source.jass.base.round_utils import calculate_starting_hands_from_round
+from source.jass.ion.log_entries import PlayerRoundLogEntry, PlayerRoundTrumpLogEntry
+from source.jass.ion.log_entry_file_generator import LogEntryFileGenerator
+from source.jass.ion.player_round_log_entry_serializer import PlayerRoundLogEntrySerializer, PlayerRoundLogTrumpEntrySerializer
+from source.jass.ion.round_log_entry_serializer import RoundLogEntrySerializer
 
 
 def generate_logs(files, output: str, output_dir: str, max_rounds: int):

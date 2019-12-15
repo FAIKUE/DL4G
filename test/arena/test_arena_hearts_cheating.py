@@ -1,13 +1,13 @@
 import unittest
 import logging
 import numpy as np
-from jass.base.const import JASS_HEARTS, next_player
-from jass.arena.arena_cheating import ArenaCheating
-from jass.base.player_round_cheating import PlayerRoundCheating
-from jass.base.rule_hearts import RuleHearts
-from jass.player.player_cheating import PlayerCheating
-from jass.arena.trump_selection_none_strategy import TrumpNoneStrategy
-from jass.arena.play_game_nr_rounds_strategy import PlayNrRoundsStrategy
+from source.jass.base.const import JASS_HEARTS, next_player
+from source.jass.arena.arena_cheating import ArenaCheating
+from source.jass.base.player_round_cheating import PlayerRoundCheating
+from source.jass.base.rule_hearts import RuleHearts
+from source.jass.player.player_cheating import PlayerCheating
+from source.jass.arena.trump_selection_none_strategy import TrumpNoneStrategy
+from source.jass.arena.play_game_nr_rounds_strategy import PlayNrRoundsStrategy
 
 
 class TestCheatingPlayer(PlayerCheating):

@@ -12,3 +12,5 @@ dist
 jass.egg-info
 jass_kit.egg-info
 
+# venv
+venv/

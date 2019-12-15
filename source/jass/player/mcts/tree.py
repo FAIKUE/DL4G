@@ -1,4 +1,4 @@
-from jass.player.fabian_mcts.node import Node
+from source.jass.player.fabian_mcts.node import Node
 
 
 class Tree:

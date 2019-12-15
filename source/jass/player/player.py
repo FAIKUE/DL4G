@@ -1,4 +1,4 @@
-from jass.base.player_round import PlayerRound
+from source.jass.base.player_round import PlayerRound
 
 
 class Player:
@@ -12,7 +12,7 @@ class Player:
             rnd: current round
 
         Returns:
-            selected trump, int encoded as defined in jass.base.const or jass.base.const.PUSH
+            selected trump, int encoded as defined in source.jass.base.const or source.jass.base.const.PUSH
         """
         raise NotImplementedError()
 
@@ -24,6 +24,6 @@ class Player:
             rnd: current round
 
         Returns:
-            card to play, int encoded as defined in jass.base.const
+            card to play, int encoded as defined in source.jass.base.const
         """
         raise NotImplementedError()

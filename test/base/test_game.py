@@ -2,10 +2,10 @@ import unittest
 import json
 import datetime
 
-from jass.base.game import Game
-from jass.ion.log_parser_swisslos import LogParserSwisslos
-from jass.ion.game_serializer import GameSerializer
-from jass.ion.round_serializer import RoundSerializer
+from source.jass.base.game import Game
+from source.jass.ion.log_parser_swisslos import LogParserSwisslos
+from source.jass.ion.game_serializer import GameSerializer
+from source.jass.ion.round_serializer import RoundSerializer
 
 
 class GameTestCase(unittest.TestCase):

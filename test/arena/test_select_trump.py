@@ -1,10 +1,10 @@
 import unittest
-from jass.base.const import JASS_SCHIEBER_1000, PUSH, SA
-from jass.arena.arena import Arena
-from jass.arena.trump_selection_players_strategy import TrumpPlayerStrategy
-from jass.arena.play_game_nr_rounds_strategy import PlayNrRoundsStrategy
-from jass.base.player_round import PlayerRound
-from jass.player.player import Player
+from source.jass.base.const import JASS_SCHIEBER_1000, PUSH, SA
+from source.jass.arena.arena import Arena
+from source.jass.arena.trump_selection_players_strategy import TrumpPlayerStrategy
+from source.jass.arena.play_game_nr_rounds_strategy import PlayNrRoundsStrategy
+from source.jass.base.player_round import PlayerRound
+from source.jass.player.player import Player
 
 
 class ArenaNrRoundsTestCase(unittest.TestCase):

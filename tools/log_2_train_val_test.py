@@ -7,9 +7,9 @@ import argparse
 import os
 
 import numpy as np
-from jass.ion.log_entry_file_generator import LogEntryFileGenerator
-from jass.ion.round_log_entry_serializer import RoundLogEntrySerializer
-from jass.ion.log_parser_swisslos import LogParserSwisslos
+from source.jass.ion.log_entry_file_generator import LogEntryFileGenerator
+from source.jass.ion.round_log_entry_serializer import RoundLogEntrySerializer
+from source.jass.ion.log_parser_swisslos import LogParserSwisslos
 
 
 def main():

@@ -1,11 +1,11 @@
 import unittest
 import json
 
-from jass.base.const import *
-from jass.base.round_schieber import RoundSchieber
-from jass.base.player_round_cheating import PlayerRoundCheating
-from jass.ion.log_parser_swisslos import LogParserSwisslos
-from jass.ion.round_serializer import RoundSerializer
+from source.jass.base.const import *
+from source.jass.base.round_schieber import RoundSchieber
+from source.jass.base.player_round_cheating import PlayerRoundCheating
+from source.jass.ion.log_parser_swisslos import LogParserSwisslos
+from source.jass.ion.round_serializer import RoundSerializer
 
 
 class PlayerRoundCheatingTestCase(unittest.TestCase):

@@ -1,6 +1,6 @@
 import unittest
 
-from jass.base.const import *
+from source.jass.base.const import *
 
 
 class JassConstTestCase(unittest.TestCase):

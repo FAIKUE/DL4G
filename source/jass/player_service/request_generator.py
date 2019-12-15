@@ -6,8 +6,8 @@
 Generate json document for Jass player service
 """
 import json
-from jass.base.player_round import PlayerRound
-from jass.base.const import convert_int_encoded_cards_to_str_encoded, convert_one_hot_encoded_cards_to_str_encoded_list
+from source.jass.base.player_round import PlayerRound
+from source.jass.base.const import convert_int_encoded_cards_to_str_encoded, convert_one_hot_encoded_cards_to_str_encoded_list
 
 
 class PlayerRoundRequestGenerator:

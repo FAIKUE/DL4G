@@ -1,12 +1,12 @@
 import unittest
 
-from jass.base.const import *
-from jass.base.player_round import PlayerRound
-from jass.base.round_factory import get_round, get_round_from_player_round
-from jass.base.round_hearts import RoundHeartsTeam
-from jass.base.round_schieber import RoundSchieber
-from jass.base.rule_hearts import RuleHearts
-from jass.base.rule_schieber import RuleSchieber
+from source.jass.base.const import *
+from source.jass.base.player_round import PlayerRound
+from source.jass.base.round_factory import get_round, get_round_from_player_round
+from source.jass.base.round_hearts import RoundHeartsTeam
+from source.jass.base.round_schieber import RoundSchieber
+from source.jass.base.rule_hearts import RuleHearts
+from source.jass.base.rule_schieber import RuleSchieber
 
 
 class RoundFactoryTestCase(unittest.TestCase):

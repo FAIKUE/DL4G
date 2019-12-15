@@ -3,9 +3,9 @@
 # Created by Thomas Koller on 06.09.18
 #
 
-from jass.arena.arena import Arena
-from jass.base.player_round_cheating import PlayerRoundCheating
-from jass.player.player_cheating import PlayerCheating
+from source.jass.arena.arena import Arena
+from source.jass.base.player_round_cheating import PlayerRoundCheating
+from source.jass.player.player_cheating import PlayerCheating
 
 
 class ArenaCheating(Arena):

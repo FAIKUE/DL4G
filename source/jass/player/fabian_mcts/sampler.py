@@ -1,7 +1,7 @@
-from jass.base.const import *
-from jass.base.player_round_cheating import PlayerRound
-from jass.base.player_round_cheating import PlayerRoundCheating
-from jass.base.round_factory import get_round_from_player_round
+from source.jass.base.const import *
+from source.jass.base.player_round_cheating import PlayerRound
+from source.jass.base.player_round_cheating import PlayerRoundCheating
+from source.jass.base.round_factory import get_round_from_player_round
 import random
 
 

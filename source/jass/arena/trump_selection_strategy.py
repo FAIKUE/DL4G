@@ -2,7 +2,7 @@
 #
 # Created by Thomas Koller on 05.09.18
 #
-from jass.base.round import Round
+from source.jass.base.round import Round
 
 
 class TrumpStrategy:

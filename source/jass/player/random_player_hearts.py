@@ -1,7 +1,7 @@
 import logging
-from jass.base.player_round import PlayerRound
-from jass.base.const import *
-from jass.player.player import Player
+from source.jass.base.player_round import PlayerRound
+from source.jass.base.const import *
+from source.jass.player.player import Player
 
 
 class RandomPlayerHearts(Player):

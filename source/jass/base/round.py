@@ -2,12 +2,12 @@
 #
 # Created by Thomas Koller on 24.07.18
 #
-from jass.base.const import *
+from source.jass.base.const import *
 
 
 class Round:
     """
-    Class for one round (game) of jass. The class contains the complete information about a round when it is either
+    Class for one round (game) of source.jass. The class contains the complete information about a round when it is either
     in play or complete, including the information of all the hands.
 
     A 'Round' object captures the information in the following stages of the game:

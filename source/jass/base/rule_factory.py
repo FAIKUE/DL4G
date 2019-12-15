@@ -3,9 +3,9 @@
 # Created by Thomas Koller on 06.09.18
 #
 
-from jass.base.const import JASS_SCHIEBER_1000, JASS_SCHIEBER_2500, JASS_HEARTS
-from jass.base.rule_hearts import RuleHearts
-from jass.base.rule_schieber import RuleSchieber
+from source.jass.base.const import JASS_SCHIEBER_1000, JASS_SCHIEBER_2500, JASS_HEARTS
+from source.jass.base.rule_hearts import RuleHearts
+from source.jass.base.rule_schieber import RuleSchieber
 
 
 def get_rule(jass_type: str):

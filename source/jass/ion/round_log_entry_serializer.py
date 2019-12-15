@@ -4,8 +4,8 @@
 #
 import json
 from datetime import datetime
-from jass.ion.log_entries import RoundLogEntry
-from jass.ion.round_serializer import RoundSerializer, DATE_FORMAT
+from source.jass.ion.log_entries import RoundLogEntry
+from source.jass.ion.round_serializer import RoundSerializer, DATE_FORMAT
 
 
 class RoundLogEntrySerializer:

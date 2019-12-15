@@ -4,12 +4,12 @@
 #
 
 import logging
-from jass.base.const import JASS_SCHIEBER_1000
-from jass.arena.arena import Arena
-from jass.arena.trump_selection_players_strategy import TrumpPlayerStrategy
-from jass.arena.play_game_nr_rounds_strategy import PlayNrRoundsStrategy
-from jass.player.random_player_schieber import RandomPlayerSchieber
-from jass.player.fabian_mcts.fabian_mcts_player import FabianMCTSPlayer
+from source.jass.base.const import JASS_SCHIEBER_1000
+from source.jass.arena.arena import Arena
+from source.jass.arena.trump_selection_players_strategy import TrumpPlayerStrategy
+from source.jass.arena.play_game_nr_rounds_strategy import PlayNrRoundsStrategy
+from source.jass.player.random_player_schieber import RandomPlayerSchieber
+from source.jass.player.fabian_mcts.fabian_mcts_player import FabianMCTSPlayer
 
 
 def main():

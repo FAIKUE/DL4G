@@ -8,8 +8,8 @@ Statistics about valid cards that can be played, that will show the number of va
 """
 
 import numpy as np
-from jass.base.player_round import PlayerRound
-from jass.base.round import Round
+from source.jass.base.player_round import PlayerRound
+from source.jass.base.round import Round
 
 
 class ValidCardsStat:

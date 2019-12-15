@@ -5,10 +5,10 @@
 import numpy as np
 import logging
 
-from jass.base.const import convert_one_hot_encoded_cards_to_str_encoded_list, get_cards_encoded, \
+from source.jass.base.const import convert_one_hot_encoded_cards_to_str_encoded_list, get_cards_encoded, \
     get_cards_encoded_from_str
-from jass.base.label_play import LabelPlay
-from jass.base.label_trump import LabelTrump
+from source.jass.base.label_play import LabelPlay
+from source.jass.base.label_trump import LabelTrump
 
 
 class LabelPlaySerializer:

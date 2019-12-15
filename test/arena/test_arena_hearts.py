@@ -1,10 +1,10 @@
 import unittest
 import logging
-from jass.base.const import JASS_HEARTS
-from jass.arena.arena import Arena
-from jass.arena.trump_selection_none_strategy import TrumpNoneStrategy
-from jass.arena.play_game_nr_rounds_strategy import PlayNrRoundsStrategy
-from jass.player.random_player_hearts import RandomPlayerHearts
+from source.jass.base.const import JASS_HEARTS
+from source.jass.arena.arena import Arena
+from source.jass.arena.trump_selection_none_strategy import TrumpNoneStrategy
+from source.jass.arena.play_game_nr_rounds_strategy import PlayNrRoundsStrategy
+from source.jass.player.random_player_hearts import RandomPlayerHearts
 
 
 class ArenaNrRoundsTestCase(unittest.TestCase):

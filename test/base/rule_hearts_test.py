@@ -1,6 +1,6 @@
 import unittest
-from jass.base.const import *
-from jass.base.rule_hearts import RuleHearts
+from source.jass.base.const import *
+from source.jass.base.rule_hearts import RuleHearts
 
 
 class RuleHeartsTestCase(unittest.TestCase):

@@ -16,9 +16,9 @@ import os
 import argparse
 import logging
 
-from jass.base.const import PUSH_ALT, next_player, partner_player
-from jass.base.player_round import PlayerRound
-from jass.ion.round_log_entry_serializer import RoundLogEntrySerializer
+from source.jass.base.const import PUSH_ALT, next_player, partner_player
+from source.jass.base.player_round import PlayerRound
+from source.jass.ion.round_log_entry_serializer import RoundLogEntrySerializer
 
 
 def generate_logs_trump(files, output_dir: str, add_player_id: bool = False):

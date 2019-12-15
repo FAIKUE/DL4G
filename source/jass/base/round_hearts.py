@@ -2,9 +2,9 @@
 #
 # Created by Thomas Koller on 24.07.18
 #
-from jass.base.const import JASS_HEARTS, next_player
-from jass.base.round import Round
-from jass.base.rule_hearts import RuleHearts
+from source.jass.base.const import JASS_HEARTS, next_player
+from source.jass.base.round import Round
+from source.jass.base.rule_hearts import RuleHearts
 
 
 class RoundHeartsTeam(Round):

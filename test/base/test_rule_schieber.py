@@ -1,6 +1,6 @@
 import unittest
-from jass.base.const import *
-from jass.base.rule_schieber import RuleSchieber
+from source.jass.base.const import *
+from source.jass.base.rule_schieber import RuleSchieber
 
 
 class RuleSchieberTestCase(unittest.TestCase):

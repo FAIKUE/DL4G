@@ -4,9 +4,9 @@
 #
 
 import logging
-from jass.base.const import convert_int_encoded_cards_to_str_encoded, partner_player, next_player, card_ids
-from jass.base.round import Round
-from jass.base.round_factory import get_round
+from source.jass.base.const import convert_int_encoded_cards_to_str_encoded, partner_player, next_player, card_ids
+from source.jass.base.round import Round
+from source.jass.base.round_factory import get_round
 
 # format of date for reading and writing
 DATE_FORMAT = '%d.%m.%y %H:%M:%S'

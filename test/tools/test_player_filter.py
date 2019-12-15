@@ -1,6 +1,6 @@
 import unittest
 
-from jass.ion.player_id_filter import PlayerStatFilter, FilterMeanAbsolute, FilterStdAbsolute, FilterMeanRelative, \
+from source.jass.ion.player_id_filter import PlayerStatFilter, FilterMeanAbsolute, FilterStdAbsolute, FilterMeanRelative, \
     FilterStdRelative, FilterPlayedGamesRelative, FilterPlayedGamesAbsolute
 
 

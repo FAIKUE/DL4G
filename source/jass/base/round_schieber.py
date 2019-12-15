@@ -3,9 +3,9 @@
 # Created by Thomas Koller on 24.07.18
 #
 import numpy as np
-from jass.base.const import JASS_SCHIEBER_1000, next_player, partner_player, PUSH
-from jass.base.round import Round
-from jass.base.rule_schieber import RuleSchieber
+from source.jass.base.const import JASS_SCHIEBER_1000, next_player, partner_player, PUSH
+from source.jass.base.round import Round
+from source.jass.base.rule_schieber import RuleSchieber
 
 
 class RoundSchieber(Round):

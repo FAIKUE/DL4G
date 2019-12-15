@@ -2,7 +2,7 @@ import argparse
 import glob
 import os
 
-from jass.ion.player_round_log_parser import PlayerRoundLogParser
+from source.jass.ion.player_round_log_parser import PlayerRoundLogParser
 
 PREFIX_FILENAME = "filtered_"
 

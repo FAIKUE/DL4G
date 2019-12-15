@@ -4,9 +4,9 @@
 #
 import numpy as np
 
-from jass.base.const import next_player
-from jass.base.player_round import PlayerRound
-from jass.base.round import Round
+from source.jass.base.const import next_player
+from source.jass.base.player_round import PlayerRound
+from source.jass.base.round import Round
 
 
 def calculate_starting_hands_from_round(rnd: Round) -> np.ndarray:

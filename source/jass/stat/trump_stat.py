@@ -6,9 +6,9 @@
 Calculate statistics of trumps in games
 """
 
-from jass.base.round_schieber import RoundSchieber
-from jass.base.player_round import PlayerRound
-from jass.base.const import *
+from source.jass.base.round_schieber import RoundSchieber
+from source.jass.base.player_round import PlayerRound
+from source.jass.base.const import *
 
 
 class TrumpStat:

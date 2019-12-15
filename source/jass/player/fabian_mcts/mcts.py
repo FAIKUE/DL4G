@@ -1,17 +1,17 @@
-from jass.base.const import *
-from jass.base.player_round import PlayerRound
-from jass.base.round_factory import get_round_from_player_round
-from jass.player.fabian_mcts.sampler import Sampler
-from jass.player.fabian_mcts.node import Node
-from jass.player.fabian_mcts.UCB import UCB
-from jass.player.random_player_schieber import RandomPlayerSchieber
+from source.jass.base.const import *
+from source.jass.base.player_round import PlayerRound
+from source.jass.base.round_factory import get_round_from_player_round
+from source.jass.player.fabian_mcts.sampler import Sampler
+from source.jass.player.fabian_mcts.node import Node
+from source.jass.player.fabian_mcts.UCB import UCB
+from source.jass.player.random_player_schieber import RandomPlayerSchieber
 import time
 from operator import attrgetter
 
 
 class MCTS:
     @staticmethod
-    def monte_carlo_tree_search(rnd: PlayerRound, run_time_seconds=9) -> (Node, int):
+    def monte_carlo_tree_search(rnd: PlayerRound, run_time_seconds=2) -> (Node, int):
         end_time = time.time() + run_time_seconds
 
         sampled_round = Sampler.sample(rnd)
@@ -73,9 +73,9 @@ class MCTS:
             rnd.action_play_card(card_action)
             cards += 1
 
+        max_points = rnd.points_team_0 + rnd.points_team_1
         my_points = rnd.get_points_for_player(player)
-        enemy_points = rnd.get_points_for_player(player + 1)
-        max_points = my_points + enemy_points
+        enemy_points = max_points - my_points
 
         return (my_points - 0) / (max_points - 0)
 

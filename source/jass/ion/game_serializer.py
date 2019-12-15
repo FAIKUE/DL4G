@@ -3,8 +3,8 @@
 # Created by Thomas Koller on 24.08.18
 #
 
-from jass.base.game import Game
-from jass.ion.round_serializer import RoundSerializer
+from source.jass.base.game import Game
+from source.jass.ion.round_serializer import RoundSerializer
 
 
 class GameSerializer:

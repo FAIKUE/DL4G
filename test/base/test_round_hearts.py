@@ -1,7 +1,7 @@
 import unittest
 
-from jass.base.const import *
-from jass.base.round_hearts import RoundHeartsTeam
+from source.jass.base.const import *
+from source.jass.base.round_hearts import RoundHeartsTeam
 
 
 class RoundHeartsTestCase(unittest.TestCase):

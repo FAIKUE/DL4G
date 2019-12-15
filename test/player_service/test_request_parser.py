@@ -6,7 +6,7 @@
 import unittest
 import json
 
-from jass.player_service.request_parser import PlayerRoundParser
+from source.jass.player_service.request_parser import PlayerRoundParser
 
 
 class RequestValidatorTest(unittest.TestCase):

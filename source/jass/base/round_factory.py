@@ -5,11 +5,11 @@
 
 import numpy as np
 
-from jass.base.const import JASS_SCHIEBER_1000, JASS_SCHIEBER_2500, JASS_HEARTS
-from jass.base.round import Round
-from jass.base.round_schieber import RoundSchieber
-from jass.base.round_hearts import RoundHeartsTeam
-from jass.base.player_round import PlayerRound
+from source.jass.base.const import JASS_SCHIEBER_1000, JASS_SCHIEBER_2500, JASS_HEARTS
+from source.jass.base.round import Round
+from source.jass.base.round_schieber import RoundSchieber
+from source.jass.base.round_hearts import RoundHeartsTeam
+from source.jass.base.player_round import PlayerRound
 
 
 def get_round(jass_type: str, dealer: int or None = None) -> Round:
