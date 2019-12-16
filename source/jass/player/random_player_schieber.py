@@ -22,5 +22,5 @@ class RandomPlayerSchieber(Player):
     def play_card(self, player_rnd: PlayerRound) -> int:
         valid_cards = player_rnd.get_valid_cards()
         card = np.random.choice(np.flatnonzero(valid_cards))
-        self._logger.debug('Played card: {}'.format(card_strings[card]))
+        #self._logger.debug('Played card: {}'.format(card_strings[card]))
         return card
