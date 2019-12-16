@@ -4,7 +4,7 @@ from operator import attrgetter
 from operator import itemgetter
 
 class MCTSThreaded:
-    def __init__(self, player_rnd, thread_count=8):
+    def __init__(self, player_rnd, thread_count=4):
         self.simulated_rounds = 0
         self.player_rnd = player_rnd
         self.thread_count = thread_count
@@ -34,7 +34,7 @@ class MCTSThreaded:
         #         best_score = score
         #         best_winner = winner
 
-        print(f"winner from all threads: {winner[0]} with visit_count {winner[1]} after {self.simulated_rounds} rounds of sampling")
+        print(f"winner from all threads: {winner[0]} with visit_count {winner[1]} ({winner[1]/self.simulated_rounds}) after {self.simulated_rounds} rounds of sampling")
         print(f"all options: {result_list}")
         return winner[0]
 

@@ -125,6 +125,10 @@ class FabianMCTSPlayer(Player):
             card to play, int encoded
         """
         #best_card = MCTS.monte_carlo_tree_search(player_rnd)
+        valid_cards = player_rnd.get_valid_cards()
+        if len(valid_cards) == 1:
+            return valid_cards[0]
+
         mcts_threaded = MCTSThreaded(player_rnd)
         best_card = mcts_threaded.run()
 
