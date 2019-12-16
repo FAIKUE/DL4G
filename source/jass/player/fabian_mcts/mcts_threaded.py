@@ -2,6 +2,7 @@ from threading import Thread
 from jass.player.fabian_mcts.mcts import MCTS
 from operator import attrgetter
 from operator import itemgetter
+from mcts_cythonized import MctsCythonized
 
 class MCTSThreaded:
     def __init__(self, player_rnd, thread_count=4):
@@ -39,7 +40,8 @@ class MCTSThreaded:
         return winner[0]
 
     def _call_mcts(self):
-        root_node = MCTS.monte_carlo_tree_search(self.player_rnd)
+        root_node = MctsCythonized.monte_carlo_tree_search(self.player_rnd)
+        #root_node = MCTS.monte_carlo_tree_search(self.player_rnd)
         self.simulated_rounds += root_node.action.visit_count
         for card in root_node.childs:
             self.winners.append(card)
