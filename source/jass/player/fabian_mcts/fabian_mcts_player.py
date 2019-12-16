@@ -125,7 +125,8 @@ class FabianMCTSPlayer(Player):
             card to play, int encoded
         """
         #best_card = MCTS.monte_carlo_tree_search(player_rnd)
-        valid_cards = player_rnd.get_valid_cards()
+        valid_cards = np.flatnonzero(player_rnd.get_valid_cards())
+        print(f"valid cards: {valid_cards}, standard probability: {1/len(valid_cards)}")
         if len(valid_cards) == 1:
             return valid_cards[0]
 
