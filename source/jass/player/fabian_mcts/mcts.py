@@ -6,38 +6,36 @@ from jass.player.fabian_mcts.node import Node
 from jass.player.fabian_mcts.UCB import UCB
 from jass.player.random_player_schieber import RandomPlayerSchieber
 import time
-from operator import attrgetter
 
 
 class MCTS:
     @staticmethod
-    def monte_carlo_tree_search(rnd: PlayerRound, run_time_seconds=9) -> (Node, int):
+    def monte_carlo_tree_search(rnd: PlayerRound, run_time_seconds=1000) -> (Node, int):
         end_time = time.time() + run_time_seconds
 
         sampled_round = Sampler.sample(rnd)
         root_node = Node()
-        root_node.action.player_nr = rnd.player
-        root_node.action.round = sampled_round
+        root_node.player_nr = rnd.player
+        root_node.round = sampled_round
 
         simulated_rounds = 0
         while time.time() < end_time:
             promising_node = MCTS._select_promising_node(root_node)
-            if promising_node.action.round.nr_cards_in_trick < 4:
+
+            if len(promising_node.childs) == 0:
                 MCTS._expand_node(promising_node, sampled_round)
 
-            node_to_explore = promising_node
             if len(promising_node.childs) > 0:
                 node_to_explore = promising_node.get_random_child()
+            else:
+                node_to_explore = promising_node
 
-            win_score = MCTS._simulate_round(node_to_explore)
-            MCTS._back_propagation(node_to_explore, sampled_round.player, win_score)
+            win = MCTS._simulate_round(node_to_explore)
+            MCTS._back_propagation(node_to_explore, sampled_round.player, win)
             simulated_rounds += 1
-
-        winner = max(root_node.childs, key=attrgetter('action.visit_count'))
-
         #winner = root_node.get_child_with_max_visit_count()
-        print(f"{simulated_rounds} rounds simulated in {run_time_seconds} seconds")
-        print(f"winner: {winner.action.card} with visit count {winner.action.visit_count} ({round(winner.action.visit_count/simulated_rounds, 3)}), valid cards: {np.flatnonzero(sampled_round.get_valid_cards())}")
+        #print(f"{simulated_rounds} rounds simulated in {run_time_seconds} seconds")
+        #print(f"winner: {winner.card} with visit count {winner.visit_count} ({round(winner.visit_count/simulated_rounds, 3)}), valid cards: {np.flatnonzero(sampled_round.get_valid_cards())}")
         return root_node
 
     @staticmethod
@@ -54,16 +52,16 @@ class MCTS:
         for card in valid_cards:
             new_node = Node()
             new_node.parent = node
-            new_node.action.round = round
-            new_node.action.player_nr = node.action.player_nr
-            new_node.action.card = card
+            new_node.round = round
+            new_node.player_nr = node.player_nr
+            new_node.card = card
             node.add_child(new_node)
 
     @staticmethod
-    def _simulate_round(node: Node) -> float:
-        rnd = get_round_from_player_round(node.action.round, node.action.round.hands)
+    def _simulate_round(node: Node) -> bool:
+        rnd = get_round_from_player_round(node.round, node.round.hands)
         player = rnd.player
-        rnd.action_play_card(node.action.card)
+        rnd.action_play_card(node.card)
         cards = rnd.nr_played_cards
         random_player = RandomPlayerSchieber()
         while cards < 36:
@@ -83,10 +81,10 @@ class MCTS:
     def _back_propagation(node: Node, player_nr: int, win: bool):
         temp_node = node
         while temp_node:
-            temp_node.action.increment_visit()
-            if temp_node.action.player_nr == player_nr:
+            temp_node.increment_visit()
+            if temp_node.player_nr == player_nr:
                 if win:
-                    temp_node.action.win_count += 1
+                    temp_node.win_count += 1
                 else:
-                    temp_node.action.lose_count += 1
+                    temp_node.lose_count += 1
             temp_node = temp_node.parent
