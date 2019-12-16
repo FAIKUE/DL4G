@@ -19,7 +19,7 @@ class TrumpStat:
     counters are incremented, when the statistics match, but the player chooses something else as trump.
     """
     def __init__(self):
-        self.description = 'No stat'
+        self.description = 'No stats'
         #
         # number of times for forehand (or first options)
         self.counter_pos_forehand = 0

@@ -7,7 +7,7 @@ from jass.ion.player_round_log_parser import PlayerRoundLogParser
 PREFIX_FILENAME = "filtered_"
 
 # >python tools\player_round_log_filter.py -src tools/player_logs.txt -dest tools/ -statfile tools/player_all_
-# stat.json -mean_abs 75 -mean_best_perc 0.5 -played_ga
+# stats.json -mean_abs 75 -mean_best_perc 0.5 -played_ga
 # mes_abs 30 -std_abs 90 -std_best_perc 0.5 -played_games_most_perc 0.1
 
 

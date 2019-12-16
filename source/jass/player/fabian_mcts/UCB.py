@@ -14,18 +14,18 @@ class UCB:
         return ucb
 
     def find_best_node_ucb(self, node: Node):
-        parent_visits = node.action.visit_count
+        parent_visits = node.visit_count
 
         best_child = None
-        best_score = 0.0
+        best_score = -1.0
         for child in node.childs:  # type; State
-            score = self.ucb_value(parent_visits, child.action.win_count, child.action.visit_count)
-            if score >= best_score:
+            score = self.ucb_value(parent_visits, child.win_count, child.visit_count)
+            if score > best_score:
                 best_child = child
                 best_score = score
 
         if best_child is None:
             print("No best Children Found")
 
-        # print(f" best child: {best_child.action.card}, best score: {best_score}")
+        # print(f" best child: {best_child.card}, best score: {best_score}")
         return best_child

@@ -1,12 +1,20 @@
 import numpy as np
-from jass.player.fabian_mcts.action import Action
 
 
 class Node:
     def __init__(self) -> None:
         self.parent = None
-        self.action = Action()
         self.childs = []  # Node
+        self.player_nr = 0
+        self.win_score = 0.0
+        self.win_count = 0
+        self.lose_count = 0
+        self.visit_count = 0
+        self.round = None
+        self.card = None
+
+    def increment_visit(self):
+        self.visit_count += 1
 
     def get_random_child(self) -> 'Node':
         return np.random.choice(self.childs)
@@ -17,13 +25,13 @@ class Node:
     def get_child_with_max_score(self) -> 'Node':
         best_child = self.childs[0]
         for child in self.childs:
-            if child.action.win_score > best_child.action.win_score:
+            if child.win_score > best_child.win_score:
                 best_child = child
         return best_child
 
     def get_child_with_max_visit_count(self) -> 'Node':
         best_child = self.childs[0]
         for child in self.childs:
-            if child.action.visit_count > best_child.action.visit_count:
+            if child.visit_count > best_child.visit_count:
                 best_child = child
         return best_child
