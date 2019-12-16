@@ -11,7 +11,7 @@ from operator import attrgetter
 
 class MCTS:
     @staticmethod
-    def monte_carlo_tree_search(rnd: PlayerRound, run_time_seconds=4) -> (Node, int):
+    def monte_carlo_tree_search(rnd: PlayerRound, run_time_seconds=9) -> (Node, int):
         end_time = time.time() + run_time_seconds
 
         sampled_round = Sampler.sample(rnd)
