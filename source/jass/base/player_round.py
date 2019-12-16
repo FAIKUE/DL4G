@@ -6,9 +6,9 @@
 from typing import List
 import numpy as np
 
-from source.jass.base.const import next_player, partner_player
-from source.jass.base.round import Round
-import source.jass.base.rule_factory
+from jass.base.const import next_player, partner_player
+from jass.base.round import Round
+import jass.base.rule_factory
 
 
 class PlayerRound:
@@ -112,7 +112,7 @@ class PlayerRound:
         self.rule = rule
         if rule is None and jass_type is not None:
             # create the rule object
-            self.rule = source.jass.base.rule_factory.get_rule(jass_type)
+            self.rule = jass.base.rule_factory.get_rule(jass_type)
 
     def __repr__(self):
         """

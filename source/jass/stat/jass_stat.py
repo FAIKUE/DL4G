@@ -4,7 +4,7 @@
 #
 import numpy as np
 from typing import Dict
-from source.jass.base.player_round import PlayerRound
+from jass.base.player_round import PlayerRound
 
 
 class PlayerStat:

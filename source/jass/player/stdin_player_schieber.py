@@ -1,10 +1,10 @@
-from source.jass.base.const import trump_strings_german_long, trump_string_push_german, trump_strings_short, \
+from jass.base.const import trump_strings_german_long, trump_string_push_german, trump_strings_short, \
     card_strings, card_ids, \
     convert_one_hot_encoded_cards_to_str_encoded_list, convert_one_hot_encoded_cards_to_int_encoded_list, \
     convert_int_encoded_cards_to_str_encoded
-from source.jass.base.player_round import PlayerRound
-from source.jass.base.rule_schieber import RuleSchieber
-from source.jass.player.player import Player
+from jass.base.player_round import PlayerRound
+from jass.base.rule_schieber import RuleSchieber
+from jass.player.player import Player
 
 
 class StdinPlayerSchieber(Player):

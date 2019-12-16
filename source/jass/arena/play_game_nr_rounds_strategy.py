@@ -3,8 +3,8 @@
 # Created by Thomas Koller on 05.09.18
 #
 import logging
-from source.jass.base.const import NORTH, next_player
-from source.jass.arena.play_game_strategy import PlayGameStrategy
+from jass.base.const import NORTH, next_player
+from jass.arena.play_game_strategy import PlayGameStrategy
 
 
 class PlayNrRoundsStrategy(PlayGameStrategy):

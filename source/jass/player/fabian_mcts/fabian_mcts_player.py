@@ -1,9 +1,9 @@
-from source.jass.base.const import *
-from source.jass.base.player_round import PlayerRound
-from source.jass.player.player import Player
-from source.jass.base.rule_schieber import RuleSchieber
-from source.jass.player.fabian_mcts.mcts import MCTS
-from source.jass.player.fabian_mcts.mcts_threaded import MCTSThreaded
+from jass.base.const import *
+from jass.base.player_round import PlayerRound
+from jass.player.player import Player
+from jass.base.rule_schieber import RuleSchieber
+from jass.player.fabian_mcts.mcts import MCTS
+from jass.player.fabian_mcts.mcts_threaded import MCTSThreaded
 import logging
 
 

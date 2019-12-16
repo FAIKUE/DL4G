@@ -3,8 +3,8 @@
 # Created by Thomas Koller on 05.09.18
 #
 
-from source.jass.base.const import PUSH, DIAMONDS, MAX_TRUMP
-from source.jass.arena.trump_selection_strategy import TrumpStrategy
+from jass.base.const import PUSH, DIAMONDS, MAX_TRUMP
+from jass.arena.trump_selection_strategy import TrumpStrategy
 import logging
 
 

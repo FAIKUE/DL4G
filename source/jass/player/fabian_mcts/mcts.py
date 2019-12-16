@@ -1,17 +1,17 @@
-from source.jass.base.const import *
-from source.jass.base.player_round import PlayerRound
-from source.jass.base.round_factory import get_round_from_player_round
-from source.jass.player.fabian_mcts.sampler import Sampler
-from source.jass.player.fabian_mcts.node import Node
-from source.jass.player.fabian_mcts.UCB import UCB
-from source.jass.player.random_player_schieber import RandomPlayerSchieber
+from jass.base.const import *
+from jass.base.player_round import PlayerRound
+from jass.base.round_factory import get_round_from_player_round
+from jass.player.fabian_mcts.sampler import Sampler
+from jass.player.fabian_mcts.node import Node
+from jass.player.fabian_mcts.UCB import UCB
+from jass.player.random_player_schieber import RandomPlayerSchieber
 import time
 from operator import attrgetter
 
 
 class MCTS:
     @staticmethod
-    def monte_carlo_tree_search(rnd: PlayerRound, run_time_seconds=9.5) -> (Node, int):
+    def monte_carlo_tree_search(rnd: PlayerRound, run_time_seconds=4) -> (Node, int):
         end_time = time.time() + run_time_seconds
 
         sampled_round = Sampler.sample(rnd)
@@ -38,7 +38,7 @@ class MCTS:
         #winner = root_node.get_child_with_max_visit_count()
         print(f"{simulated_rounds} rounds simulated in {run_time_seconds} seconds")
         print(f"winner: {winner.action.card} with visit count {winner.action.visit_count} ({round(winner.action.visit_count/simulated_rounds, 3)}), valid cards: {np.flatnonzero(sampled_round.get_valid_cards())}")
-        return winner, simulated_rounds
+        return root_node
 
     @staticmethod
     def _select_promising_node(root_node: Node) -> Node:
@@ -77,13 +77,16 @@ class MCTS:
         my_points = rnd.get_points_for_player(player)
         enemy_points = max_points - my_points
 
-        return (my_points - 0) / (max_points - 0)
+        return my_points > enemy_points
 
     @staticmethod
-    def _back_propagation(node: Node, player_nr: int, win_score: float):
+    def _back_propagation(node: Node, player_nr: int, win: bool):
         temp_node = node
         while temp_node:
             temp_node.action.increment_visit()
             if temp_node.action.player_nr == player_nr:
-                temp_node.action.win_score = win_score
+                if win:
+                    temp_node.action.win_count += 1
+                else:
+                    temp_node.action.lose_count += 1
             temp_node = temp_node.parent

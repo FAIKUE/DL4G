@@ -2,8 +2,8 @@
 #
 # Created by Thomas Koller on 06.09.18
 #
-from source.jass.base.player_round_cheating import PlayerRoundCheating
-from source.jass.player.player import Player
+from jass.base.player_round_cheating import PlayerRoundCheating
+from jass.player.player import Player
 
 
 class PlayerCheating(Player):

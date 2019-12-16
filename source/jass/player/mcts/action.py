@@ -1,4 +1,4 @@
-from source.jass.base.round import Round
+from jass.base.round import Round
 
 class Action(object):
     def __init__(self) -> None:

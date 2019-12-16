@@ -1,14 +1,14 @@
-from source.jass.base.const import*
-from source.jass.base.player_round_cheating import PlayerRoundCheating
-from source.jass.base.round_factory import get_round_from_player_round
-from source.jass.player.player_cheating import PlayerCheating
-from source.jass.base.rule_schieber import RuleSchieber
-from source.jass.player.mcts.const import Status
-from source.jass.player.mcts.node import Node
-from source.jass.player.mcts.tree import Tree
-from source.jass.player.mcts.UCB import UCB
-from source.jass.player.random_player_schieber import RandomPlayerSchieber
-from source.jass.player.mcts.sampler import Sampler
+from jass.base.const import*
+from jass.base.player_round_cheating import PlayerRoundCheating
+from jass.base.round_factory import get_round_from_player_round
+from jass.player.player_cheating import PlayerCheating
+from jass.base.rule_schieber import RuleSchieber
+from jass.player.mcts.const import Status
+from jass.player.mcts.node import Node
+from jass.player.mcts.tree import Tree
+from jass.player.mcts.UCB import UCB
+from jass.player.random_player_schieber import RandomPlayerSchieber
+from jass.player.mcts.sampler import Sampler
 
 import time
 import random

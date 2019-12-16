@@ -7,10 +7,10 @@
 import numpy as np
 import logging
 
-from source.jass.base.const import card_ids, convert_one_hot_encoded_cards_to_str_encoded_list, card_strings, \
+from jass.base.const import card_ids, convert_one_hot_encoded_cards_to_str_encoded_list, card_strings, \
     convert_int_encoded_cards_to_str_encoded, JASS_ALL, partner_player, next_player
-from source.jass.base.player_round import PlayerRound
-from source.jass.base.player_round_cheating import PlayerRoundCheating
+from jass.base.player_round import PlayerRound
+from jass.base.player_round_cheating import PlayerRoundCheating
 
 
 class PlayerRoundSerializer:

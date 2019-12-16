@@ -4,8 +4,8 @@
 
 """ Implementation of rules of jass game"""
 
-from source.jass.base.const import *
-from source.jass.base.rule import Rule
+from jass.base.const import *
+from jass.base.rule import Rule
 
 
 class RuleSchieber(Rule):

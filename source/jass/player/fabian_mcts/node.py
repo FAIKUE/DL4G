@@ -1,5 +1,5 @@
 import numpy as np
-from source.jass.player.fabian_mcts.action import Action
+from jass.player.fabian_mcts.action import Action
 
 
 class Node:

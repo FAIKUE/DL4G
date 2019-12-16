@@ -4,8 +4,8 @@
 #
 
 from flask import Flask
-from source.jass.player.player import Player
-from source.jass.player_service.player_service_route import players
+from jass.player.player import Player
+from jass.player_service.player_service_route import players
 
 
 class PlayerServiceApp(Flask):

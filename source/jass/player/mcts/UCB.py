@@ -1,6 +1,6 @@
 import math
 import sys
-from source.jass.player.mcts.node import Node
+from jass.player.mcts.node import Node
 import logging
 import random
 

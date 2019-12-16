@@ -1,8 +1,8 @@
-from source.jass.base.const import *
-from source.jass.base.player_round import PlayerRound
-from source.jass.player.player import Player
-from source.jass.base.rule_schieber import RuleSchieber
-from source.jass.player.mcts.monte_carlo_tree_search import MonteCarloTreeSearch
+from jass.base.const import *
+from jass.base.player_round import PlayerRound
+from jass.player.player import Player
+from jass.base.rule_schieber import RuleSchieber
+from jass.player.mcts.monte_carlo_tree_search import MonteCarloTreeSearch
 
 import logging
 

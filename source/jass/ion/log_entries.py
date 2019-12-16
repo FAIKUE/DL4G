@@ -5,11 +5,11 @@
 import datetime
 from typing import List
 
-from source.jass.base.label_play import LabelPlay
-from source.jass.base.label_trump import LabelTrump
-from source.jass.base.player_round import PlayerRound
-from source.jass.base.player_round_cheating import PlayerRoundCheating
-from source.jass.base.round import Round
+from jass.base.label_play import LabelPlay
+from jass.base.label_trump import LabelTrump
+from jass.base.player_round import PlayerRound
+from jass.base.player_round_cheating import PlayerRoundCheating
+from jass.base.round import Round
 
 
 class RoundLogEntry:

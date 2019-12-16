@@ -8,9 +8,9 @@ Code for the validation and parsing of requests to a Jass player service.
 
 import logging
 
-from source.jass.base.const import *
-from source.jass.base.player_round import PlayerRound
-from source.jass.ion.player_round_serializer import PlayerRoundSerializer
+from jass.base.const import *
+from jass.base.player_round import PlayerRound
+from jass.ion.player_round_serializer import PlayerRoundSerializer
 
 ERROR_MSG_PREFIX = 'Request Parse Error: '
 VALID_JASS_TYPES = ['SCHIEBER_1000', 'SCHIEBER_2500']

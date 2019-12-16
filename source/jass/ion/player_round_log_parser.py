@@ -1,12 +1,12 @@
 import logging
 import json
 
-from source.jass.base.const import card_ids
-from source.jass.base.player_round import PlayerRound
+from jass.base.const import card_ids
+from jass.base.player_round import PlayerRound
 
 import numpy as np
 
-from source.jass.base.player_round_cheating import PlayerRoundCheating
+from jass.base.player_round_cheating import PlayerRoundCheating
 
 
 class PlayerRoundLogParser:

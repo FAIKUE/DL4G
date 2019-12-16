@@ -1,10 +1,10 @@
 import random
 
 import logging
-from source.jass.base.player_round import PlayerRound
-from source.jass.base.const import *
-from source.jass.player.player import Player
-from source.jass.base.rule_schieber import RuleSchieber
+from jass.base.player_round import PlayerRound
+from jass.base.const import *
+from jass.player.player import Player
+from jass.base.rule_schieber import RuleSchieber
 
 
 class RandomPlayerSchieber(Player):

@@ -3,8 +3,8 @@
 # Created by Thomas Koller on 05.09.18
 #
 import random
-from source.jass.base.const import PUSH, MAX_TRUMP
-from source.jass.arena.trump_selection_strategy import TrumpStrategy
+from jass.base.const import PUSH, MAX_TRUMP
+from jass.arena.trump_selection_strategy import TrumpStrategy
 
 
 class TrumpRandomStrategy(TrumpStrategy):
