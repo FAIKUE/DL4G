@@ -12,6 +12,7 @@ from jass.player.random_player_schieber import RandomPlayerSchieber
 
 def monte_carlo_tree_search(rnd: PlayerRound, int run_time_seconds=9, int c=1) -> (Node, int):
     cdef double end_time
+    cdef int depth
     end_time = time.time() + run_time_seconds
 
     cdef bool win
@@ -22,10 +23,10 @@ def monte_carlo_tree_search(rnd: PlayerRound, int run_time_seconds=9, int c=1) -
     cdef int simulated_rounds
     simulated_rounds = 0
     while time.time() < end_time:
-        promising_node = _select_promising_node(root_node, c)
+        promising_node, depth = _select_promising_node(root_node, c, depth)
 
         if len(promising_node.childs) == 0:
-            _expand_node(promising_node, sampled_round)
+            _expand_node(promising_node, depth)
 
         if len(promising_node.childs) > 0:
             node_to_explore = promising_node.get_random_child()
@@ -42,18 +43,21 @@ def monte_carlo_tree_search(rnd: PlayerRound, int run_time_seconds=9, int c=1) -
 
 def _select_promising_node(root_node: Node, int c) -> Node:
     node = root_node
+    cdef int depth
+    depth = 0
     while len(node.childs) != 0:
         node = _find_best_node_ucb(node, c)
-    return node
+        depth += 1
+    return node, depth
 
-def _expand_node(node: Node, round: PlayerRound):
+def _expand_node(node: Node, round: PlayerRound, int depth):
     valid_cards = np.flatnonzero(round.get_valid_cards())
     cdef int card
     for card in valid_cards:
         new_node = Node()
         new_node.parent = node
         new_node.round = round
-        new_node.player_nr = node.player_nr
+        new_node.player_nr = ((depth + node.player_nr) % 4)
         new_node.card = card
         node.add_child(new_node)
 
