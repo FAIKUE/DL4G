@@ -12,9 +12,11 @@ class FabianMCTSPlayer(Player):
     Implementation of a player to play Jass using Monte Carlo Tree Search.
     """
 
-    def __init__(self):
+    def __init__(self, ucb_c=1, threads=10):
         self._logger = logging.getLogger(__name__)
         self._rule = RuleSchieber()
+        self.ucb_c = ucb_c
+        self.threads = threads
 
     def select_trump(self, rnd: PlayerRound) -> int:
         """
@@ -69,8 +71,8 @@ class FabianMCTSPlayer(Player):
                     print(f"bauer und näll und andere karten der farbe und andere asse with score {temp_score_in_trump}")
                     if temp_score_in_trump > score_in_trump:
                         score_in_trump = temp_score_in_trump
-                elif has_bauer and has_naell and len(cards_of_this_color) >= 3 and len([i for i in cards_of_other_colors if i in high_cards]) >= 6:
-                    temp_score_in_trump = 40 + len(cards_of_this_color) - 3 + len([i for i in cards_of_other_colors if i in high_cards]) - 6
+                elif has_bauer and has_naell and len(cards_of_this_color) >= 3 and len([i for i in cards_of_other_colors if i in high_cards]) >= 4:
+                    temp_score_in_trump = 40 + len(cards_of_this_color) - 3 + len([i for i in cards_of_other_colors if i in high_cards]) - 4
                     print(f"bauer und näll und andere karten der farbe und andere gute karten with score {temp_score_in_trump}")
                     if temp_score_in_trump > score_in_trump:
                         score_in_trump = temp_score_in_trump
@@ -130,7 +132,7 @@ class FabianMCTSPlayer(Player):
         if len(valid_cards) == 1:
             return valid_cards[0]
 
-        mcts_threaded = MCTSThreaded(player_rnd)
+        mcts_threaded = MCTSThreaded(player_rnd, self.threads, self.ucb_c)
         best_card = mcts_threaded.run()
 
         return best_card

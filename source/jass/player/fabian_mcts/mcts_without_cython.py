@@ -2,7 +2,6 @@ import math
 import random
 import time
 import copy
-from cpython cimport bool
 
 from jass.base.const import *
 from jass.base.player_round import PlayerRound
@@ -11,22 +10,23 @@ from jass.base.round_factory import get_round_from_player_round
 from jass.player.random_player_schieber import RandomPlayerSchieber
 
 
-def monte_carlo_tree_search(rnd: PlayerRound, int run_time_seconds=9, int c=1) -> (Node, int):
-    cdef double end_time
-    cdef int depth
-    end_time = time.time() + run_time_seconds
+def monte_carlo_tree_search(rnd: PlayerRound, run_time_seconds=9000, c=1):
+    start_time = time.time()
+    end_time = start_time + run_time_seconds
 
     sampled_round = _sample(rnd)
     root_node = Node()
     root_node.player_nr = rnd.player
     root_node.round = sampled_round
-    cdef int simulated_rounds
     simulated_rounds = 0
     while time.time() < end_time:
         promising_node, depth = _select_promising_node(root_node, c)
-        valid_cards = np.flatnonzero(promising_node.round.get_valid_cards())
 
-        for card in valid_cards:
+        valid_cards = np.flatnonzero(promising_node.round.get_valid_cards())
+        playable_cards = list(set(valid_cards) - set(promising_node.get_child_cards()))
+
+        if playable_cards:
+            card = np.random.choice(valid_cards)
             win, played_round = _simulate_round(sampled_round, card, (((depth + sampled_round.player) % 2) == 0))
             new_node = Node()
             new_node.parent = promising_node
@@ -34,16 +34,15 @@ def monte_carlo_tree_search(rnd: PlayerRound, int run_time_seconds=9, int c=1) -
             new_node.player_nr = ((promising_node.player_nr + 1) % 4)
             new_node.card = card
             promising_node.add_child(new_node)
-            _back_propagation(new_node, win)
+            _back_propagation(new_node, sampled_round.player, win)
         simulated_rounds += 1
     #winner = root_node.get_child_with_max_visit_count()
     #print(f"{simulated_rounds} rounds simulated in {run_time_seconds} seconds")
     #print(f"winner: {winner.card} with visit count {winner.visit_count} ({round(winner.visit_count/simulated_rounds, 3)}), valid cards: {np.flatnonzero(sampled_round.get_valid_cards())}")
     return root_node
 
-def _select_promising_node(root_node: Node, int c) -> Node:
+def _select_promising_node(root_node, c):
     node = root_node
-    cdef int depth
     depth = 0
     while len(node.childs) != 0:
         node = _find_best_node_ucb(node, c)
@@ -61,10 +60,7 @@ def _select_promising_node(root_node: Node, int c) -> Node:
 #         new_node.card = card
 #         node.add_child(new_node)
 
-def _simulate_round(round: PlayerRound, int card, my_play) -> (bool, PlayerRound):
-    cdef int player
-    cdef int cards
-    cdef int card_action
+def _simulate_round(round: PlayerRound, card, my_play: bool) -> (bool, PlayerRound):
     rnd = get_round_from_player_round(round, round.hands)
     player = rnd.player
     rnd.action_play_card(card)
@@ -78,18 +74,14 @@ def _simulate_round(round: PlayerRound, int card, my_play) -> (bool, PlayerRound
         rnd.action_play_card(card_action)
         cards += 1
 
-    cdef int max_points
-    cdef int my_points
-    cdef int enemy_points
-
     max_points = rnd.points_team_0 + rnd.points_team_1
     my_points = rnd.get_points_for_player(player)
     enemy_points = max_points - my_points
 
-    win = (my_points > enemy_points and my_play) or (enemy_points > my_points and not my_play)
+    win = my_points > enemy_points and my_play
     return win, played_round
 
-def _back_propagation(node: Node, win):
+def _back_propagation(node, player_nr, win: bool):
     temp_node = node
     while temp_node:
         temp_node.increment_visit()
@@ -105,7 +97,6 @@ def _sample(rnd: PlayerRound) -> PlayerRoundCheating:
     hands = np.zeros(shape=[4, 36], dtype=np.int)
 
     # give the own player the correct hand and the other players sampled hands
-    cdef int i
     for i in range(0, 4):
         if i == rnd.player:
             hands[i] = rnd.hand
@@ -117,8 +108,6 @@ def _sample(rnd: PlayerRound) -> PlayerRoundCheating:
 
 def __get_hands(sampled_cards: np.array):
     one_hand = np.zeros(shape=36, dtype=int)
-    cdef int card
-    cdef int i
     for i in range(0, 9):
         card = random.choice(np.flatnonzero(sampled_cards))
         sampled_cards[card] = 0
@@ -126,20 +115,16 @@ def __get_hands(sampled_cards: np.array):
 
     return one_hand, sampled_cards
 
-def _ucb_value(int total_visits, float node_win_count, int node_visits, int c) -> float:
+def _ucb_value(total_visits, node_win_count, node_visits, c) -> float:
     if node_visits == 0:
         return 2147483647
-    cdef double ucb
     ucb = (node_win_count / node_visits) + c * math.sqrt(math.log(total_visits, math.e) / node_visits)
     return ucb
 
-def _find_best_node_ucb(node: Node, int c):
-    cdef int parent_visits
+def _find_best_node_ucb(node, c):
     parent_visits = node.visit_count
 
     best_child = None
-    cdef double best_score
-    cdef double score
     best_score = -1.0
     for child in node.childs:  # type; State
         score = _ucb_value(parent_visits, child.win_count, child.visit_count, c)

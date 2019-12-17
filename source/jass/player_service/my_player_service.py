@@ -31,7 +31,10 @@ def create_app():
     # app.config.from_pyfile('my_player_service.cfg', silent=False)
 
     # add some players
-    app.add_player('fabianmcts', FabianMCTSPlayer())
+    app.add_player('DeAentlibuecherUCB14', FabianMCTSPlayer(ucb_c=1.4))
+    app.add_player('DeAentlibuecher', FabianMCTSPlayer())
+    app.add_player('DeAentlibuecherUCB75', FabianMCTSPlayer(ucb_c=0.75))
+    app.add_player('DeAentlibuecher2T', FabianMCTSPlayer(threads=2))
     # app.add_player('stdin', StdinPlayerSchieber())
     app.add_player('random', RandomPlayerSchieber())
 
