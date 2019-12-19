@@ -35,3 +35,10 @@ class Node:
             if child.visit_count > best_child.visit_count:
                 best_child = child
         return best_child
+
+    def get_child_cards(self):
+        child_cards = []
+        for child in self.childs:
+            child_cards.append(child.card)
+        return child_cards
+

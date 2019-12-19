@@ -9,7 +9,7 @@ class UCB:
 
     def ucb_value(self, total_visits: int, node_win_count: float, node_visits: int) -> float:
         if node_visits == 0:
-            return sys.maxsize
+            return 2147483647
         ucb = (node_win_count / node_visits) + self.c * math.sqrt(math.log(total_visits, math.e) / node_visits)
         return ucb
 
@@ -19,7 +19,7 @@ class UCB:
         best_child = None
         best_score = -1.0
         for child in node.childs:  # type; State
-            score = self.ucb_value(parent_visits, child.win_count, child.visit_count)
+            score = self.ucb_value(parent_visits, child.win_count, child.visit_count, c)
             if score > best_score:
                 best_child = child
                 best_score = score
