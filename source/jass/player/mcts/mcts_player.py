@@ -2,12 +2,11 @@ from jass.base.const import *
 from jass.base.player_round import PlayerRound
 from jass.player.player import Player
 from jass.base.rule_schieber import RuleSchieber
-from jass.player.fabian_mcts.mcts import MCTS
-from jass.player.fabian_mcts.mcts_threaded import MCTSThreaded
+from jass.player.mcts.mcts_threaded import MCTSThreaded
 import logging
 
 
-class FabianMCTSPlayer(Player):
+class MCTSPlayer(Player):
     """
     Implementation of a player to play Jass using Monte Carlo Tree Search.
     """

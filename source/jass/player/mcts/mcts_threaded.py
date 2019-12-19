@@ -1,7 +1,7 @@
 from threading import Thread
-from jass.player.fabian_mcts.mcts import MCTS
+from jass.player.mcts.mcts import MCTS
 from operator import itemgetter
-from jass.player.fabian_mcts import mcts_cythonized
+from jass.player.mcts import mcts_cythonized
 
 
 class MCTSThreaded:
